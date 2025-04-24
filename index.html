@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>РецептБот Web App</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
     <h1>🍽 Що приготувати?</h1>
 
     <!-- Категорії -->
-    <div class="scroll-menu section active" id="section-recipes">
+    <div class="scroll-menu section active" id="section-categories">
       <button>👶 Для дітей</button>
       <button>🥗 Вегетаріанське</button>
       <button>🌾 Без глютену</button>
@@ -78,7 +78,6 @@
 
   <!-- Нижнє меню -->
   <div class="bottom-nav-wrapper with-scroll-indicators">
-    <div class="scroll-arrow left-arrow" onclick="scrollBottomNav('left')">◀</div>
     <div class="bottom-nav" id="bottomNav">
       <button onclick="showSection('section-profile')">👤 Профіль</button>
       <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
@@ -86,13 +85,14 @@
       <button onclick="showSection('section-list')">🧾 Список</button>
       <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
     </div>
-    <div class="scroll-arrow right-arrow" onclick="scrollBottomNav('right')">▶</div>
   </div>
 
   <script>
     function showSection(id) {
       document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.bottom-nav button[onclick*="${id}"]`)?.classList.add('active');
     }
 
     function addToFavorites(button) {
@@ -109,12 +109,6 @@
       daysLeft > 0
         ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
         : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
-
-    function scrollBottomNav(direction) {
-      const container = document.getElementById('bottomNav');
-      const scrollAmount = 100;
-      container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
-    }
   </script>
 </body>
 </html>
