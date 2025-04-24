@@ -27,6 +27,7 @@ h1 {
   margin-bottom: 20px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  position: relative;
 }
 
 .scroll-menu::-webkit-scrollbar {
@@ -154,7 +155,7 @@ h1 {
   cursor: pointer;
 }
 
-/* Нижнє меню з прокруткою */
+/* Нижнє меню з прокруткою і стрілками */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 0;
@@ -162,23 +163,27 @@ h1 {
   width: 100%;
   background-color: #ffffff;
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: env(safe-area-inset-bottom);
-  scrollbar-width: none;
+  z-index: 999;
+  overflow: hidden;
 }
 
-.bottom-nav-wrapper::-webkit-scrollbar {
+.bottom-nav-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.bottom-nav-container::-webkit-scrollbar {
   display: none;
 }
 
 .bottom-nav {
-  display: flex;
+  display: inline-flex;
   min-width: max-content;
-  justify-content: flex-start;
   align-items: center;
-  padding: 10px 12px;
-  gap: 16px;
 }
 
 .bottom-nav button {
@@ -204,6 +209,32 @@ h1 {
 .bottom-nav button.active {
   color: #ff9800;
   font-weight: bold;
+}
+
+.nav-arrow {
+  width: 24px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0.8), #ffffff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.nav-arrow.left {
+  left: 0;
+  padding-left: 6px;
+}
+
+.nav-arrow.right {
+  right: 0;
+  padding-right: 6px;
 }
 
 /* Анімація та секції */
