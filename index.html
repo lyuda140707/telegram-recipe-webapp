@@ -38,7 +38,7 @@
     </div>
 
     <!-- Рецепт дня -->
-    <div class="recipe-card section active">
+    <div class="recipe-card section active" id="section-recipes">
       <h2>🍗 Курка в медово-гірчичному соусі</h2>
       <p class="details">⏱️ 15 хв • 2 порції</p>
       <p class="ingredients"><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
@@ -76,16 +76,17 @@
     </div>
   </div>
 
-  <!-- Нижнє меню з прокруткою -->
-  <div class="bottom-nav-wrapper">
-    <div class="bottom-nav" id="bottom-nav">
+  <!-- Нижнє меню -->
+  <div class="bottom-nav-wrapper with-scroll-indicators">
+    <div class="scroll-arrow left-arrow" onclick="scrollBottomNav('left')">◀</div>
+    <div class="bottom-nav" id="bottomNav">
       <button onclick="showSection('section-profile')">👤 Профіль</button>
       <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
       <button onclick="showSection('section-menu')">🧺 Меню</button>
       <button onclick="showSection('section-list')">🧾 Список</button>
       <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
     </div>
-    <div class="scroll-hint">➡️</div>
+    <div class="scroll-arrow right-arrow" onclick="scrollBottomNav('right')">▶</div>
   </div>
 
   <script>
@@ -99,7 +100,6 @@
       button.disabled = true;
     }
 
-    // Тимчасова логіка для "залишилось X днів"
     const start = localStorage.getItem('trial_start') || Date.now();
     localStorage.setItem('trial_start', start);
     const msInDay = 1000 * 60 * 60 * 24;
@@ -109,6 +109,12 @@
       daysLeft > 0
         ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
         : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+
+    function scrollBottomNav(direction) {
+      const container = document.getElementById('bottomNav');
+      const scrollAmount = 100;
+      container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
