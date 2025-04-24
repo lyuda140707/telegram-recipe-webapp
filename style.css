@@ -154,30 +154,32 @@ h1 {
   bottom: 0;
   left: 0;
   width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
   background-color: #ffffff;
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
   z-index: 999;
-  display: flex;
-  justify-content: center;
-  overflow-x: auto;
 }
 
 .bottom-nav {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  max-width: 500px;
+  display: inline-flex;
+  min-width: max-content;
+  padding: 10px 0;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .bottom-nav button {
-  flex: 1;
-  padding: 10px 0;
+  flex: 0 0 auto;
+  display: inline-block;
   background: none;
   border: none;
   font-size: 14px;
   cursor: pointer;
   color: #333;
+  margin: 0 16px;
   white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .bottom-nav button:hover {
@@ -207,4 +209,10 @@ h1 {
 .recipe-buttons button[disabled] {
   background-color: #d6ffd6;
   color: #444;
+}
+
+/* Видалити фонові декори (піца, тако, локшина) */
+.bg-decor {
+  display: none !important;
+  background: none !important;
 }
