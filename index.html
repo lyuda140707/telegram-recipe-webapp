@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>РецептБот Web App</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="bg-decor"></div>
     <div class="app">
-        <h1>🍽 Обери категорію</h1>
+        <h1>🍽 Що приготувати?</h1>
         <div class="buttons">
             <button onclick="selectCategory('М'ясо')">🥩 М'ясо</button>
             <button onclick="selectCategory('Вегетаріанське')">🥗 Вегетаріанське</button>
@@ -17,17 +19,16 @@
         </div>
         <div id="recipe-card" class="card hidden">
             <h2>🍗 Курка в медово-гірчичному соусі</h2>
-            <p><strong>Час:</strong> 15 хв • 2 порції</p>
-            <p><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця</p>
-            <p><strong>Рецепт:</strong></p>
+            <p><strong>⏱️ 15 хв</strong> • <strong>2 порції</strong></p>
+            <p><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
             <ol>
-                <li>Обсмажити філе до скоринки</li>
-                <li>Змішати мед і гірчицю</li>
-                <li>Тушкувати все разом 5–7 хв</li>
+                <li>Обсмажити філе до золотистої скоринки</li>
+                <li>Змішати мед з гірчицею</li>
+                <li>Додати до філе і тушкувати 7 хв</li>
             </ol>
             <div class="actions">
                 <button onclick="alert('Додано в улюблене!')">❤️ Улюблене</button>
-                <button onclick="alert('Додано в список покупок!')">🧺 До списку</button>
+                <button onclick="alert('Додано в кошик!')">🧺 До кошика</button>
             </div>
         </div>
     </div>
