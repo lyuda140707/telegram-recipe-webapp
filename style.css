@@ -1,5 +1,6 @@
+
 body {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Lobster', cursive;
     background: linear-gradient(to bottom, #f7ffb3, #c3fdb8);
     margin: 0;
     padding: 0;
@@ -7,13 +8,16 @@ body {
     overflow-x: hidden;
 }
 .bg-decor {
-    background-image: url('https://em-content.zobj.net/source/apple/354/doughnut_1f369.png'),
-                      url('https://em-content.zobj.net/source/apple/354/broccoli_1f966.png'),
-                      url('https://em-content.zobj.net/source/apple/354/pizza_1f355.png');
+    background-image: 
+        url('https://em-content.zobj.net/source/apple/354/doughnut_1f369.png'),
+        url('https://em-content.zobj.net/source/apple/354/broccoli_1f966.png'),
+        url('https://em-content.zobj.net/source/apple/354/pizza_1f355.png'),
+        url('https://em-content.zobj.net/source/apple/354/strawberry_1f353.png'),
+        url('https://em-content.zobj.net/source/apple/354/cheese-wedge_1f9c0.png');
     background-repeat: no-repeat;
-    background-size: 60px;
-    background-position: 10% 10%, 80% 30%, 40% 80%;
-    opacity: 0.15;
+    background-size: 90px;
+    background-position: 10% 10%, 80% 30%, 40% 80%, 70% 60%, 20% 75%;
+    opacity: 0.3;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -28,7 +32,7 @@ body {
 }
 h1 {
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 20px;
 }
 .buttons {
@@ -38,7 +42,7 @@ h1 {
 }
 button {
     padding: 15px;
-    font-size: 16px;
+    font-size: 18px;
     border: none;
     border-radius: 16px;
     background-color: #ffffffd9;
