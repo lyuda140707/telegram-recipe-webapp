@@ -77,7 +77,8 @@
   </div>
 
   <!-- Нижнє меню -->
-  <div class="bottom-nav-wrapper">
+  <div class="bottom-nav-wrapper with-scroll-indicators">
+    <div class="scroll-arrow left-arrow" onclick="scrollBottomNav('left')">◀</div>
     <div class="bottom-nav" id="bottomNav">
       <button onclick="showSection('section-profile')">👤 Профіль</button>
       <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
@@ -85,14 +86,13 @@
       <button onclick="showSection('section-list')">🧾 Список</button>
       <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
     </div>
+    <div class="scroll-arrow right-arrow" onclick="scrollBottomNav('right')">▶</div>
   </div>
 
   <script>
     function showSection(id) {
       document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`.bottom-nav button[onclick*="${id}"]`)?.classList.add('active');
     }
 
     function addToFavorites(button) {
@@ -107,8 +107,14 @@
     const daysLeft = 7 - daysUsed;
     document.getElementById('days-left').innerHTML =
       daysLeft > 0
-        ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
-        : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+        ? 🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>
+        : 🔒 Платна версія активується після оформлення <strong>PRO</strong>;
+
+    function scrollBottomNav(direction) {
+      const container = document.getElementById('bottomNav');
+      const scrollAmount = 100;
+      container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
