@@ -3,22 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>РецептБот Web App</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <style>
+    .section { display: none; animation: fade 0.4s ease; }
+    .active { display: block !important; }
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-decor"></div>
+  <div class="app">
     <h1>🍽 Що приготувати?</h1>
 
     <!-- Категорії -->
     <div class="scroll-menu section active" id="section-recipes">
-    <div class="scroll-menu section active" id="section-categories">
       <button>👶 Для дітей</button>
       <button>🥗 Вегетаріанське</button>
       <button>🌾 Без глютену</button>
+      <button>⚡ Швидко</button>
+      <button>🍲 Перші страви</button>
+      <button>🥘 Другі страви</button>
+      <button>🥗 Салати</button>
+      <button>🥒 Консервація та соління</button>
+      <button>🥤 Напої</button>
+      <button>🍰 Десерти</button>
+      <button>🍞 Випічка</button>
+      <button>🥪 Закуски</button>
+      <button>🫕 Соуси та заправки</button>
+    </div>
+
+    <!-- Рецепт дня -->
+    <div class="recipe-card section active" id="section-recipes">
+      <h2>🍗 Курка в медово-гірчичному соусі</h2>
+      <p class="details">⏱️ 15 хв • 2 порції</p>
+      <p class="ingredients"><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
+      <div class="recipe-buttons">
+        <button onclick="addToFavorites(this)">❤️ Улюблене</button>
+        <button onclick="alert('Додано в меню!')">📋 До меню</button>
+      </div>
+      <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
+    </div>
+
+    <!-- Меню -->
+    <div class="section" id="section-menu">
+      <h2>📋 Моє меню</h2>
+      <p>Тут будуть збережені рецепти, які ви хочете приготувати.</p>
+    </div>
+
+    <!-- Список покупок -->
+    <div class="section" id="section-list">
+      <h2>🧾 Список покупок</h2>
+      <p>Інгредієнти зі збережених страв будуть зібрані в одному списку.</p>
+    </div>
+
+    <!-- Холодильник -->
+    <div class="fridge-block section" id="section-fridge">
+      <h2>❄️ Що є в холодильнику?</h2>
+      <input type="text" placeholder="Введіть продукти, наприклад: яйце, молоко" />
+      <button onclick="alert('Показати рецепти з введених продуктів')">🔍 Показати рецепти</button>
+    </div>
+
+    <!-- Профіль -->
+    <div class="profile-block section" id="section-profile">
+      <h2>👤 Мій профіль</h2>
+      <p id="days-left">🔓 Пробна версія: залишилось <strong>7 днів</strong></p>
+      <button onclick="alert('Оплата PRO ще не підключена')">💳 Оформити PRO</button>
+    </div>
+  </div>
 
   <!-- Нижнє меню -->
-  <div class="bottom-nav-wrapper with-scroll-indicators">
-    <div class="scroll-arrow left-arrow" onclick="scrollBottomNav('left')">◀</div>
+  <div class="bottom-nav-wrapper">
     <div class="bottom-nav" id="bottomNav">
       <button onclick="showSection('section-profile')">👤 Профіль</button>
       <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
@@ -26,7 +85,6 @@
       <button onclick="showSection('section-list')">🧾 Список</button>
       <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
     </div>
-    <div class="scroll-arrow right-arrow" onclick="scrollBottomNav('right')">▶</div>
   </div>
 
   <script>
@@ -38,14 +96,19 @@
     }
 
     function addToFavorites(button) {
+      button.textContent = '✅ В улюбленому';
+      button.disabled = true;
+    }
+
+    const start = localStorage.getItem('trial_start') || Date.now();
+    localStorage.setItem('trial_start', start);
+    const msInDay = 1000 * 60 * 60 * 24;
+    const daysUsed = Math.floor((Date.now() - start) / msInDay);
+    const daysLeft = 7 - daysUsed;
+    document.getElementById('days-left').innerHTML =
       daysLeft > 0
         ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
         : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
-    function scrollBottomNav(direction) {
-      const container = document.getElementById('bottomNav');
-      const scrollAmount = 100;
-      container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
-    }
   </script>
 </body>
 </html>
