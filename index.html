@@ -5,47 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>РецептБот Web App</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lobster', cursive;
+            background: linear-gradient(#fff7dc, #ffffff);
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+            color: #2e2e2e;
+        }
+        .scroll-menu {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+            background: #fff7dc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .scroll-menu button {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 10px 16px;
+            font-size: 14px;
+            border: none;
+            border-radius: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+        .scroll-menu button:hover {
+            background-color: #fff1b8;
+        }
+        .recipe-today {
+            background: #fff9e6;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .recipe-today h2 {
+            font-size: 22px;
+            margin: 0 0 10px;
+        }
+        .recipe-today .details {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .recipe-today .ingredients {
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+        .recipe-buttons button {
+            margin: 5px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .recipe-buttons button:hover {
+            background: #ffeebb;
+        }
+    </style>
 </head>
 <body>
-    <div class="bg-decor"></div>
-    <div class="app">
-        <h1>🍽 Що приготувати?</h1>
-  <h2>🍗 Курка в медово-гірчичному соусі</h2>
+    <h1>🍽 Що приготувати?</h1>
+    <div class="scroll-menu">
+      <button>👶 Для дітей</button>
+      <button>🥗 Вегетаріанське</button>
+      <button>🌾 Без глютену</button>
+      <button>⚡ Швидко</button>
+      <button>🍲 Перші страви</button>
+      <button>🥘 Другі страви</button>
+      <button>🥗 Салати</button>
+      <button>🥒 Консервація та соління</button>
+      <button>🥤 Напої</button>
+      <button>🍰 Десерти</button>
+      <button>🍞 Випічка</button>
+      <button>🥪 Закуски</button>
+      <button>🫕 Соуси та заправки</button>
+    </div>
 
-        <!-- Горизонтальне меню категорій -->
-        <div class="scroll-menu">
-            <button>👶 Для дітей</button>
-            <button>🥗 Вегетаріанське</button>
-            <button>🌾 Без глютену</button>
-            <button>⚡ Швидко</button>
-            <button>🍲 Перші страви</button>
-            <button>🥘 Другі страви</button>
-            <button>🥗 Салати</button>
-            <button>🥒 Консервація та соління</button>
-            <button>🥤 Напої</button>
-            <button>🍰 Десерти</button>
-            <button>🍞 Випічка</button>
-            <button>🥪 Закуски</button>
-            <button>🫕 Соуси та заправки</button>
-        </div>
-
-        <!-- Рецепт -->
-        <div id="recipe-card" class="card hidden">
-            <h2>🍗 Курка в медово-гірчичному соусі</h2>
-            <p><strong>⏱️ 15 хв</strong> • <strong>2 порції</strong></p>
-            <p><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
-            <ol>
-                <li>Обсмажити філе до золотистої скоринки</li>
-                <li>Змішати мед з гірчицею</li>
-                <li>Додати до філе і тушкувати 7 хв</li>
-            </ol>
-            <div class="actions">
-                <button onclick="alert('Додано в улюблене!')">❤️ Улюблене</button>
-                <button onclick="alert('Додано в кошик!')">🧺 До кошика</button>
-            </div>
+    <div class="recipe-today">
+        <h2>🍗 Курка в медово-гірчичному соусі</h2>
+        <p class="details">15 хв • 2 порції</p>
+        <p class="ingredients"><strong>Інгредієнти:</strong> куряче філе, гірчиця, мед, спеції</p>
+        <div class="recipe-buttons">
+            <button>🔁 Показати інший</button>
+            <button>➕ Додати в меню</button>
+            <button>🛒 Список покупок</button>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
