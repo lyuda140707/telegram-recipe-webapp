@@ -6,17 +6,8 @@
   <title>РецептБот Web App</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-  <style>
-    .section { display: none; animation: fade 0.4s ease; }
-    .active { display: block !important; }
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
 </head>
 <body>
-  <div class="bg-decor"></div>
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
 
@@ -77,16 +68,15 @@
   </div>
 
   <!-- Нижнє меню -->
-<div class="bottom-nav-wrapper">
-  <div class="bottom-nav">
-    <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
-    <button onclick="showSection('section-menu')">🧺 Меню</button>
-    <button onclick="showSection('section-list')">🧾 Список</button>
-    <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
-    <button onclick="showSection('section-profile')">👤 Профіль</button>
-  
-</div>
-
+  <div class="bottom-nav-wrapper">
+    <div class="bottom-nav">
+      <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
+      <button onclick="showSection('section-menu')">🧺 Меню</button>
+      <button onclick="showSection('section-list')">🧾 Список</button>
+      <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
+      <button onclick="showSection('section-profile')">👤 Профіль</button>
+    </div>
+  </div>
 
   <script>
     function showSection(id) {
@@ -99,7 +89,6 @@
       button.disabled = true;
     }
 
-    // Тимчасова логіка для "залишилось X днів"
     const start = localStorage.getItem('trial_start') || Date.now();
     localStorage.setItem('trial_start', start);
     const msInDay = 1000 * 60 * 60 * 24;
