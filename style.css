@@ -25,6 +25,18 @@ h1 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   border-radius: 12px;
   margin-bottom: 20px;
+  position: relative;
+}
+
+.scroll-menu::after {
+  content: '➡️';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .scroll-menu button {
@@ -159,6 +171,18 @@ h1 {
   background-color: #ffffff;
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
   z-index: 999;
+  position: relative;
+}
+
+.bottom-nav-wrapper::after {
+  content: '➡️';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .bottom-nav {
