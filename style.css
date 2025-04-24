@@ -1,73 +1,21 @@
-
+/* Загальний стиль */
 body {
-    font-family: 'Lobster', cursive;
-    background: linear-gradient(to bottom, #f7ffb3, #c3fdb8);
-    margin: 0;
-    padding: 0;
-    position: relative;
-    overflow-x: hidden;
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(to bottom, #d9fdd3, #fffcd9);
+  color: #333;
 }
-.bg-decor {
-    background-image: 
-        url('https://em-content.zobj.net/source/apple/354/doughnut_1f369.png'),
-        url('https://em-content.zobj.net/source/apple/354/broccoli_1f966.png'),
-        url('https://em-content.zobj.net/source/apple/354/pizza_1f355.png'),
-        url('https://em-content.zobj.net/source/apple/354/strawberry_1f353.png'),
-        url('https://em-content.zobj.net/source/apple/354/cheese-wedge_1f9c0.png');
-    background-repeat: no-repeat;
-    background-size: 90px;
-    background-position: 10% 10%, 80% 30%, 40% 80%, 70% 60%, 20% 75%;
-    opacity: 0.3;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-}
+
 .app {
-    padding: 20px;
-    max-width: 480px;
-    margin: auto;
-    position: relative;
-    z-index: 1;
+  padding: 20px;
 }
+
 h1 {
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 20px;
+  font-family: 'Lobster', cursive;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
-.buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-button {
-    padding: 15px;
-    font-size: 18px;
-    border: none;
-    border-radius: 16px;
-    background-color: #ffffffd9;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-button:hover {
-    background-color: #fff6dd;
-}
-.card {
-    background-color: #fffdf3;
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.hidden {
-    display: none;
-}
-.actions {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 15px;
-}
+
 .scroll-menu {
   overflow-x: auto;
   white-space: nowrap;
@@ -77,6 +25,7 @@ button:hover {
   border-radius: 12px;
   margin-bottom: 20px;
 }
+
 .scroll-menu button {
   display: inline-block;
   margin-right: 10px;
@@ -90,49 +39,11 @@ button:hover {
   transition: background-color 0.2s;
   white-space: nowrap;
 }
+
 .scroll-menu button:hover {
   background-color: #fff1b8;
 }
-.recipe-today {
-  background: #fff7dc;
-  border-radius: 20px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  margin: 20px 0;
-}
-.recipe-today h2 {
-  font-size: 22px;
-  margin-bottom: 8px;
-  color: #2b2b2b;
-}
-.recipe-today .details {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 12px;
-}
-.recipe-today .ingredients {
-  font-size: 15px;
-  margin-bottom: 20px;
-}
-.recipe-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.recipe-buttons button {
-  font-size: 15px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 14px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-.recipe-buttons button:hover {
-  background-color: #fff0a4;
-}
+
 .recipe-card {
   background-color: #fff8d6;
   border-radius: 20px;
@@ -141,23 +52,27 @@ button:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   text-align: center;
 }
+
 .recipe-card h2 {
   font-size: 20px;
   margin-bottom: 10px;
   font-family: 'Lobster', cursive;
 }
+
 .recipe-card .details,
 .recipe-card .ingredients {
   font-size: 14px;
   color: #444;
   margin-bottom: 10px;
 }
+
 .recipe-buttons {
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-bottom: 10px;
 }
+
 .recipe-buttons button,
 .shopping-list {
   padding: 10px 14px;
@@ -168,6 +83,7 @@ button:hover {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   cursor: pointer;
 }
+
 .shopping-list {
   width: 100%;
 }
