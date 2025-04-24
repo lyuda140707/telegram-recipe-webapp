@@ -133,3 +133,41 @@ button:hover {
 .recipe-buttons button:hover {
   background-color: #fff0a4;
 }
+.recipe-card {
+  background-color: #fff8d6;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.recipe-card h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-family: 'Lobster', cursive;
+}
+.recipe-card .details,
+.recipe-card .ingredients {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
+}
+.recipe-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.recipe-buttons button,
+.shopping-list {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+.shopping-list {
+  width: 100%;
+}
