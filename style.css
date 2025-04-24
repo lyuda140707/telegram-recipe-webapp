@@ -170,6 +170,8 @@ h1 {
 .bottom-nav button:hover {
   color: #ff9800;
 }
+
+/* Анімація та секції */
 .section {
   display: none;
   animation: fade 0.4s ease;
@@ -180,9 +182,10 @@ h1 {
 
 @keyframes fade {
   from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* Кнопка улюбленого рецепта */
 .recipe-buttons button[disabled] {
   background-color: #d6ffd6;
   color: #444;
