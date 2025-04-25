@@ -1,120 +1,279 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>РецептБот Web App</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-  <style>
-    .section { display: none; animation: fade 0.4s ease; }
-    .active { display: block !important; }
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+/* Загальний стиль */
+body {
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(to bottom, #d9fdd3, #fffcd9);
+  color: #333;
+}
 
-    /* Підказка свайпу */
-    .swipe-hint {
-      position: fixed;
-      bottom: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 13px;
-      color: #888;
-      background: #ffffffdd;
-      padding: 4px 12px;
-      border-radius: 16px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      animation: hintSwipe 2s ease-in-out infinite;
-      z-index: 1000;
-    }
+.app {
+  padding: 20px;
+  padding-bottom: 100px;
+}
 
-    @keyframes hintSwipe {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-53%) translateY(-2px); }
-    }
-  </style>
-</head>
-<body>
-  <div class="bg-decor"></div>
-  <div class="app">
-    <h1>🍽 Що приготувати?</h1>
+h1 {
+  font-family: 'Lobster', cursive;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
 
-    <!-- Категорії -->
-    <div class="scroll-menu section active" id="section-recipes">
-      <button>👶 Для дітей</button>
-      <button>🥗 Вегетаріанське</button>
-      <button>🌾 Без глютену</button>
-      <button>⚡ Швидко</button>
-      <button>🍲 Перші страви</button>
-      <button>🥘 Другі страви</button>
-      <button>🥗 Салати</button>
-      <button>🥒 Консервація та соління</button>
-      <button>🥤 Напої</button>
-      <button>🍰 Десерти</button>
-      <button>🍞 Випічка</button>
-      <button>🥪 Закуски</button>
-      <button>🫕 Соуси та заправки</button>
-    </div>
+.scroll-menu {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
+  background: #fff7dc;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: relative;
+}
 
-    <!-- Рецепт дня -->
-    <div class="recipe-card section active" id="section-recipes">
-      <h2>🍗 Курка в медово-гірчичному соусі</h2>
-      <p class="details">⏱️ 15 хв • 2 порції</p>
-      <p class="ingredients"><strong>Інгрідієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
-      <div class="recipe-buttons">
-        <button onclick="addToFavorites(this)">❤️ Улюблене</button>
-        <button onclick="alert('Додано в меню!')">📋 До меню</button>
-      </div>
-      <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
-    </div>
+.scroll-menu::-webkit-scrollbar {
+  display: none;
+}
 
-    <!-- Підказка свайпу -->
-    <div class="swipe-hint">← Гортай меню →</div>
-  </div>
+.scroll-menu button {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
 
-  <!-- Нижнє меню -->
-  <div class="bottom-nav-wrapper">
-    <div class="bottom-nav" id="bottomNav">
-      <button onclick="showSection('section-profile')">👤 Профіль</button>
-      <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
-      <button onclick="showSection('section-menu')">🧺 Меню</button>
-      <button onclick="showSection('section-list')">🧾 Список</button>
-      <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
-    </div>
-  </div>
+.scroll-menu button:hover {
+  background-color: #fff1b8;
+}
 
-  <script>
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`.bottom-nav button[onclick*="${id}"]`)?.classList.add('active');
-    }
+.recipe-card {
+  background-color: #fff8d6;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
 
-    function addToFavorites(button) {
-      button.textContent = '✅ В улюбленому';
-      button.disabled = true;
-    }
+.recipe-card h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-family: 'Lobster', cursive;
+}
 
-    // Автоматично сховати підказку через 5 секунд
-    setTimeout(() => {
-      const hint = document.querySelector('.swipe-hint');
-      if (hint) hint.style.display = 'none';
-    }, 5000);
+.recipe-card .details,
+.recipe-card .ingredients {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
+}
 
-    const start = localStorage.getItem('trial_start') || Date.now();
-    localStorage.setItem('trial_start', start);
-    const msInDay = 1000 * 60 * 60 * 24;
-    const daysUsed = Math.floor((Date.now() - start) / msInDay);
-    const daysLeft = 7 - daysUsed;
-    const daysText =
-      daysLeft > 0
-        ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
-        : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
-    const daysContainer = document.getElementById('days-left');
-    if (daysContainer) daysContainer.innerHTML = daysText;
-  </script>
-</body>
-</html>
+.recipe-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.recipe-buttons button,
+.shopping-list {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.shopping-list {
+  width: 100%;
+}
+
+/* Холодильник */
+.fridge-block {
+  background: #d8faff;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+.fridge-block h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.fridge-block input {
+  padding: 10px;
+  width: 80%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+.fridge-block button {
+  padding: 10px 16px;
+  font-size: 14px;
+  background-color: #fff;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+/* Профіль */
+.profile-block {
+  background: #ffe6f1;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+.profile-block h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.profile-block p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.profile-block button {
+  padding: 10px 16px;
+  font-size: 14px;
+  background-color: #fff;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+/* Нижнє меню в стилі верхнього з градієнтом */
+.bottom-nav-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  background: linear-gradient(to right, #fffbe6, #ffffff);
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.15);
+  padding: 12px 0;
+  z-index: 999;
+  border-radius: 16px 16px 0 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bottom-nav {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 16px;
+  min-width: max-content;
+}
+
+.bottom-nav button {
+  flex: 0 0 auto;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.bottom-nav button:hover {
+  background-color: #fff1b8;
+}
+
+.bottom-nav button.active {
+  background-color: #ffe082 !important;
+  font-weight: bold;
+  color: #000 !important;
+  box-shadow: 0 3px 8px rgba(255, 152, 0, 0.2);
+}
+
+/* Підказка "гортай" */
+.swipe-hint {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: #888;
+  background: #ffffffdd;
+  padding: 4px 12px;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  animation: hintSwipe 2s ease-in-out infinite;
+  z-index: 1000;
+}
+
+@keyframes hintSwipe {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-53%) translateY(-2px); }
+}
+
+/* Градієнти з боків нижнього меню */
+.bottom-nav-wrapper::before,
+.bottom-nav-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.bottom-nav-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #ffffff, transparent);
+}
+
+.bottom-nav-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #ffffff, transparent);
+}
+
+/* Кнопка улюбленого рецепта */
+.recipe-buttons button[disabled] {
+  background-color: #d6ffd6;
+  color: #444;
+}
+
+/* Кнопка "назад" */
+.back-button {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: inline-block;
+  background: #fff3e0;
+  padding: 6px 12px;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: #ffe0b2;
+}
+
+/* Видалити фонові декори */
+.bg-decor {
+  display: none !important;
+  background: none !important;
+}
