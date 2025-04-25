@@ -15,6 +15,14 @@
     }
   </style>
 </head>
+  <script>
+  // Автоматично сховати підказку через 5 секунд
+  setTimeout(() => {
+    const hint = document.querySelector('.swipe-hint');
+    if (hint) hint.style.display = 'none';
+  }, 5000);
+</script>
+
 <body>
   <div class="bg-decor"></div>
   <div class="app">
@@ -110,5 +118,7 @@
         ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
         : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
   </script>
+<!-- Підказка свайпу -->
+<div class="swipe-hint">← Гортай меню →</div>
 </body>
 </html>
