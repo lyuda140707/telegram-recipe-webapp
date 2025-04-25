@@ -17,6 +17,7 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* Горизонтальне меню зверху */
 .scroll-menu {
   overflow-x: auto;
   white-space: nowrap;
@@ -52,6 +53,7 @@ h1 {
   background-color: #fff1b8;
 }
 
+/* Рецепт-картка */
 .recipe-card {
   background-color: #fff8d6;
   border-radius: 20px;
@@ -106,10 +108,12 @@ h1 {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
 }
+
 .fridge-block h2 {
   font-size: 20px;
   margin-bottom: 10px;
 }
+
 .fridge-block input {
   padding: 10px;
   width: 80%;
@@ -118,6 +122,7 @@ h1 {
   border-radius: 12px;
   margin-bottom: 10px;
 }
+
 .fridge-block button {
   padding: 10px 16px;
   font-size: 14px;
@@ -137,14 +142,17 @@ h1 {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
 }
+
 .profile-block h2 {
   font-size: 20px;
   margin-bottom: 10px;
 }
+
 .profile-block p {
   font-size: 14px;
   margin-bottom: 10px;
 }
+
 .profile-block button {
   padding: 10px 16px;
   font-size: 14px;
@@ -155,7 +163,7 @@ h1 {
   cursor: pointer;
 }
 
-/* Нижнє меню в стилі верхнього з градієнтом */
+/* Нижнє меню */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 0;
@@ -171,7 +179,29 @@ h1 {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Кнопки меню */
+/* Градієнти з боків нижнього меню */
+.bottom-nav-wrapper::before,
+.bottom-nav-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.bottom-nav-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #ffffff, transparent);
+}
+
+.bottom-nav-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #ffffff, transparent);
+}
+
+/* Кнопки нижнього меню */
 .bottom-nav {
   display: flex;
   gap: 12px;
@@ -206,27 +236,36 @@ h1 {
   box-shadow: 0 3px 8px rgba(255, 152, 0, 0.2);
 }
 
-/* Підказка "гортай" */
+/* Підказка свайпу */
 .swipe-hint {
   position: fixed;
-  bottom: 56px;
+  bottom: 70px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 13px;
   color: #888;
-  background: #ffffffd9;
+  background: #ffffffdd;
   padding: 4px 12px;
   border-radius: 16px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  animation: hintSwipe 2s infinite ease-in-out;
+  animation: hintSwipe 2s ease-in-out infinite;
   z-index: 1000;
 }
 
 @keyframes hintSwipe {
   0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-55%) translateY(-2px); }
+  50% { transform: translateX(-53%) translateY(-2px); }
 }
 
+/* Анімація та секції */
+.section {
+  display: none;
+  animation: fade 0.4s ease;
+}
+
+.active {
+  display: block !important;
+}
 
 /* Кнопка улюбленого рецепта */
 .recipe-buttons button[disabled] {
