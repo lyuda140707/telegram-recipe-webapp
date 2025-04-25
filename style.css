@@ -45,12 +45,16 @@ h1 {
   background-color: #ffffff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s ease;
   white-space: nowrap;
 }
 
 .scroll-menu button:hover {
   background-color: #fff1b8;
+}
+
+.scroll-menu button:active {
+  transform: scale(0.98);
 }
 
 /* Рецепт-картка */
@@ -179,7 +183,6 @@ h1 {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Градієнти з боків нижнього меню */
 .bottom-nav-wrapper::before,
 .bottom-nav-wrapper::after {
   content: "";
@@ -201,7 +204,6 @@ h1 {
   background: linear-gradient(to left, #ffffff, transparent);
 }
 
-/* Кнопки нижнього меню */
 .bottom-nav {
   display: flex;
   gap: 12px;
@@ -257,7 +259,6 @@ h1 {
   50% { transform: translateX(-53%) translateY(-2px); }
 }
 
-/* Анімація та секції */
 .section {
   display: none;
   animation: fade 0.9s ease;
@@ -267,13 +268,11 @@ h1 {
   display: block !important;
 }
 
-/* Кнопка улюбленого рецепта */
 .recipe-buttons button[disabled] {
   background-color: #d6ffd6;
   color: #444;
 }
 
-/* Видалити фонові декори */
 .bg-decor {
   display: none !important;
   background: none !important;
