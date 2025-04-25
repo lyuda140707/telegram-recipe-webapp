@@ -13,16 +13,29 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Підказка свайпу */
+    .swipe-hint {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      color: #888;
+      background: #ffffffdd;
+      padding: 4px 12px;
+      border-radius: 16px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      animation: hintSwipe 2s ease-in-out infinite;
+      z-index: 1000;
+    }
+
+    @keyframes hintSwipe {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-53%) translateY(-2px); }
+    }
   </style>
 </head>
-  <script>
-  // Автоматично сховати підказку через 5 секунд
-  setTimeout(() => {
-    const hint = document.querySelector('.swipe-hint');
-    if (hint) hint.style.display = 'none';
-  }, 5000);
-</script>
-
 <body>
   <div class="bg-decor"></div>
   <div class="app">
@@ -49,7 +62,7 @@
     <div class="recipe-card section active" id="section-recipes">
       <h2>🍗 Курка в медово-гірчичному соусі</h2>
       <p class="details">⏱️ 15 хв • 2 порції</p>
-      <p class="ingredients"><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
+      <p class="ingredients"><strong>Інгрідієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
       <div class="recipe-buttons">
         <button onclick="addToFavorites(this)">❤️ Улюблене</button>
         <button onclick="alert('Додано в меню!')">📋 До меню</button>
@@ -57,34 +70,10 @@
       <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
     </div>
 
-    <!-- Меню -->
-    <div class="section" id="section-menu">
-      <h2>📋 Моє меню</h2>
-      <p>Тут будуть збережені рецепти, які ви хочете приготувати.</p>
-    </div>
-
-    <!-- Список покупок -->
-    <div class="section" id="section-list">
-      <h2>🧾 Список покупок</h2>
-      <p>Інгредієнти зі збережених страв будуть зібрані в одному списку.</p>
-    </div>
-
-    <!-- Холодильник -->
-    <div class="fridge-block section" id="section-fridge">
-      <h2>❄️ Що є в холодильнику?</h2>
-      <input type="text" placeholder="Введіть продукти, наприклад: яйце, молоко" />
-      <button onclick="alert('Показати рецепти з введених продуктів')">🔍 Показати рецепти</button>
-    </div>
-
-    <!-- Профіль -->
-    <div class="profile-block section" id="section-profile">
-      <h2>👤 Мій профіль</h2>
-      <p id="days-left">🔓 Пробна версія: залишилось <strong>7 днів</strong></p>
-      <button onclick="alert('Оплата PRO ще не підключена')">💳 Оформити PRO</button>
-    </div>
+    <!-- Підказка свайпу -->
+    <div class="swipe-hint">← Гортай меню →</div>
   </div>
-<!-- Підказка свайпу -->
-<div class="swipe-hint">← Гортай меню →</div>
+
   <!-- Нижнє меню -->
   <div class="bottom-nav-wrapper">
     <div class="bottom-nav" id="bottomNav">
@@ -109,15 +98,23 @@
       button.disabled = true;
     }
 
+    // Автоматично сховати підказку через 5 секунд
+    setTimeout(() => {
+      const hint = document.querySelector('.swipe-hint');
+      if (hint) hint.style.display = 'none';
+    }, 5000);
+
     const start = localStorage.getItem('trial_start') || Date.now();
     localStorage.setItem('trial_start', start);
     const msInDay = 1000 * 60 * 60 * 24;
     const daysUsed = Math.floor((Date.now() - start) / msInDay);
     const daysLeft = 7 - daysUsed;
-    document.getElementById('days-left').innerHTML =
+    const daysText =
       daysLeft > 0
         ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
         : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+    const daysContainer = document.getElementById('days-left');
+    if (daysContainer) daysContainer.innerHTML = daysText;
   </script>
 </body>
 </html>
