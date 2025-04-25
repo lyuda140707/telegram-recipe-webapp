@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
@@ -90,53 +90,57 @@
     </div>
   </div>
 
-<script>
-  let previousSection = 'section-home';
+  <!-- Підказка свайпу -->
+  <div class="swipe-hint">← Гортай меню →</div>
 
-  function showSection(id) {
-    previousSection = document.querySelector('.section.active')?.id || 'section-home';
-    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-    const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
-    if (activeBtn) activeBtn.classList.add('active');
-    document.querySelector('.back-button').style.display = id !== 'section-home' ? 'inline-block' : 'none';
-  }
+  <script>
+    let previousSection = 'section-home';
 
-  function goBack() {
-    showSection(previousSection);
-  }
+    function showSection(id) {
+      previousSection = document.querySelector('.section.active')?.id || 'section-home';
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+      document.querySelector('.back-button').style.display = id !== 'section-home' ? 'inline-block' : 'none';
+    }
 
-  function goHome() {
-    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-    document.getElementById('section-categories').classList.add('active');
-    document.getElementById('section-recipes').classList.add('active');
-    document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-    document.querySelector('.back-button').style.display = 'none';
-  }
+    function goHome() {
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.getElementById('section-categories').classList.add('active');
+      document.getElementById('section-recipes').classList.add('active');
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector('.back-button').style.display = 'none';
+    }
 
-  function addToFavorites(button) {
-    button.textContent = '✅ В улюбленому';
-    button.disabled = true;
-  }
+    function addToFavorites(button) {
+      button.textContent = '✅ В улюбленому';
+      button.disabled = true;
+    }
 
-  const start = localStorage.getItem('trial_start') || Date.now();
-  localStorage.setItem('trial_start', start);
-  const msInDay = 1000 * 60 * 60 * 24;
-  const daysUsed = Math.floor((Date.now() - start) / msInDay);
-  const daysLeft = 7 - daysUsed;
-  document.getElementById('days-left').innerHTML =
-    daysLeft > 0
-      ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
-      : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+    const start = localStorage.getItem('trial_start') || Date.now();
+    localStorage.setItem('trial_start', start);
+    const msInDay = 1000 * 60 * 60 * 24;
+    const daysUsed = Math.floor((Date.now() - start) / msInDay);
+    const daysLeft = 7 - daysUsed;
+    document.getElementById('days-left').innerHTML =
+      daysLeft > 0
+        ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
+        : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
 
-  // Підказка свайпу
-  setTimeout(() => {
-    const hint = document.querySelector('.swipe-hint');
-    if (hint) hint.style.display = 'none';
-  }, 9000);
-</script>
+    // Підказка свайпу
+    window.onload = function() {
+      setTimeout(() => {
+        const hint = document.querySelector('.swipe-hint');
+        if (hint) {
+          hint.style.opacity = '0';
+          hint.style.transition = 'opacity 1s ease';
+          setTimeout(() => hint.remove(), 1000); // після затухання видалити
+        }
+      }, 9000); // тут час появи підказки
+    }
+  </script>
 
-<div class="swipe-hint">← Гортай меню →</div>
 </body>
 </html>
