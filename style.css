@@ -260,8 +260,6 @@ h1 {
 }
 
 .section {
-  display: none;
-  animation: fade 0.4s ease;
 }
 
 .active {
