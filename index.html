@@ -269,6 +269,23 @@ document.querySelectorAll('.scroll-menu button').forEach(button => {
       });
     });
   </script>
+<!-- Модальне вікно для фото -->
+<div id="imageModal" class="modal" onclick="closeImageModal()">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="modalImage">
+</div>
+<script>
+function openImageModal(src) {
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById("modalImage");
+  modal.style.display = "block";
+  modalImg.src = src;
+}
+
+function closeImageModal() {
+  document.getElementById("imageModal").style.display = "none";
+}
+</script>
 
 </body>
 </html>
