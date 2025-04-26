@@ -141,6 +141,54 @@
       }, 9000); // тут час появи підказки
     }
   </script>
+<script>
+const recipesData = {
+  "Для дітей": [
+    { title: "Пюре з броколі", details: "⏱️ 20 хв • 2 порції", ingredients: "Броколі, вода, масло" },
+    { title: "Каша рисова", details: "⏱️ 30 хв • 3 порції", ingredients: "Рис, молоко, цукор" }
+  ],
+  "Швидко": [
+    { title: "Омлет за 5 хв", details: "⏱️ 5 хв • 1 порція", ingredients: "Яйця, молоко, сіль" },
+    { title: "Салат з тунцем", details: "⏱️ 10 хв • 2 порції", ingredients: "Тунець, кукурудза, огірок" }
+  ],
+  "Десерти": [
+    { title: "Шоколадний мус", details: "⏱️ 15 хв • 2 порції", ingredients: "Шоколад, вершки, цукор" },
+    { title: "Печиво бананове", details: "⏱️ 25 хв • 4 порції", ingredients: "Банан, вівсянка, мед" }
+  ]
+};
+
+function loadCategory(category) {
+  const section = document.getElementById('section-recipes');
+  section.innerHTML = `<h2>🍴 ${category}</h2>`;
+
+  recipesData[category].forEach(recipe => {
+    section.innerHTML += `
+      <div class="recipe-card">
+        <h2>${recipe.title}</h2>
+        <p class="details">${recipe.details}</p>
+        <p class="ingredients"><strong>Інгредієнти:</strong> ${recipe.ingredients}</p>
+        <div class="recipe-buttons">
+          <button onclick="addToFavorites(this)">❤️ Улюблене</button>
+          <button onclick="alert('Додано в меню!')">📋 До меню</button>
+        </div>
+        <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
+      </div>
+    `;
+  });
+
+  showSection('section-recipes');
+}
+
+// Нова функція: коли клікаємо на кнопку категорії
+document.querySelectorAll('.scroll-menu button').forEach(button => {
+  button.addEventListener('click', () => {
+    const category = button.textContent.replace(/^[^\wА-Яа-яіІїЇєЄ]+/, '').trim();
+    if (recipesData[category]) {
+      loadCategory(category);
+    }
+  });
+});
+</script>
 
 </body>
 </html>
