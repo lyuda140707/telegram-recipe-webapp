@@ -107,12 +107,26 @@
     }
 
     function goHome() {
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      document.getElementById('section-categories').classList.add('active');
-      document.getElementById('section-recipes').classList.add('active');
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector('.back-button').style.display = 'none';
-    }
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.getElementById('section-categories').classList.add('active');
+  document.getElementById('section-recipes').classList.add('active');
+  
+  const section = document.getElementById('section-recipes');
+  section.innerHTML = `
+    <h2>🍗 Курка в медово-гірчичному соусі</h2>
+    <p class="details">⏱️ 15 хв • 2 порції</p>
+    <p class="ingredients"><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
+    <div class="recipe-buttons">
+      <button onclick="addToFavorites(this)">❤️ Улюблене</button>
+      <button onclick="alert('Додано в меню!')">📋 До меню</button>
+    </div>
+    <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
+  `;
+
+  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+  document.querySelector('.back-button').style.display = 'none';
+}
+
 
     function addToFavorites(button) {
       button.textContent = '✅ В улюбленому';
