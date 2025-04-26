@@ -290,3 +290,25 @@ h1 {
   opacity: 1;
   transform: translateY(0);
 }
+.back-button {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: #fff8d6;
+  color: #333;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #ffe082;
+  color: #000;
+}
+
