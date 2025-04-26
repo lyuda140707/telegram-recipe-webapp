@@ -204,6 +204,38 @@
     { title: "Тартар", details: "⏱️ 10 хв", ingredients: "Майонез, огірки, зелень" }
   ]
 };
+// Завантаження рецептів по категорії
+function loadCategory(category) {
+  const section = document.getElementById('section-recipes');
+  section.innerHTML = `<h2>🍴 ${category}</h2>`;
+
+  recipesData[category].forEach(recipe => {
+    section.innerHTML += `
+      <div class="recipe-card">
+        <h2>${recipe.title}</h2>
+        <p class="details">${recipe.details}</p>
+        <p class="ingredients"><strong>Інгредієнти:</strong> ${recipe.ingredients}</p>
+        <div class="recipe-buttons">
+          <button onclick="addToFavorites(this)">❤️ Улюблене</button>
+          <button onclick="alert('Додано в меню!')">📋 До меню</button>
+        </div>
+        <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
+      </div>
+    `;
+  });
+
+  showSection('section-recipes');
+}
+
+// Підключаємо кліки по кнопках категорій
+document.querySelectorAll('.scroll-menu button').forEach(button => {
+  button.addEventListener('click', () => {
+    const category = button.textContent.replace(/^[^\wА-Яа-яіІїЇєЄ]+/, '').trim();
+    if (recipesData[category]) {
+      loadCategory(category);
+    }
+  });
+});
 
 
     function loadCategory(category) {
