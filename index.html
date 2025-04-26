@@ -97,14 +97,26 @@
     let previousSection = 'section-home';
 
     function showSection(id) {
-      previousSection = document.querySelector('.section.active')?.id || 'section-home';
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-      document.querySelector('.back-button').style.display = id !== 'section-home' ? 'inline-block' : 'none';
-    }
+  document.querySelectorAll('.section').forEach(el => {
+    el.classList.remove('active');
+    el.style.display = 'none';
+  });
+
+  const section = document.getElementById(id);
+  if (section) {
+    section.style.display = 'block';
+    setTimeout(() => {
+      section.classList.add('active');
+    }, 10); // маленька затримка для запуску анімації
+  }
+
+  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  document.querySelector('.back-button').style.display = id !== 'section-home' ? 'inline-block' : 'none';
+}
+
 
     function goHome() {
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
