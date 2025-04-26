@@ -16,117 +16,139 @@
   </style>
 </head>
 <body>
-  <div class="bg-decor"></div>
-  <div class="app">
-    <h1>🍽 Що приготувати?</h1>
+<div class="bg-decor"></div>
+<div class="app">
+  <h1>🍽 Що приготувати?</h1>
 
-    <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
+  <!-- Кнопка Назад -->
+  <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
 
-    <div class="scroll-menu section active" id="section-categories">
-      <button>👶 Для дітей</button>
-      <button>🥗 Вегетаріанське</button>
-      <button>🌾 Без глютену</button>
-      <button>⚡ Швидко</button>
-      <button>🍲 Перші страви</button>
-      <button>🥘 Другі страви</button>
-    </div>
+  <!-- Категорії -->
+  <div class="scroll-menu section active" id="section-categories">
+    <button>👶 Для дітей</button>
+    <button>🥗 Вегетаріанське</button>
+    <button>🌾 Без глютену</button>
+    <button>⚡ Швидко</button>
+    <button>🍲 Перші страви</button>
+    <button>🥘 Другі страви</button>
+    <button>🥗 Салати</button>
+    <button>🥒 Консервація та соління</button>
+    <button>🥤 Напої</button>
+    <button>🍰 Десерти</button>
+    <button>🍞 Випічка</button>
+    <button>🥪 Закуски</button>
+    <button>🪵 Соуси та заправки</button>
+  </div>
 
-    <div class="recipe-card section active" id="section-recipes">
-      <h2>🍗 Курка в медово-гірчичному соусі</h2>
-      <p class="details">⏱️ 15 хв • 2 порції</p>
-      <p class="ingredients"><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
-      <div class="recipe-buttons">
-        <button onclick="addToFavorites(this)">❤️ Улюблене</button>
-        <button onclick="alert('Додано в меню!')">📋 До меню</button>
+  <!-- Рецепт дня або перше завантаження -->
+  <div class="recipe-card section active" id="section-recipes"></div>
+
+  <!-- Секції -->
+  <div class="section" id="section-menu"><h2>👋 Меню</h2></div>
+  <div class="section" id="section-list"><h2>👋 Список покупок</h2></div>
+  <div class="section" id="section-fridge"><h2>🌨 Холодильник</h2></div>
+  <div class="section" id="section-profile"><h2>👤 Профіль</h2><p id="days-left"></p></div>
+</div>
+
+<!-- Нижнє меню -->
+<div class="bottom-nav-wrapper">
+  <div class="bottom-nav" id="bottomNav">
+    <button onclick="showSection('section-profile')">👤 Профіль</button>
+    <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
+    <button onclick="showSection('section-menu')">🧻 Меню</button>
+    <button onclick="showSection('section-list')">📏 Список</button>
+    <button onclick="showSection('section-fridge')">🌨 Холодильник</button>
+  </div>
+</div>
+
+<!-- Скріпти -->
+<script>
+const recipesData = {
+  "Для дітей": [
+    { title: "Пюре з броколі", details: "⏱️ 20 хв • 2 порції", ingredients: "Броколі, вода, масло" },
+    { title: "Каша рисова", details: "⏱️ 30 хв • 3 порції", ingredients: "Рис, молоко, цукор" }
+  ],
+  "Швидко": [
+    { title: "Омлет за 5 хв", details: "⏱️ 5 хв • 1 порція", ingredients: "Яйця, молоко, сіль" },
+    { title: "Салат з тунцем", details: "⏱️ 10 хв • 2 порції", ingredients: "Тунець, кукурудза, огірок" }
+  ],
+  "Десерти": [
+    { title: "Шоколадний мус", details: "⏱️ 15 хв • 2 порції", ingredients: "Шоколад, вершки, цукор" },
+    { title: "Печиво бананове", details: "⏱️ 25 хв • 4 порції", ingredients: "Банан, вівсянка, мід" }
+  ]
+};
+
+function loadCategory(category) {
+  const section = document.getElementById('section-recipes');
+  section.innerHTML = `<h2>🍽 ${category}</h2>`;
+
+  (recipesData[category] || []).forEach(recipe => {
+    section.innerHTML += `
+      <div class="recipe-card">
+        <h2>${recipe.title}</h2>
+        <p class="details">${recipe.details}</p>
+        <p class="ingredients"><strong>Інгредієнти:</strong> ${recipe.ingredients}</p>
+        <div class="recipe-buttons">
+          <button onclick="addToFavorites(this)">❤️ Улюблене</button>
+          <button onclick="alert('Додано в меню!')">📋 До меню</button>
+        </div>
+        <button class="shopping-list" onclick="alert('Додано до списку покупок!')">👚 Список покупок</button>
       </div>
-      <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
-    </div>
+    `;
+  });
+  showSection('section-recipes');
+}
 
-    <div class="section" id="section-menu">
-      <h2>📋 Моє меню</h2>
-      <p>Тут будуть збережені рецепти.</p>
-    </div>
-
-    <div class="section" id="section-list">
-      <h2>🧲 Список покупок</h2>
-      <p>Список інгредієнтів з страв.</p>
-    </div>
-
-    <div class="section" id="section-fridge">
-      <h2>❄️ Що є в холодильнику?</h2>
-      <input type="text" placeholder="Введіть продукти" />
-      <button onclick="alert('Показати рецепти')">🔍 Пошук</button>
-    </div>
-
-    <div class="profile-block section" id="section-profile">
-      <h2>👤 Профіль</h2>
-      <p id="days-left">🔓 Пробна: <strong>7 днів</strong></p>
-      <button onclick="alert('Оформити PRO')">💳 Про-версія</button>
-    </div>
-  </div>
-
-  <div class="bottom-nav-wrapper">
-    <div class="bottom-nav" id="bottomNav">
-      <button onclick="showSection('section-profile')">👤 Профіль</button>
-      <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
-      <button onclick="showSection('section-menu')">📋 Меню</button>
-      <button onclick="showSection('section-list')">🧲 Список</button>
-      <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
-    </div>
-  </div>
-
-  <div class="swipe-hint">← Гортай меню →</div>
-
-  <script>
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(el => {
-        el.classList.remove('active');
-        el.style.display = 'none';
-      });
-
-      const section = document.getElementById(id);
-      if (section) {
-        section.style.display = 'block';
-        setTimeout(() => section.classList.add('active'), 10);
-      }
-
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-
-      document.querySelector('.back-button').style.display = id !== 'section-home' ? 'inline-block' : 'none';
+document.querySelectorAll('.scroll-menu button').forEach(button => {
+  button.addEventListener('click', () => {
+    const category = button.textContent.replace(/^\D+/g, '').trim();
+    if (recipesData[category]) {
+      loadCategory(category);
+    } else {
+      const section = document.getElementById('section-recipes');
+      section.innerHTML = `<h2>🍽 ${category}</h2><p>Рецепті скоро додадуться!</p>`;
+      showSection('section-recipes');
     }
+  });
+});
 
-    function goHome() {
-      document.querySelectorAll('.section').forEach(el => {
-        el.classList.remove('active');
-        el.style.display = 'none';
-      });
-      document.getElementById('section-categories').style.display = 'block';
-      document.getElementById('section-recipes').style.display = 'block';
-      setTimeout(() => {
-        document.getElementById('section-categories').classList.add('active');
-        document.getElementById('section-recipes').classList.add('active');
-      }, 10);
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector('.back-button').style.display = 'none';
-    }
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(el => {
+    el.classList.remove('active');
+    el.style.display = 'none';
+  });
+  const section = document.getElementById(id);
+  if (section) {
+    section.style.display = 'block';
+    setTimeout(() => section.classList.add('active'), 10);
+  }
+}
 
-    function addToFavorites(button) {
-      button.textContent = '✅ В улюбленому';
-      button.disabled = true;
-    }
+function goHome() {
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.getElementById('section-categories').classList.add('active');
+  document.getElementById('section-recipes').classList.add('active');
+}
 
-    window.onload = function() {
-      setTimeout(() => {
-        const hint = document.querySelector('.swipe-hint');
-        if (hint) {
-          hint.style.opacity = '0';
-          hint.style.transition = 'opacity 1s ease';
-          setTimeout(() => hint.remove(), 1000);
-        }
-      }, 9000);
+function addToFavorites(button) {
+  button.textContent = '✅ В улюблених';
+  button.disabled = true;
+}
+</script>
+
+<!-- Підказка гортай -->
+<div class="swipe-hint">← Гортай меню →</div>
+<script>
+window.onload = function() {
+  setTimeout(() => {
+    const hint = document.querySelector('.swipe-hint');
+    if (hint) {
+      hint.style.opacity = '0';
+      hint.style.transition = 'opacity 1s ease';
+      setTimeout(() => hint.remove(), 1000);
     }
-  </script>
+  }, 9000);
+}
+</script>
 </body>
 </html>
