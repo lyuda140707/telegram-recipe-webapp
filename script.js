@@ -30,3 +30,33 @@ async function loadRecipes() {
 
 // Викликаємо завантаження рецептів, коли відкривається сторінка
 loadRecipes();
+async function loadRecipes() {
+  try {
+    const response = await fetch('/recipes');
+    const recipes = await response.json();
+
+    const container = document.getElementById('recipes');
+    container.innerHTML = ''; // очищаємо перед вставкою нових рецептів
+
+    recipes.forEach(recipe => {
+      const recipeBlock = document.createElement('div');
+      recipeBlock.className = 'recipe-card';
+      recipeBlock.innerHTML = `
+        <h2>${recipe.title}</h2>
+        <p class="details">${recipe.time}</p>
+        <p class="ingredients"><strong>Інгредієнти:</strong> ${recipe.ingredients}</p>
+        ${recipe.steps.map(step => step.type === 'текст'
+          ? `<p>${step.content}</p>`
+          : `<img src="${step.content}" alt="Фото" style="max-width:100%; border-radius: 12px; margin-top: 10px;">`
+        ).join('')}
+      `;
+      container.appendChild(recipeBlock);
+    });
+  } catch (error) {
+    console.error('Помилка при завантаженні рецептів:', error);
+  }
+}
+
+// Викликаємо функцію одразу при відкритті сторінки
+loadRecipes();
+
