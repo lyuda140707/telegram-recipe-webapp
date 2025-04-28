@@ -37,7 +37,7 @@ function showRecipes(recipes) {
 // Завантажити рецепти
 async function fetchRecipes() {
   try {
-    const response = await fetch('http://localhost:8000/recipes');
+    const response = await fetch('https://recipe-backend-0gz1.onrender.com/recipes');
     const recipes = await response.json();
     console.log('Отримано рецепти:', recipes);
     showRecipes(recipes);
