@@ -19,12 +19,10 @@
   <div class="bg-decor"></div>
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
-  <div id="recipes"></div>
+    <div id="recipes"></div>
 
-    <!-- Кнопка Назад -->
     <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
 
-    <!-- Категорії -->
     <div class="scroll-menu section active" id="section-categories">
       <button>👶 Для дітей</button>
       <button>🥗 Вегетаріанське</button>
@@ -41,43 +39,20 @@
       <button>🫕 Соуси та заправки</button>
     </div>
 
-    <!-- Блок "Рецепт дня" -->
-    <div class="recipe-card section active" id="section-recipes">
-      <h2>🍗 Курка в медово-гірчичному соусі</h2>
-      <p class="details">⏱️ 15 хв • 2 порції</p>
-      <p class="ingredients"><strong>Інгредієнти:</strong> куряче філе, мед, гірчиця, спеції</p>
-      <div class="recipe-buttons">
-        <button onclick="addToFavorites(this)">❤️ Улюблене</button>
-        <button onclick="alert('Додано в меню!')">📋 До меню</button>
-      </div>
-      <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
-    </div>
-
-    <!-- Інші секції -->
-    <div class="section" id="section-menu">
-      <h2>📋 Моє меню</h2>
-      <p>Тут будуть збережені рецепти, які ви хочете приготувати.</p>
-    </div>
-
-    <div class="section" id="section-list">
-      <h2>🧾 Список покупок</h2>
-      <p>Інгредієнти зі збережених страв будуть зібрані в одному списку.</p>
-    </div>
-
+    <div class="section" id="section-menu"><h2>📋 Моє меню</h2></div>
+    <div class="section" id="section-list"><h2>🧾 Список покупок</h2></div>
     <div class="fridge-block section" id="section-fridge">
       <h2>❄️ Що є в холодильнику?</h2>
-      <input type="text" placeholder="Введіть продукти, наприклад: яйце, молоко" />
-      <button onclick="alert('Показати рецепти з введених продуктів')">🔍 Показати рецепти</button>
+      <input type="text" placeholder="Введіть продукти" />
+      <button onclick="alert('Показати рецепти')">🔍 Показати рецепти</button>
     </div>
-
     <div class="profile-block section" id="section-profile">
       <h2>👤 Мій профіль</h2>
-      <p id="days-left">🔓 Пробна версія: залишилось <strong>7 днів</strong></p>
+      <p id="days-left">🔓 Пробна версія</p>
       <button onclick="alert('Оплата PRO ще не підключена')">💳 Оформити PRO</button>
     </div>
   </div>
 
-  <!-- Нижнє меню -->
   <div class="bottom-nav-wrapper">
     <div class="bottom-nav" id="bottomNav">
       <button onclick="showSection('section-profile')">👤 Профіль</button>
@@ -88,12 +63,9 @@
     </div>
   </div>
 
-  <!-- Підказка свайпу -->
   <div class="swipe-hint">← Гортай меню →</div>
 
   <script>
-    let previousSection = 'section-home';
-
     function showSection(id) {
       document.querySelectorAll('.section').forEach(el => {
         el.classList.remove('active');
@@ -107,7 +79,7 @@
       }
 
       document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
+      const activeBtn = document.querySelector(\`.bottom-nav button[onclick*="\${id}"]\`);
       if (activeBtn) activeBtn.classList.add('active');
 
       document.querySelector('.back-button').style.display = id !== 'section-home' ? 'inline-block' : 'none';
@@ -126,19 +98,54 @@
       button.disabled = true;
     }
 
-    // Пробний період
-    const start = localStorage.getItem('trial_start') || Date.now();
-    localStorage.setItem('trial_start', start);
-    const msInDay = 1000 * 60 * 60 * 24;
-    const daysUsed = Math.floor((Date.now() - start) / msInDay);
-    const daysLeft = 7 - daysUsed;
-    document.getElementById('days-left').innerHTML =
-      daysLeft > 0
-        ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
-        : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+    async function fetchRecipes() {
+      try {
+        const response = await fetch('https://recipe-backend-0gz1.onrender.com/recipes');
+        const recipes = await response.json();
+        window.allRecipes = recipes;
+        console.log("Отримано рецепти:", recipes);
+      } catch (error) {
+        console.error("Помилка завантаження рецептів:", error);
+      }
+    }
 
-    // Плавне зникнення підказки свайпу
+    function loadCategory(category) {
+      const section = document.getElementById('section-recipes');
+      section.innerHTML = `<h2>🍴 \${category}</h2>`;
+
+      const filtered = window.allRecipes.filter(r =>
+        r["категорія"]?.trim().toLowerCase() === category.trim().toLowerCase()
+      );
+
+      if (filtered.length === 0) {
+        section.innerHTML += `<p>Немає рецептів у цій категорії.</p>`;
+      }
+
+      filtered.forEach(recipe => {
+        const block = document.createElement('div');
+        block.className = 'recipe-card';
+
+        if (recipe["тип блоку"] === "текст") {
+          block.innerHTML = `<p>\${recipe["контент"]}</p>`;
+        } else if (recipe["тип блоку"] === "фото") {
+          block.innerHTML = `<img src="\${recipe["контент"]}" onclick="openImageModal('\${recipe["контент"]}')">`;
+        }
+
+        section.appendChild(block);
+      });
+
+      showSection('section-recipes');
+    }
+
+    document.querySelectorAll('.scroll-menu button').forEach(button => {
+      button.addEventListener('click', () => {
+        const category = button.textContent.replace(/^[^\wА-Яа-яіІїЇєЄ]+/, '').trim();
+        loadCategory(category);
+      });
+    });
+
     window.onload = function() {
+      fetchRecipes();
       setTimeout(() => {
         const hint = document.querySelector('.swipe-hint');
         if (hint) {
@@ -148,145 +155,22 @@
         }
       }, 9000);
     };
-  </script>
 
-  <script>
-    const recipesData = {
-  "Для дітей": [
-    { title: "Пюре з броколі", details: "⏱️ 20 хв • 2 порції", ingredients: "Броколі, вода, масло" },
-    { title: "Каша рисова", details: "⏱️ 30 хв • 3 порції", ingredients: "Рис, молоко, цукор" }
-  ],
-  "Вегетаріанське": [
-    { title: "Овочеве рагу", details: "⏱️ 25 хв • 2 порції", ingredients: "Кабачок, перець, баклажан" },
-    { title: "Салат з нутом", details: "⏱️ 15 хв • 2 порції", ingredients: "Нут, помідори, зелень" }
-  ],
-  "Без глютену": [
-    { title: "Гречані млинці", details: "⏱️ 30 хв • 4 порції", ingredients: "Гречане борошно, молоко, яйця" },
-    { title: "Запіканка з рису", details: "⏱️ 40 хв • 4 порції", ingredients: "Рис, сир, яйця" }
-  ],
-  "Швидко": [
-    { title: "Омлет за 5 хв", details: "⏱️ 5 хв • 1 порція", ingredients: "Яйця, молоко, сіль" },
-    { title: "Салат з тунцем", details: "⏱️ 10 хв • 2 порції", ingredients: "Тунець, кукурудза, огірок" }
-  ],
-  "Перші страви": [
-    { title: "Борщ український", details: "⏱️ 60 хв • 6 порцій", ingredients: "Буряк, капуста, картопля, м'ясо" },
-    { title: "Крем-суп з гарбуза", details: "⏱️ 40 хв • 4 порції", ingredients: "Гарбуз, вершки, спеції" }
-  ],
-  "Другі страви": [
-    { title: "Курка в соусі", details: "⏱️ 30 хв • 2 порції", ingredients: "Куряче філе, вершки, гриби" },
-    { title: "Котлети домашні", details: "⏱️ 40 хв • 4 порції", ingredients: "Фарш, цибуля, хліб" }
-  ],
-  "Салати": [
-    { title: "Олів'є", details: "⏱️ 45 хв • 6 порцій", ingredients: "Картопля, морква, горошок, майонез" },
-    { title: "Цезар", details: "⏱️ 20 хв • 2 порції", ingredients: "Курка, салат, сир, сухарики" }
-  ],
-  "Консервація та соління": [
-    { title: "Огірки мариновані", details: "⏱️ 1 день", ingredients: "Огірки, оцет, спеції" },
-    { title: "Варення з вишні", details: "⏱️ 1 година", ingredients: "Вишня, цукор" }
-  ],
-  "Напої": [
-    { title: "Мохіто безалкогольне", details: "⏱️ 5 хв • 2 порції", ingredients: "М'ята, лайм, газована вода" },
-    { title: "Глінтвейн", details: "⏱️ 20 хв • 2 порції", ingredients: "Вино, спеції, апельсин" }
-  ],
-  "Десерти": [
-    { title: "Шоколадний мус", details: "⏱️ 15 хв • 2 порції", ingredients: "Шоколад, вершки, цукор" },
-    { title: "Печиво бананове", details: "⏱️ 25 хв • 4 порції", ingredients: "Банан, вівсянка, мед" }
-  ],
-  "Випічка": [
-    { title: "Булочки з корицею", details: "⏱️ 2 години • 8 штук", ingredients: "Борошно, кориця, дріжджі" },
-    { title: "Пиріг з яблуками", details: "⏱️ 1 година • 6 порцій", ingredients: "Яблука, борошно, яйця" }
-  ],
-  "Закуски": [
-    { title: "Брускети", details: "⏱️ 15 хв • 4 порції", ingredients: "Батон, помідори, базилік" },
-    { title: "Роли з лаваша", details: "⏱️ 20 хв • 4 порції", ingredients: "Лаваш, сир, зелень" }
-  ],
-  "Соуси та заправки": [
-    { title: "Песто", details: "⏱️ 10 хв", ingredients: "Базилік, олія, пармезан" },
-    { title: "Тартар", details: "⏱️ 10 хв", ingredients: "Майонез, огірки, зелень" }
-  ]
-};
-// Завантаження рецептів по категорії
-function loadCategory(category) {
-  const section = document.getElementById('section-recipes');
-  section.innerHTML = `<h2>🍴 ${category}</h2>`;
-
-  recipesData[category].forEach(recipe => {
-    section.innerHTML += `
-      <div class="recipe-card">
-        <h2>${recipe.title}</h2>
-        <p class="details">${recipe.details}</p>
-        <p class="ingredients"><strong>Інгредієнти:</strong> ${recipe.ingredients}</p>
-        <div class="recipe-buttons">
-          <button onclick="addToFavorites(this)">❤️ Улюблене</button>
-          <button onclick="alert('Додано в меню!')">📋 До меню</button>
-        </div>
-        <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
-      </div>
-    `;
-  });
-
-  showSection('section-recipes');
-}
-
-// Підключаємо кліки по кнопках категорій
-document.querySelectorAll('.scroll-menu button').forEach(button => {
-  button.addEventListener('click', () => {
-    const category = button.textContent.replace(/^[^\wА-Яа-яіІїЇєЄ]+/, '').trim();
-    if (recipesData[category]) {
-      loadCategory(category);
-    }
-  });
-});
-
-
-    function loadCategory(category) {
-      const section = document.getElementById('section-recipes');
-      section.innerHTML = `<h2>🍴 ${category}</h2>`;
-
-      recipesData[category].forEach(recipe => {
-        section.innerHTML += `
-          <div class="recipe-card">
-            <h2>${recipe.title}</h2>
-            <p class="details">${recipe.details}</p>
-            <p class="ingredients"><strong>Інгредієнти:</strong> ${recipe.ingredients}</p>
-            <div class="recipe-buttons">
-              <button onclick="addToFavorites(this)">❤️ Улюблене</button>
-              <button onclick="alert('Додано в меню!')">📋 До меню</button>
-            </div>
-            <button class="shopping-list" onclick="alert('Додано до списку покупок!')">🛒 Список покупок</button>
-          </div>
-        `;
-      });
-
-      showSection('section-recipes');
+    function openImageModal(src) {
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("modalImage");
+      modal.style.display = "block";
+      modalImg.src = src;
     }
 
-    document.querySelectorAll('.scroll-menu button').forEach(button => {
-      button.addEventListener('click', () => {
-        const category = button.textContent.replace(/^[^\wА-Яа-яіІїЇєЄ]+/, '').trim();
-        if (recipesData[category]) {
-          loadCategory(category);
-        }
-      });
-    });
+    function closeImageModal() {
+      document.getElementById("imageModal").style.display = "none";
+    }
   </script>
-<!-- Модальне вікно для фото -->
-<div id="imageModal" class="modal" onclick="closeImageModal()">
-  <span class="close">&times;</span>
-  <img class="modal-content" id="modalImage">
-</div>
-<script>
-function openImageModal(src) {
-  const modal = document.getElementById("imageModal");
-  const modalImg = document.getElementById("modalImage");
-  modal.style.display = "block";
-  modalImg.src = src;
-}
 
-function closeImageModal() {
-  document.getElementById("imageModal").style.display = "none";
-}
-</script>
-
+  <div id="imageModal" class="modal" onclick="closeImageModal()">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
 </body>
 </html>
