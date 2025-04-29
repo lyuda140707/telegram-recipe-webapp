@@ -346,3 +346,18 @@ h1 {
   font-weight: bold;
   cursor: pointer;
 }
+.detail-button {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  background-color: #ffe28a;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.detail-button:hover {
+  background-color: #ffce58;
+}
