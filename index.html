@@ -164,7 +164,10 @@ function renderGroupedRecipes(groups, category) {
       <h3>${info["назва рецепту"]}</h3>
       <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
       <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+      <div class="recipe-buttons">
+        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        <button class="favorite-button" onclick="addToFavorites('${info["номер рецепту"]}', this)">❤️ Улюблене</button>
+      </div>
       <div id="${id}" style="display:none; margin-top:10px;"></div>
     `;
     container.appendChild(card);
@@ -187,6 +190,16 @@ function toggleRecipe(id, btn) {
   const isShown = el.style.display === 'block';
   el.style.display = isShown ? 'none' : 'block';
   btn.innerText = isShown ? '➕ Показати рецепт' : '➖ Згорнути';
+
+}
+function addToFavorites(recipeId, button) {
+  let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  if (!favorites.includes(recipeId)) {
+    favorites.push(recipeId);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    button.innerText = '💛 У списку';
+    button.disabled = true;
+  }
 }
 
 function showSection(id) {
