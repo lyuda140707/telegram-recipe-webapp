@@ -386,6 +386,22 @@ h1 {
     padding: 8px 12px;
     font-size: 13px;
   }
+  .favorite-button {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  background-color: #ffd6d6;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.favorite-button:hover {
+  background-color: #ffb3b3;
+}
+
 
   .bottom-nav {
     gap: 6px;
