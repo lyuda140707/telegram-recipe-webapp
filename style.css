@@ -361,3 +361,77 @@ h1 {
 .detail-button:hover {
   background-color: #ffce58;
 }
+/* 📱 Смартфони */
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .scroll-menu button {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .recipe-card {
+    padding: 15px;
+    margin: 10px 5px;
+  }
+
+  .recipe-card h2 {
+    font-size: 18px;
+  }
+
+  .detail-button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .bottom-nav {
+    gap: 6px;
+    padding: 0 8px;
+  }
+
+  .bottom-nav button {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .back-button {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
+
+/* 📱📲 Планшети */
+@media screen and (max-width: 768px) {
+  .app {
+    padding: 16px;
+    padding-bottom: 100px;
+  }
+
+  .recipe-card {
+    margin: 15px 8px;
+    padding: 18px;
+  }
+
+  .scroll-menu {
+    padding: 8px;
+  }
+
+  .scroll-menu button {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  .bottom-nav {
+    gap: 10px;
+    padding: 0 12px;
+  }
+
+  .bottom-nav button {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+}
+
