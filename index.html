@@ -46,126 +46,151 @@
     </div>
   </div>
 
-  <script>
-    const categories = ["Для дітей", "Вегетаріанське", "Без глютену", "Швидко", "Перші страви", "Другі страви", "Салати", "Консервація та соління", "Напої", "Десерти", "Випічка", "Закуски", "Соуси та заправки"];
+ <script>
+const categories = [
+  "Для дітей", "Вегетаріанське", "Без глютену", "Швидко", "Перші страви",
+  "Другі страви", "Салати", "Консервація та соління", "Напої", "Десерти",
+  "Випічка", "Закуски", "Соуси та заправки"
+];
 
-    async function fetchRecipes(category = null) {
-      try {
-        let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
-        if (category) url += `?category=${encodeURIComponent(category.toLowerCase())}`;
-        const response = await fetch(url);
-        return await response.json();
-      } catch (e) {
-        console.error("Помилка під час завантаження:", e);
-        return [];
+async function fetchRecipes(category = null) {
+  try {
+    let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
+    if (category) {
+      url += `?category=${encodeURIComponent(category.toLowerCase())}`;
+    }
+    const response = await fetch(url);
+    return await response.json();
+  } catch (e) {
+    console.error("Помилка при завантаженні:", e);
+    return [];
+  }
+}
+
+function groupByRecipeNumber(data) {
+  const grouped = {};
+  data.forEach(row => {
+    const id = row["номер рецепту"];
+    if (!grouped[id]) grouped[id] = [];
+    grouped[id].push(row);
+  });
+  return Object.values(grouped);
+}
+
+async function loadCategories() {
+  const container = document.getElementById('section-categories');
+  container.innerHTML = '';
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.innerText = cat;
+    btn.onclick = async () => {
+      const raw = await fetchRecipes(cat.toLowerCase());
+      const grouped = groupByRecipeNumber(raw);
+      renderGroupedRecipes(grouped, cat);
+    };
+    container.appendChild(btn);
+  });
+}
+
+async function loadDailyRecipe() {
+  const recipes = await fetchRecipes();
+  const container = document.getElementById('daily-recipe');
+  const grouped = groupByRecipeNumber(recipes);
+  if (grouped.length === 0) return;
+
+  const recipe = grouped[0];
+  const id = `daily-details`;
+  const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
+
+  container.innerHTML = `
+    <div class="recipe-card">
+      <h2>${info["назва рецепту"]}</h2>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+      <button onclick="toggleRecipe('${id}', this)">🔽 Детальніше</button>
+      <div id="${id}" style="display:none; margin-top:10px;"></div>
+    </div>
+  `;
+
+  const block = document.getElementById(id);
+  recipe.forEach(r => {
+    if (r["тип блоку"] === "текст") {
+      block.innerHTML += `<p>${r["контент"]}</p>`;
+    } else if (r["тип блоку"] === "фото") {
+      block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+    }
+  });
+}
+
+function renderGroupedRecipes(groups, category) {
+  const container = document.getElementById('section-recipes');
+  container.innerHTML = `<h2>🍴 ${category}</h2>`;
+
+  groups.forEach((group, index) => {
+    const id = `recipe-details-${index}`;
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    card.innerHTML = `
+      <h3>${info["назва рецепту"]}</h3>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+      <button onclick="toggleRecipe('${id}', this)">🔽 Детальніше</button>
+      <div id="${id}" style="display:none; margin-top:10px;"></div>
+    `;
+    container.appendChild(card);
+
+    const block = document.getElementById(id);
+    group.forEach(r => {
+      if (r["тип блоку"] === "текст") {
+        block.innerHTML += `<p>${r["контент"]}</p>`;
+      } else if (r["тип блоку"] === "фото") {
+        block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
       }
-    }
+    });
+  });
 
-    async function loadCategories() {
-      const container = document.getElementById('section-categories');
-      container.innerHTML = '';
-      categories.forEach(cat => {
-        const btn = document.createElement('button');
-        btn.innerText = cat;
-        btn.onclick = async () => {
-          const recipes = await fetchRecipes(cat);
-          renderRecipes(recipes, cat);
-        };
-        container.appendChild(btn);
-      });
-    }
+  showSection('section-recipes');
+}
 
-    async function loadDailyRecipe() {
-      const recipes = await fetchRecipes();
-      const container = document.getElementById('daily-recipe');
-      if (recipes.length > 0) {
-        const r = recipes[0];
-        const dailyId = `daily-details`;
+function toggleRecipe(id, btn) {
+  const el = document.getElementById(id);
+  const isShown = el.style.display === 'block';
+  el.style.display = isShown ? 'none' : 'block';
+  btn.innerText = isShown ? '🔽 Детальніше' : '🔼 Згорнути';
+}
 
-        container.innerHTML = `
-          <div class="recipe-card">
-            <h2>${r["назва рецепту"]}</h2>
-            <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-            <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
-            <button onclick="toggleRecipe('${dailyId}', this)">🔽 Детальніше</button>
-            <div id="${dailyId}" style="display: none; margin-top: 10px;"></div>
-          </div>
-        `;
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  const section = document.getElementById(id);
+  if (section) section.classList.add('active');
+  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+  document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
+}
 
-        const detail = document.getElementById(dailyId);
-        if (r["тип блоку"] === "текст") {
-          detail.innerHTML = `<p>${r["контент"]}</p>`;
-        } else if (r["тип блоку"] === "фото") {
-          detail.innerHTML = `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-        }
-      }
-    }
+function goHome() {
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.getElementById('section-categories').classList.add('active');
+  document.getElementById('daily-recipe').classList.add('active');
+  document.querySelector('.back-button').style.display = 'none';
+}
 
-    function renderRecipes(recipes, category = '') {
-      const container = document.getElementById('section-recipes');
-      container.innerHTML = `<h2>🍴 ${category}</h2>`;
+window.onload = async function () {
+  loadCategories();
+  loadDailyRecipe();
+  const start = localStorage.getItem('trial_start') || Date.now();
+  localStorage.setItem('trial_start', start);
+  const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
+  const daysLeft = 7 - daysUsed;
+  document.getElementById('days-left').innerHTML =
+    daysLeft > 0
+      ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
+      : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+};
+</script>
 
-      recipes.forEach((r, index) => {
-        const div = document.createElement('div');
-        div.className = 'recipe-card';
-        const recipeId = `recipe-details-${index}`;
-
-        div.innerHTML = `
-          <h3>${r["назва рецепту"]}</h3>
-          <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
-          <button onclick="toggleRecipe('${recipeId}', this)">🔽 Детальніше</button>
-          <div id="${recipeId}" style="display: none; margin-top: 10px;"></div>
-        `;
-
-        container.appendChild(div);
-
-        const detailsDiv = document.getElementById(recipeId);
-        if (r["тип блоку"] === "текст") {
-          detailsDiv.innerHTML = `<p>${r["контент"]}</p>`;
-        } else if (r["тип блоку"] === "фото") {
-          detailsDiv.innerHTML = `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-        }
-      });
-
-      showSection('section-recipes');
-    }
-
-    function toggleRecipe(id, btn) {
-      const block = document.getElementById(id);
-      const isVisible = block.style.display === 'block';
-      block.style.display = isVisible ? 'none' : 'block';
-      btn.innerText = isVisible ? '🔽 Детальніше' : '🔼 Згорнути';
-    }
-
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      const section = document.getElementById(id);
-      if (section) section.classList.add('active');
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-      document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
-    }
-
-    function goHome() {
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      document.getElementById('section-categories').classList.add('active');
-      document.getElementById('daily-recipe').classList.add('active');
-      document.querySelector('.back-button').style.display = 'none';
-    }
-
-    window.onload = async function() {
-      loadCategories();
-      loadDailyRecipe();
-      const start = localStorage.getItem('trial_start') || Date.now();
-      localStorage.setItem('trial_start', start);
-      const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
-      const daysLeft = 7 - daysUsed;
-      document.getElementById('days-left').innerHTML = daysLeft > 0
-        ? `🔓 Пробна версія: залишилось <strong>${daysLeft}</strong>`
-        : `🔒 Оформіть PRO`;
-    }
-  </script>
 </body>
 </html>
