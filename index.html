@@ -19,6 +19,23 @@
     .bottom-nav button { background: transparent; border: none; font-size: 16px; cursor: pointer; }
     .back-button { margin: 10px 0; padding: 6px 12px; background: #eee; border: none; border-radius: 6px; cursor: pointer; }
     @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .detail-button {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  background-color: #ffe28a;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.detail-button:hover {
+  background-color: #ffce58;
+}
+
+
   </style>
 </head>
 <body>
@@ -106,7 +123,7 @@ async function loadDailyRecipe() {
       <h2>${info["назва рецепту"]}</h2>
       <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
       <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button onclick="toggleRecipe('${id}', this)">🔽 Детальніше</button>
+      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
       <div id="${id}" style="display:none; margin-top:10px;"></div>
     </div>
   `;
@@ -135,7 +152,7 @@ function renderGroupedRecipes(groups, category) {
       <h3>${info["назва рецепту"]}</h3>
       <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
       <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button onclick="toggleRecipe('${id}', this)">🔽 Детальніше</button>
+      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
       <div id="${id}" style="display:none; margin-top:10px;"></div>
     `;
     container.appendChild(card);
