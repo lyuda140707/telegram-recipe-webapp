@@ -11,123 +11,48 @@
     .app { padding: 10px; max-width: 700px; margin: auto; }
     .section { display: none; animation: fade 0.4s ease; }
     .active { display: block !important; }
-    .scroll-menu {
-      overflow-x: auto;
-      white-space: nowrap;
-      padding: 10px 0;
-      display: flex;
-      gap: 8px;
-    }
-    .scroll-menu button {
-      flex: 0 0 auto;
-      background: #fff3c4;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 16px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .recipe-card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 16px;
-      margin: 10px 0;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    .bottom-nav-wrapper {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #fff3c4;
-      border-top: 1px solid #ddd;
-    }
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      overflow-x: auto;
-    }
-    .bottom-nav button {
-      background: transparent;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .back-button {
-      margin: 10px 0;
-      padding: 6px 12px;
-      background: #eee;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .scroll-menu { overflow-x: auto; white-space: nowrap; padding: 10px 0; display: flex; gap: 8px; }
+    .scroll-menu button { flex: 0 0 auto; background: #fff3c4; border: none; border-radius: 20px; padding: 8px 16px; cursor: pointer; font-size: 14px; }
+    .recipe-card { background: #fff; border-radius: 10px; padding: 16px; margin: 10px 0; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    .bottom-nav-wrapper { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff3c4; border-top: 1px solid #ddd; }
+    .bottom-nav { display: flex; justify-content: space-around; padding: 10px 0; overflow-x: auto; }
+    .bottom-nav button { background: transparent; border: none; font-size: 16px; cursor: pointer; }
+    .back-button { margin: 10px 0; padding: 6px 12px; background: #eee; border: none; border-radius: 6px; cursor: pointer; }
+    @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
 
-    <!-- Верхні категорії -->
     <div class="scroll-menu section active" id="section-categories"></div>
-
-    <!-- Рецепт дня -->
     <div id="daily-recipe" class="section active"></div>
-
-    <!-- Кнопка Назад -->
     <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
-
-    <!-- Результати фільтрації -->
     <div id="section-recipes" class="section"></div>
 
-    <!-- Інші секції -->
-    <div class="section" id="section-menu">
-      <h2>📋 Моє меню</h2>
-      <p>Тут будуть збережені рецепти, які ви хочете приготувати.</p>
-    </div>
-
-    <div class="section" id="section-list">
-      <h2>🧾 Список покупок</h2>
-    </div>
-
-    <div class="section" id="section-fridge">
-      <h2>❄️ Що є в холодильнику?</h2>
-    </div>
-
-    <div class="section" id="section-profile">
-      <h2>👤 Профіль</h2>
-      <p id="days-left"></p>
-    </div>
+    <div class="section" id="section-menu"><h2>📋 Моє меню</h2><p>Тут будуть збережені рецепти.</p></div>
+    <div class="section" id="section-list"><h2>📟 Список покупок</h2></div>
+    <div class="section" id="section-fridge"><h2>❄️ Що є в холодильнику?</h2></div>
+    <div class="section" id="section-profile"><h2>👤 Мій профіль</h2><p id="days-left"></p></div>
   </div>
 
-  <!-- Нижнє меню -->
   <div class="bottom-nav-wrapper">
     <div class="bottom-nav" id="bottomNav">
       <button onclick="showSection('section-profile')">👤 Профіль</button>
       <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
-      <button onclick="showSection('section-menu')">🧺 Меню</button>
-      <button onclick="showSection('section-list')">🧾 Список</button>
+      <button onclick="showSection('section-menu')">🮺 Меню</button>
+      <button onclick="showSection('section-list')">📟 Список</button>
       <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
     </div>
   </div>
 
   <script>
-    const categories = [
-      "Для дітей", "Вегетаріанське", "Без глютену", "Швидко", "Перші страви",
-      "Другі страви", "Салати", "Консервація та соління", "Напої", "Десерти",
-      "Випічка", "Закуски", "Соуси та заправки"
-    ];
+    const categories = ["Для дітей", "Вегетаріанське", "Без глютену", "Швидко", "Перші страви", "Другі страви", "Салати", "Консервація та соління", "Напої", "Десерти", "Випічка", "Закуски", "Соуси та заправки"];
 
     async function fetchRecipes(category = null) {
       try {
         let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
-        if (category) {
-          url += `?category=${encodeURIComponent(category.toLowerCase())}`;
-        }
+        if (category) url += `?category=${encodeURIComponent(category.toLowerCase())}`;
         const response = await fetch(url);
         return await response.json();
       } catch (e) {
@@ -143,7 +68,7 @@
         const btn = document.createElement('button');
         btn.innerText = cat;
         btn.onclick = async () => {
-          const recipes = await fetchRecipes(cat.toLowerCase());
+          const recipes = await fetchRecipes(cat);
           renderRecipes(recipes, cat);
         };
         container.appendChild(btn);
@@ -155,31 +80,62 @@
       const container = document.getElementById('daily-recipe');
       if (recipes.length > 0) {
         const r = recipes[0];
+        const dailyId = `daily-details`;
+
         container.innerHTML = `
           <div class="recipe-card">
             <h2>${r["назва рецепту"]}</h2>
-            <p><strong>Час:</strong> ${r["час приготування"]}</p>
-            <p><strong>Інгредієнти:</strong> ${r["інгредієнти"]}</p>
-            <p>${r["контент"]}</p>
+            <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
+            <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+            <button onclick="toggleRecipe('${dailyId}', this)">🔽 Детальніше</button>
+            <div id="${dailyId}" style="display: none; margin-top: 10px;"></div>
           </div>
         `;
+
+        const detail = document.getElementById(dailyId);
+        if (r["тип блоку"] === "текст") {
+          detail.innerHTML = `<p>${r["контент"]}</p>`;
+        } else if (r["тип блоку"] === "фото") {
+          detail.innerHTML = `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+        }
       }
     }
 
     function renderRecipes(recipes, category = '') {
       const container = document.getElementById('section-recipes');
       container.innerHTML = `<h2>🍴 ${category}</h2>`;
-      recipes.forEach(r => {
+
+      recipes.forEach((r, index) => {
         const div = document.createElement('div');
         div.className = 'recipe-card';
-        if (r["тип блоку"] === "текст") {
-          div.innerHTML = `<p>${r["контент"]}</p>`;
-        } else if (r["тип блоку"] === "фото") {
-          div.innerHTML = `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-        }
+        const recipeId = `recipe-details-${index}`;
+
+        div.innerHTML = `
+          <h3>${r["назва рецепту"]}</h3>
+          <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
+          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+          <button onclick="toggleRecipe('${recipeId}', this)">🔽 Детальніше</button>
+          <div id="${recipeId}" style="display: none; margin-top: 10px;"></div>
+        `;
+
         container.appendChild(div);
+
+        const detailsDiv = document.getElementById(recipeId);
+        if (r["тип блоку"] === "текст") {
+          detailsDiv.innerHTML = `<p>${r["контент"]}</p>`;
+        } else if (r["тип блоку"] === "фото") {
+          detailsDiv.innerHTML = `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+        }
       });
+
       showSection('section-recipes');
+    }
+
+    function toggleRecipe(id, btn) {
+      const block = document.getElementById(id);
+      const isVisible = block.style.display === 'block';
+      block.style.display = isVisible ? 'none' : 'block';
+      btn.innerText = isVisible ? '🔽 Детальніше' : '🔼 Згорнути';
     }
 
     function showSection(id) {
@@ -199,18 +155,17 @@
       document.querySelector('.back-button').style.display = 'none';
     }
 
-    window.onload = async function () {
+    window.onload = async function() {
       loadCategories();
       loadDailyRecipe();
       const start = localStorage.getItem('trial_start') || Date.now();
       localStorage.setItem('trial_start', start);
       const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
       const daysLeft = 7 - daysUsed;
-      document.getElementById('days-left').innerHTML =
-        daysLeft > 0
-          ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
-          : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
-    };
+      document.getElementById('days-left').innerHTML = daysLeft > 0
+        ? `🔓 Пробна версія: залишилось <strong>${daysLeft}</strong>`
+        : `🔒 Оформіть PRO`;
+    }
   </script>
 </body>
 </html>
