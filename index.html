@@ -3,170 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Рецептник Бот</title>
+  <title>РецептБот Web App</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <style>
-    .scroll-menu {
-      overflow-x: auto;
-      white-space: nowrap;
-      padding: 0.5em 0.3em;
-      background: #fff7e8;
-      display: flex;
-      gap: 0.5em;
-    }
-    .scroll-menu button {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.5em 1em;
-      background: #fff;
-      border-radius: 2em;
-      border: none;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      background-color: #fff7e8;
-      padding: 0.5em 0;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
-    }
-    .bottom-nav button {
-      background: none;
-      border: none;
-      font-size: 1.1em;
-    }
-    .section { display: none; padding: 1em; }
+    body { font-family: 'Lobster', cursive; margin: 0; background: #fff9f4; }
+    .app { padding: 20px; }
+    .section { display: none; animation: fade 0.4s ease; }
     .active { display: block !important; }
-    .recipe-card {
-      background: #fff;
-      margin: 1em 0;
-      padding: 1em;
-      border-radius: 1em;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
+    @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .scroll-menu, .bottom-nav { overflow-x: auto; white-space: nowrap; }
+    .scroll-menu button, .bottom-nav button { display: inline-block; margin: 5px; padding: 10px; border: none; background: #ffc; border-radius: 12px; cursor: pointer; }
+    .recipe-card { background: #fff; padding: 15px; margin: 10px 0; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .back-button { margin: 10px 0; padding: 8px 12px; border: none; background: #ffccaa; border-radius: 12px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <h1 style="text-align:center; font-family:Lobster">🍽 Що приготувати?</h1>
+<div class="app">
+  <h1>🍽 Що приготувати?</h1>
 
-  <!-- Верхнє меню категорій -->
-  <div class="scroll-menu" id="category-buttons">
-    <button>👶 Для дітей</button>
-    <button>🥗 Вегетаріанське</button>
-    <button>🌾 Без глютену</button>
-    <button>⚡ Швидко</button>
-    <button>🍲 Перші страви</button>
-    <button>🥘 Другі страви</button>
-    <button>🥗 Салати</button>
-    <button>🥒 Консервація та соління</button>
-    <button>🥤 Напої</button>
-    <button>🍰 Десерти</button>
-    <button>🍞 Випічка</button>
-    <button>🥪 Закуски</button>
-    <button>🫕 Соуси та заправки</button>
-  </div>
+  <div id="recipes"></div>
 
-  <!-- Секції -->
-  <div id="section-home" class="section active">
-    <h2>🥇 Рецепт дня</h2>
-    <div id="daily-recipe"></div>
-  </div>
+  <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
 
-  <div id="section-recipes" class="section">
-    <h2>🍽 Рецепти</h2>
-    <div id="recipes"></div>
-  </div>
+  <div class="scroll-menu section active" id="section-categories"></div>
 
-  <div id="section-menu" class="section">
-    <h2>📋 Моє меню</h2>
-    <p>Наразі порожньо.</p>
-  </div>
+  <div id="section-content" class="section active"></div>
+</div>
 
-  <div id="section-list" class="section">
-    <h2>🧾 Список покупок</h2>
-    <p>Інгредієнти будуть тут.</p>
+<div class="bottom-nav-wrapper">
+  <div class="bottom-nav" id="bottomNav">
+    <button onclick="showSection('profile')">👤 Профіль</button>
+    <button onclick="showSection('recipes')">🍽 Рецепти</button>
+    <button onclick="showSection('menu')">🧺 Меню</button>
+    <button onclick="showSection('list')">🧾 Список</button>
+    <button onclick="showSection('fridge')">❄️ Холодильник</button>
   </div>
-
-  <div id="section-profile" class="section">
-    <h2>👤 Профіль</h2>
-    <p>🔓 Пробна версія: залишилось 7 днів</p>
-  </div>
-
-  <!-- Нижнє меню -->
-  <div class="bottom-nav">
-    <button onclick="showSection('section-profile')">👤 Профіль</button>
-    <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
-    <button onclick="showSection('section-menu')">📋 Меню</button>
-    <button onclick="showSection('section-list')">🧾 Список</button>
-    <button onclick="showSection('section-home')">🏠 Головна</button>
-  </div>
+</div>
 
 <script>
-const API_URL = 'https://recipe-backend-0gz1.onrender.com/recipes';
+let allRecipes = [];
 
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-async function fetchRecipes(category = null) {
+async function fetchAllRecipes() {
   try {
-    const url = category ? `${API_URL}?category=${encodeURIComponent(category)}` : API_URL;
-    const res = await fetch(url);
+    const res = await fetch('https://recipe-backend-0gz1.onrender.com/recipes');
     const data = await res.json();
-    return data;
-  } catch (e) {
-    console.error('Помилка:', e);
-    return [];
+    allRecipes = data;
+    showRecipeOfDay();
+    showCategories();
+  } catch (error) {
+    console.error("Помилка завантаження рецептів:", error);
   }
 }
 
-function renderRecipes(data) {
+function showRecipeOfDay() {
+  if (!allRecipes.length) return;
+  const recipe = allRecipes[0];
   const container = document.getElementById('recipes');
+  container.innerHTML = `
+    <div class="recipe-card">
+      <h2>${recipe["назва рецепту"]}</h2>
+      <p><strong>Час:</strong> ${recipe["час приготування"] || 'Невідомо'}</p>
+      <p><strong>Інгредієнти:</strong> ${recipe["інгредієнти"] || 'Немає'}</p>
+      ${recipe["тип блоку"] === 'текст' ? `<p>${recipe["контент"]}</p>` : ''}
+      ${recipe["тип блоку"] === 'фото' ? `<img src="${recipe["контент"]}" style="max-width:100%; border-radius:12px; margin-top:10px;">` : ''}
+    </div>
+  `;
+}
+
+function showCategories() {
+  const categories = [
+    "Для дітей", "Вегетаріанське", "Без глютену", "Швидко", "Перші страви",
+    "Другі страви", "Салати", "Консервація та соління", "Напої", "Десерти",
+    "Випічка", "Закуски", "Соуси та заправки"
+  ];
+
+  const container = document.getElementById('section-categories');
   container.innerHTML = '';
-  data.forEach(item => {
+
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.textContent = cat;
+    btn.onclick = () => filterByCategory(cat);
+    container.appendChild(btn);
+  });
+}
+
+function filterByCategory(category) {
+  document.querySelector('.back-button').style.display = 'inline-block';
+  const section = document.getElementById('section-content');
+  section.innerHTML = '';
+
+  const filtered = allRecipes.filter(r => (r["категорія"] || '').toLowerCase() === category.toLowerCase());
+  
+  if (!filtered.length) {
+    section.innerHTML = '<p>Нічого не знайдено у цій категорії.</p>';
+    return;
+  }
+
+  filtered.forEach(recipe => {
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    if (item["тип блоку"] === "текст") {
-      card.innerHTML = `<p>${item["контент"]}</p>`;
-    } else if (item["тип блоку"] === "фото") {
-      card.innerHTML = `<img src="${item["контент"]}" style="max-width:100%; border-radius:1em;">`;
-    }
-    container.appendChild(card);
-  });
-  showSection('section-recipes');
-}
 
-async function showDailyRecipe() {
-  const all = await fetchRecipes();
-  const daily = all.find(r => r["номер рецепту"] == 1);
-  const container = document.getElementById('daily-recipe');
-  if (daily) {
-    container.innerHTML = `
-      <div class="recipe-card">
-        <h3>${daily["назва рецепту"]}</h3>
-        <p>${daily["контент"]}</p>
-      </div>
+    card.innerHTML = `
+      <h2>${recipe["назва рецепту"]}</h2>
+      <p><strong>Час:</strong> ${recipe["час приготування"] || 'Невідомо'}</p>
+      <p><strong>Інгредієнти:</strong> ${recipe["інгредієнти"] || 'Немає'}</p>
+      ${recipe["тип блоку"] === 'текст' ? `<p>${recipe["контент"]}</p>` : ''}
+      ${recipe["тип блоку"] === 'фото' ? `<img src="${recipe["контент"]}" style="max-width:100%; border-radius:12px; margin-top:10px;">` : ''}
     `;
-  }
+
+    section.appendChild(card);
+  });
 }
 
-// Клік по категоріях
-document.querySelectorAll('#category-buttons button').forEach(btn => {
-  btn.addEventListener('click', async () => {
-    const cat = btn.textContent.replace(/^[^\wА-Яа-яіІїЇєЄ]+/, '').trim().toLowerCase();
-    const recipes = await fetchRecipes(cat);
-    renderRecipes(recipes);
-  });
-});
+function goHome() {
+  document.querySelector('.back-button').style.display = 'none';
+  document.getElementById('section-content').innerHTML = '';
+  showRecipeOfDay();
+}
 
-window.onload = showDailyRecipe;
+function showSection(section) {
+  alert('Тут має бути перехід на розділ: ' + section);
+}
+
+window.onload = fetchAllRecipes;
 </script>
 </body>
 </html>
