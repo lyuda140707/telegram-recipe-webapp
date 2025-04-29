@@ -1,145 +1,172 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>РецептБот Web App</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рецептник Бот</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <style>
-    .section { display: none; animation: fade 0.4s ease; }
-    .active { display: block !important; }
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
     .scroll-menu {
-      display: flex;
       overflow-x: auto;
-      gap: 10px;
-      padding: 10px;
-      flex-wrap: nowrap;
+      white-space: nowrap;
+      padding: 0.5em 0.3em;
+      background: #fff7e8;
+      display: flex;
+      gap: 0.5em;
     }
     .scroll-menu button {
-      white-space: nowrap;
-      padding: 8px 12px;
-      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5em 1em;
+      background: #fff;
+      border-radius: 2em;
       border: none;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      font-weight: bold;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
       cursor: pointer;
-    }
-    .bottom-nav-wrapper {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border-top: 1px solid #ddd;
+      font-weight: bold;
     }
     .bottom-nav {
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
+      background-color: #fff7e8;
+      padding: 0.5em 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+    }
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 1.1em;
+    }
+    .section { display: none; padding: 1em; }
+    .active { display: block !important; }
+    .recipe-card {
+      background: #fff;
+      margin: 1em 0;
+      padding: 1em;
+      border-radius: 1em;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <h1>🍽 Що приготувати?</h1>
+  <h1 style="text-align:center; font-family:Lobster">🍽 Що приготувати?</h1>
 
-    <!-- Верхнє меню категорій -->
-    <div class="scroll-menu" id="top-categories"></div>
+  <!-- Верхнє меню категорій -->
+  <div class="scroll-menu" id="category-buttons">
+    <button>👶 Для дітей</button>
+    <button>🥗 Вегетаріанське</button>
+    <button>🌾 Без глютену</button>
+    <button>⚡ Швидко</button>
+    <button>🍲 Перші страви</button>
+    <button>🥘 Другі страви</button>
+    <button>🥗 Салати</button>
+    <button>🥒 Консервація та соління</button>
+    <button>🥤 Напої</button>
+    <button>🍰 Десерти</button>
+    <button>🍞 Випічка</button>
+    <button>🥪 Закуски</button>
+    <button>🫕 Соуси та заправки</button>
+  </div>
 
-    <!-- Розділи -->
-    <div id="section-home" class="section active">
-      <h2>🍳 Рецепт дня</h2>
-      <div id="daily-recipe" class="recipe-card"></div>
-    </div>
+  <!-- Секції -->
+  <div id="section-home" class="section active">
+    <h2>🥇 Рецепт дня</h2>
+    <div id="daily-recipe"></div>
+  </div>
 
-    <div id="section-recipes" class="section">
-      <h2 id="category-title"></h2>
-      <div id="recipes"></div>
-    </div>
+  <div id="section-recipes" class="section">
+    <h2>🍽 Рецепти</h2>
+    <div id="recipes"></div>
+  </div>
 
-    <div id="section-menu" class="section">
-      <h2>📋 Моє меню</h2>
-      <p>Тут будуть збережені страви.</p>
-    </div>
+  <div id="section-menu" class="section">
+    <h2>📋 Моє меню</h2>
+    <p>Наразі порожньо.</p>
+  </div>
 
-    <div id="section-list" class="section">
-      <h2>🧾 Список покупок</h2>
-    </div>
+  <div id="section-list" class="section">
+    <h2>🧾 Список покупок</h2>
+    <p>Інгредієнти будуть тут.</p>
+  </div>
 
-    <div id="section-fridge" class="section">
-      <h2>❄️ Що є в холодильнику?</h2>
-    </div>
+  <div id="section-profile" class="section">
+    <h2>👤 Профіль</h2>
+    <p>🔓 Пробна версія: залишилось 7 днів</p>
   </div>
 
   <!-- Нижнє меню -->
-  <div class="bottom-nav-wrapper">
-    <div class="bottom-nav">
-      <button onclick="showSection('section-home')">🍽 Головна</button>
-      <button onclick="showSection('section-recipes')">🍲 Рецепти</button>
-      <button onclick="showSection('section-menu')">🧺 Меню</button>
-      <button onclick="showSection('section-list')">🧾 Список</button>
-      <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
-    </div>
+  <div class="bottom-nav">
+    <button onclick="showSection('section-profile')">👤 Профіль</button>
+    <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
+    <button onclick="showSection('section-menu')">📋 Меню</button>
+    <button onclick="showSection('section-list')">🧾 Список</button>
+    <button onclick="showSection('section-home')">🏠 Головна</button>
   </div>
 
-  <script>
-    const categories = [
-      "Для дітей", "Вегетаріанське", "Без глютену", "Швидко", "Перші страви", "Другі страви", "Салати", "Консервація та соління", "Напої", "Десерти", "Випічка", "Закуски", "Соуси та заправки"
-    ];
+<script>
+const API_URL = 'https://recipe-backend-0gz1.onrender.com/recipes';
 
-    categories.forEach(category => {
-      const btn = document.createElement("button");
-      btn.textContent = category;
-      btn.onclick = () => fetchCategoryRecipes(category);
-      document.getElementById("top-categories").appendChild(btn);
-    });
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-    function showSection(id) {
-      document.querySelectorAll(".section").forEach(el => el.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
+async function fetchRecipes(category = null) {
+  try {
+    const url = category ? `${API_URL}?category=${encodeURIComponent(category)}` : API_URL;
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.error('Помилка:', e);
+    return [];
+  }
+}
+
+function renderRecipes(data) {
+  const container = document.getElementById('recipes');
+  container.innerHTML = '';
+  data.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    if (item["тип блоку"] === "текст") {
+      card.innerHTML = `<p>${item["контент"]}</p>`;
+    } else if (item["тип блоку"] === "фото") {
+      card.innerHTML = `<img src="${item["контент"]}" style="max-width:100%; border-radius:1em;">`;
     }
+    container.appendChild(card);
+  });
+  showSection('section-recipes');
+}
 
-    async function fetchDailyRecipe() {
-      try {
-        const res = await fetch("https://recipe-backend-0gz1.onrender.com/recipes");
-        const data = await res.json();
-        const first = data[0];
-        document.getElementById("daily-recipe").innerHTML =
-          `<div><strong>${first["назва рецепту"]}</strong><p>${first["контент"]}</p></div>`;
-      } catch (err) {
-        console.error("Помилка завантаження рецепту дня", err);
-      }
-    }
+async function showDailyRecipe() {
+  const all = await fetchRecipes();
+  const daily = all.find(r => r["номер рецепту"] == 1);
+  const container = document.getElementById('daily-recipe');
+  if (daily) {
+    container.innerHTML = `
+      <div class="recipe-card">
+        <h3>${daily["назва рецепту"]}</h3>
+        <p>${daily["контент"]}</p>
+      </div>
+    `;
+  }
+}
 
-    async function fetchCategoryRecipes(category) {
-      try {
-        const res = await fetch(`https://recipe-backend-0gz1.onrender.com/recipes?category=${encodeURIComponent(category)}`);
-        const data = await res.json();
-        document.getElementById("category-title").textContent = `🍽 ${category}`;
-        const container = document.getElementById("recipes");
-        container.innerHTML = "";
-        data.forEach(recipe => {
-          const div = document.createElement("div");
-          div.className = "recipe-card";
-          if (recipe["тип блоку"] === "текст") {
-            div.innerHTML = `<p>${recipe["контент"]}</p>`;
-          } else if (recipe["тип блоку"] === "фото") {
-            div.innerHTML = `<img src="${recipe["контент"]}" style="max-width: 100%">`;
-          }
-          container.appendChild(div);
-        });
-        showSection("section-recipes");
-      } catch (err) {
-        console.error("Помилка категорії", err);
-      }
-    }
+// Клік по категоріях
+document.querySelectorAll('#category-buttons button').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const cat = btn.textContent.replace(/^[^\wА-Яа-яіІїЇєЄ]+/, '').trim().toLowerCase();
+    const recipes = await fetchRecipes(cat);
+    renderRecipes(recipes);
+  });
+});
 
-    window.onload = fetchDailyRecipe;
-  </script>
+window.onload = showDailyRecipe;
+</script>
 </body>
 </html>
