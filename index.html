@@ -157,9 +157,11 @@ function toggleRecipe(id, btn) {
   const el = document.getElementById(id);
   const isShown = el.style.display === 'block';
   el.style.display = isShown ? 'none' : 'block';
-<button onclick="toggleRecipe('${id}', this)">
-  ➕ Показати рецепт
-</button>
+function toggleRecipe(id, btn) {
+  const el = document.getElementById(id);
+  const isShown = el.style.display === 'block';
+  el.style.display = isShown ? 'none' : 'block';
+  btn.innerText = isShown ? '➕ Показати рецепт' : '➖ Згорнути';
 }
 
 function showSection(id) {
