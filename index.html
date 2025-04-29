@@ -13,6 +13,8 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    img { max-width: 100%; border-radius: 10px; }
+    .recipe-card { background: #fffbe6; padding: 1em; margin: 1em 0; border-radius: 10px; }
   </style>
 </head>
 <body>
@@ -21,49 +23,34 @@
     <h1>🍽 Що приготувати?</h1>
     <div id="recipes"></div>
 
+    <!-- Кнопка Назад -->
     <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
 
+    <!-- Категорії -->
     <div class="scroll-menu section active" id="section-categories">
-      <button>👶 Для дітей</button>
-      <button>🥗 Вегетаріанське</button>
-      <button>🌾 Без глютену</button>
-      <button>⚡ Швидко</button>
-      <button>🍲 Перші страви</button>
-      <button>🥘 Другі страви</button>
-      <button>🥗 Салати</button>
-      <button>🥒 Консервація та соління</button>
-      <button>🥤 Напої</button>
-      <button>🍰 Десерти</button>
-      <button>🍞 Випічка</button>
-      <button>🥪 Закуски</button>
-      <button>🫕 Соуси та заправки</button>
+      <button onclick="fetchByCategory('для дітей')">👶 Для дітей</button>
+      <button onclick="fetchByCategory('вегетаріанське')">🥗 Вегетаріанське</button>
+      <button onclick="fetchByCategory('без глютену')">🌾 Без глютену</button>
+      <button onclick="fetchByCategory('швидко')">⚡ Швидко</button>
+      <button onclick="fetchByCategory('перші страви')">🍲 Перші страви</button>
+      <button onclick="fetchByCategory('другі страви')">🥘 Другі страви</button>
+      <button onclick="fetchByCategory('салати')">🥗 Салати</button>
+      <button onclick="fetchByCategory('консервація та соління')">🥒 Консервація та соління</button>
+      <button onclick="fetchByCategory('напої')">🥤 Напої</button>
+      <button onclick="fetchByCategory('десерти')">🍰 Десерти</button>
+      <button onclick="fetchByCategory('випічка')">🍞 Випічка</button>
+      <button onclick="fetchByCategory('закуски')">🥪 Закуски</button>
+      <button onclick="fetchByCategory('соуси та заправки')">🫕 Соуси та заправки</button>
     </div>
 
     <div class="section active" id="section-recipes"></div>
-
-    <div class="section" id="section-menu">
-      <h2>📋 Моє меню</h2>
-      <p>Тут будуть збережені рецепти, які ви хочете приготувати.</p>
-    </div>
-
-    <div class="section" id="section-list">
-      <h2>🧾 Список покупок</h2>
-      <p>Інгредієнти зі збережених страв будуть зібрані в одному списку.</p>
-    </div>
-
-    <div class="section" id="section-fridge">
-      <h2>❄️ Що є в холодильнику?</h2>
-      <input type="text" placeholder="Введіть продукти...">
-      <button onclick="alert('Показати рецепти з введених продуктів')">🔍 Показати рецепти</button>
-    </div>
-
-    <div class="section" id="section-profile">
-      <h2>👤 Мій профіль</h2>
-      <p id="days-left">🔓 Пробна версія: залишилось <strong>7 днів</strong></p>
-      <button onclick="alert('Оплата PRO ще не підключена')">💳 Оформити PRO</button>
-    </div>
+    <div class="section" id="section-menu"><h2>📋 Моє меню</h2><p>Тут буде обране.</p></div>
+    <div class="section" id="section-list"><h2>🧾 Список покупок</h2><p>Тут буде список.</p></div>
+    <div class="section" id="section-fridge"><h2>❄️ Холодильник</h2><input type="text" placeholder="Введіть продукти"><button>🔍 Показати рецепти</button></div>
+    <div class="section" id="section-profile"><h2>👤 Мій профіль</h2><p id="days-left"></p><button>💳 Оформити PRO</button></div>
   </div>
 
+  <!-- Нижнє меню -->
   <div class="bottom-nav-wrapper">
     <div class="bottom-nav" id="bottomNav">
       <button onclick="showSection('section-profile')">👤 Профіль</button>
@@ -74,87 +61,50 @@
     </div>
   </div>
 
-  <div class="swipe-hint">← Гортай меню →</div>
-
-<script>
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-  document.querySelector(`.bottom-nav button[onclick*="${id}"]`)?.classList.add('active');
-  document.querySelector('.back-button').style.display = id !== 'section-home' ? 'inline-block' : 'none';
-}
-
-function goHome() {
-  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-  document.getElementById('section-categories').classList.add('active');
-  document.getElementById('section-recipes').classList.add('active');
-  document.querySelector('.back-button').style.display = 'none';
-}
-
-async function fetchRecipesByCategory(category) {
-  const url = `https://recipe-backend-0gz1.onrender.com/recipes?category=${encodeURIComponent(category.toLowerCase())}`;
-  try {
-    const response = await fetch(url);
-    const recipes = await response.json();
-    showRecipes(recipes);
-  } catch (error) {
-    console.error("Помилка при отриманні рецептів:", error);
-  }
-}
-
-function showRecipes(recipes) {
-  const section = document.getElementById('section-recipes');
-  section.innerHTML = '';
-
-  if (recipes.length === 0) {
-    section.innerHTML = '<p>Рецептів не знайдено 😢</p>';
-    return;
-  }
-
-  recipes.forEach(recipe => {
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
-    if (recipe["тип блоку"] === "текст") {
-      card.innerHTML = `<p>${recipe["контент"]}</p>`;
-    } else if (recipe["тип блоку"] === "фото") {
-      card.innerHTML = `<img src="${recipe["контент"]}" onclick="openImageModal('${recipe["контент"]}')">`;
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+      document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
     }
-    section.appendChild(card);
-  });
-  showSection('section-recipes');
-}
 
-document.querySelectorAll('.scroll-menu button').forEach(button => {
-  button.addEventListener('click', () => {
-    const category = button.textContent.replace(/^[^\wА-Яа-яіІїЇєЄ]+/, '').trim();
-    fetchRecipesByCategory(category);
-  });
-});
+    function goHome() {
+      showSection('section-categories');
+    }
 
-window.onload = () => {
-  const start = localStorage.getItem('trial_start') || Date.now();
-  localStorage.setItem('trial_start', start);
-  const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
-  const daysLeft = 7 - daysUsed;
-  document.getElementById('days-left').innerHTML =
-    daysLeft > 0 ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
-                : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
-};
-</script>
+    async function fetchByCategory(category) {
+      try {
+        const response = await fetch(`https://recipe-backend-0gz1.onrender.com/recipes?category=${encodeURIComponent(category)}`);
+        const recipes = await response.json();
+        displayRecipes(recipes, category);
+      } catch (err) {
+        console.error("Помилка завантаження рецептів:", err);
+      }
+    }
 
-<div id="imageModal" class="modal" onclick="closeImageModal()">
-  <span class="close">&times;</span>
-  <img class="modal-content" id="modalImage">
-</div>
-<script>
-function openImageModal(src) {
-  document.getElementById("imageModal").style.display = "block";
-  document.getElementById("modalImage").src = src;
-}
-function closeImageModal() {
-  document.getElementById("imageModal").style.display = "none";
-}
-</script>
+    function displayRecipes(recipes, category) {
+      const section = document.getElementById('section-recipes');
+      section.innerHTML = `<h2>🍴 ${category}</h2>`;
+      recipes.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'recipe-card';
+        if (r["тип блоку"] === "фото") {
+          div.innerHTML = `<img src="${r["контент"]}" alt="Фото">`;
+        } else {
+          div.innerHTML = `<p>${r["контент"]}</p>`;
+        }
+        section.appendChild(div);
+      });
+      showSection('section-recipes');
+    }
+
+    window.onload = () => {
+      const start = localStorage.getItem('trial_start') || Date.now();
+      localStorage.setItem('trial_start', start);
+      const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
+      const daysLeft = 7 - daysUsed;
+      document.getElementById('days-left').innerHTML = daysLeft > 0 ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>` : `🔒 Платна версія після оформлення <strong>PRO</strong>`;
+    };
+  </script>
 </body>
 </html>
