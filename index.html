@@ -65,10 +65,20 @@
 
  <script>
 const categories = [
-      "Для дітей", "Вегетаріанське", "Без глютену", "Швидко", "Перші страви",
-      "Другі страви", "Салати", "Консервація та соління", "Напої", "Десерти",
-      "Випічка", "Закуски", "Соуси та заправки"
-    ];
+  "👶 Для дітей",
+  "🥗 Вегетаріанське",
+  "🌾 Без глютену",
+  "⚡ Швидко",
+  "🍲 Перші страви",
+  "🥘 Другі страви",
+  "🥗 Салати",
+  "🥒 Консервація та соління",
+  "🥤 Напої",
+  "🍰 Десерти",
+  "🍞 Випічка",
+  "🥪 Закуски",
+  "🫕 Соуси та заправки"
+];
 async function fetchRecipes(category = null) {
   try {
     let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
@@ -100,10 +110,12 @@ async function loadCategories() {
     const btn = document.createElement('button');
     btn.innerText = cat;
     btn.onclick = async () => {
-      const raw = await fetchRecipes(cat.toLowerCase());
-      const grouped = groupByRecipeNumber(raw);
-      renderGroupedRecipes(grouped, cat);
-    };
+  const cleanCategory = cat.replace(/^[^\wа-яА-ЯёЁҐґІіЇїЄє]+/, '').trim(); // прибирає емодзі
+  const raw = await fetchRecipes(cleanCategory.toLowerCase());
+  const grouped = groupByRecipeNumber(raw);
+  renderGroupedRecipes(grouped, cat);
+};
+
     container.appendChild(btn);
   });
 }
