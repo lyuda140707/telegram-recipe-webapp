@@ -45,12 +45,18 @@
   </style>
 </head>
 <body>
+ <body>
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
     <div class="scroll-menu section active" id="section-categories"></div>
+
+    <!-- ✅ Підказка всередині .app -->
+    <div class="swipe-hint">⬅ Гортай меню ➡</div>
+
     <div id="daily-recipe" class="section active"></div>
     <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
     <div id="section-recipes" class="section"></div>
+
 <div class="section" id="section-menu">
   <h2>📋 Моє меню</h2>
   <p>Тут будуть збережені рецепти.</p>
@@ -433,6 +439,14 @@ function removeFromCustomList(index) {
   localStorage.setItem('custom_list', JSON.stringify(items));
   loadCustomList(); // оновлюємо список на сторінці
 }
+setTimeout(() => {
+  const hint = document.querySelector('.swipe-hint');
+  if (hint) {
+    hint.style.opacity = '0';
+    hint.style.pointerEvents = 'none';
+    setTimeout(() => hint.remove(), 400); // Повністю прибере з DOM
+  }
+}, 10000); // 10 000 мс = 10 секунд
 
 </script>
 </body>
