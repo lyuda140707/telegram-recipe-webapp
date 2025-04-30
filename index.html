@@ -43,12 +43,14 @@
     <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
     <div id="section-recipes" class="section"></div>
     <div class="section" id="section-menu"><h2>📋 Моє меню</h2><p>Тут будуть збережені рецепти.</p></div>
-    <div class="section" id="section-list"><h2>📿 Список покупок</h2></div>
     <div class="section" id="section-fridge"><h2>❄️ Що є в холодильнику?</h2></div>
     <div class="section" id="section-profile">
       <h2>👤 Мій профіль</h2>
       <p id="days-left"></p>
       <h3 id="open-favorites" style="cursor:pointer;">💛 Улюблені рецепти</h3>
+      <h3 id="open-list" style="cursor:pointer;">🛒 Що купити</h3>
+      <ul id="custom-list" style="padding-left: 20px;"></ul>
+
       <div id="favorites-container"></div>
     </div>
   </div>
@@ -58,7 +60,7 @@
       <button onclick="showSection('section-profile')">👤 Профіль</button>
       <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
       <button onclick="showSection('section-menu')">🍽 Меню</button>
-      <button onclick="showSection('section-list')">📿 Список</button>
+      <button id="open-list">🛒 Що купити</button>
       <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
     </div>
   </div>
@@ -208,7 +210,10 @@ function showSection(id) {
   const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
   if (activeBtn) activeBtn.classList.add('active');
   document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
-  if (id === 'section-profile') loadFavorites();
+  if (id === 'section-profile') {
+  loadFavorites();
+  loadCustomList();
+}
 }
 
 function goHome() {
@@ -233,13 +238,17 @@ window.onload = async function () {
       ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
       : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
 
-  // ⬇️ Правильне місце для додавання слухача на клік
+  // 👇 Слухачі окремо
   document.getElementById('open-favorites').addEventListener('click', () => {
     showSection('section-profile');
     loadFavorites();
   });
-};
 
+  document.getElementById('open-list').addEventListener('click', () => {
+    showSection('section-profile');
+    loadCustomList();
+  });
+};
 
 async function loadFavorites() {
   const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -264,15 +273,15 @@ async function loadFavorites() {
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.innerHTML = `
-      <h3>${info["назва рецепту"]}</h3>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">
-  💛 У списку
-</button>
-
-      <div id="${id}" style="display:none; margin-top:10px;"></div>
-    `;
+  <h3>${info["назва рецепту"]}</h3>
+  <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+  <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+  <div class="recipe-buttons">
+    <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+    <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
+  </div>
+  <div id="${id}" style="display:none; margin-top:10px;"></div>
+`;
 
     container.appendChild(card);
 
@@ -286,6 +295,21 @@ async function loadFavorites() {
     });
   });
 }
+function loadCustomList() {
+  const items = JSON.parse(localStorage.getItem('custom_list')) || [];
+  const container = document.getElementById('custom-list');
+  container.innerHTML = '';
+  if (!items.length) {
+    container.innerHTML = '<li>Порожньо</li>';
+    return;
+  }
+  items.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.innerText = `• ${item}`;
+    container.appendChild(li);
+  });
+}
+
 </script>
 </body>
 </html>
