@@ -42,11 +42,28 @@
     <div id="daily-recipe" class="section active"></div>
     <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
     <div id="section-recipes" class="section"></div>
-    <div class="section" id="section-menu"><h2>📋 Моє меню</h2><p>Тут будуть збережені рецепти.</p></div>
-    <div class="section" id="section-fridge"><h2>❄️ Що є в холодильнику?</h2></div>
-    <div class="section" id="section-profile">
-      <h2>👤 Мій профіль</h2>
-      <p id="days-left"></p>
+<div class="section" id="section-menu">
+  <h2>📋 Моє меню</h2>
+  <p>Тут будуть збережені рецепти.</p>
+</div>
+<div class="section" id="section-fridge">
+  <h2>❄️ Що є в холодильнику?</h2>
+</div>
+
+<!-- ✅ окрема секція -->
+<div class="section" id="section-buy">
+  <h2>🛒 Що купити</h2>
+  <div style="margin-top:10px;">
+    <input id="custom-input-buy" placeholder="Додати до списку..." style="padding:8px; width:80%;">
+    <button onclick="addToCustomList()" style="padding:8px;">➕</button>
+  </div>
+  <ul id="custom-list-buy" style="padding-left: 20px;"></ul>
+</div>
+
+<div class="section" id="section-profile">
+  <h2>👤 Мій профіль</h2>
+  <p id="days-left"></p>
+
      <div class="accordion-block" id="fav-accordion">
   <div class="accordion-title" id="open-favorites">
     💛 Улюблені рецепти <span id="arrow-fav">🔽</span>
@@ -76,7 +93,7 @@
     <button onclick="showSection('section-profile')">👤 Профіль</button>
     <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
     <button onclick="showSection('section-menu')">🍽 Меню</button>
-    <button onclick="toggleListSection()">🛒 Що купити</button>
+    <button onclick="showSection('section-buy')">🛒 Що купити</button>
     <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
   </div>
 </div>
@@ -222,19 +239,32 @@ function toggleFavorite(recipeId, button) {
 }
 
 function showSection(id) {
+  // Приховуємо всі секції
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+
+  // Показуємо потрібну
   const section = document.getElementById(id);
   if (section) section.classList.add('active');
+
+  // Підсвічування активної кнопки
   document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
   const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
   if (activeBtn) activeBtn.classList.add('active');
-  document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
-  if (id === 'section-profile') {
-  loadFavorites();
-  loadCustomList();
-}
-}
 
+  // Кнопка "На головну"
+  document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
+
+  // Якщо це профіль — підгружаємо улюблене і список
+  if (id === 'section-profile') {
+    loadFavorites();
+    loadCustomList();
+  }
+
+  // Якщо це "Що купити" — теж завантажуємо список
+  if (id === 'section-buy') {
+    loadCustomList();
+  }
+}
 function goHome() {
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
   document.getElementById('section-categories').classList.add('active');
@@ -352,9 +382,8 @@ function loadCustomList() {
     container.appendChild(li);
   });
 }
-
 function addToCustomList() {
-  const input = document.getElementById('custom-input');
+  const input = document.getElementById('custom-input') || document.getElementById('custom-input-buy');
   const value = input.value.trim();
   if (!value) return;
 
@@ -364,6 +393,7 @@ function addToCustomList() {
   input.value = '';
   loadCustomList(); // оновлюємо список
 }
+
 function removeFromCustomList(index) {
   const items = JSON.parse(localStorage.getItem('custom_list')) || [];
   items.splice(index, 1); // видаляємо обраний
