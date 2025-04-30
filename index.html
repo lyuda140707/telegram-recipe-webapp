@@ -53,8 +53,9 @@
   <input id="custom-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
   <button onclick="addToCustomList()" style="padding:8px;">➕</button>
 </div>
-
-      <div id="favorites-container">
+      <ul id="custom-list" style="padding-left: 20px;"></ul>
+      
+ <div id="favorites-container">
   <!-- сюди буде додаватись картка з кнопкою та прихованим блоком -->
 </div>
 
@@ -275,22 +276,22 @@ async function loadFavorites() {
 
   container.innerHTML = '';
   filteredGroups.forEach((group, index) => {
-    const id = `favorite-${index}`;
-    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+    const id = `favorite-details-${index}`; // унікальний ID
 
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
     const card = document.createElement('div');
     card.className = 'recipe-card';
-  
-card.innerHTML = `
-  <h3>${info["назва рецепту"]}</h3>
-  <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-  <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-  <div class="recipe-buttons">
-    <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-    <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
-  </div>
-  <div id="${id}" style="display:none; margin-top:10px;"></div>
-`;
+
+    card.innerHTML = `
+      <h3>${info["назва рецепту"]}</h3>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+      <div class="recipe-buttons">
+        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
+      </div>
+      <div id="${id}" style="display:none; margin-top:10px;"></div>
+    `;
 
     container.appendChild(card);
 
@@ -304,6 +305,7 @@ card.innerHTML = `
     });
   });
 }
+
 function loadCustomList() {
   const items = JSON.parse(localStorage.getItem('custom_list')) || [];
   const container = document.getElementById('custom-list');
