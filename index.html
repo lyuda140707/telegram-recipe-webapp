@@ -156,7 +156,7 @@ function renderGroupedRecipes(groups, category) {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    const id = `favorite-details-${index}`;
+  
 card.innerHTML = `
   <h3>${info["назва рецепту"]}</h3>
   <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
