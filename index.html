@@ -50,7 +50,13 @@
     <div class="section" id="section-menu"><h2>📋 Моє меню</h2><p>Тут будуть збережені рецепти.</p></div>
     <div class="section" id="section-list"><h2>📟 Список покупок</h2></div>
     <div class="section" id="section-fridge"><h2>❄️ Що є в холодильнику?</h2></div>
-    <div class="section" id="section-profile"><h2>👤 Мій профіль</h2><p id="days-left"></p></div>
+    <div class="section" id="section-profile">
+  <h2>👤 Мій профіль</h2>
+  <p id="days-left"></p>
+  <h3>💛 Улюблені рецепти</h3>
+  <div id="favorites-container"></div>
+</div>
+
   </div>
 
   <div class="bottom-nav-wrapper">
@@ -210,7 +216,11 @@ function showSection(id) {
   const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
   if (activeBtn) activeBtn.classList.add('active');
   document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
+  if (id === 'section-profile') {
+  loadFavorites();
 }
+
+
 
 function goHome() {
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
@@ -231,6 +241,49 @@ window.onload = async function () {
       ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
       : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
 };
+   async function loadFavorites() {
+  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  if (!favorites.length) {
+    document.getElementById('favorites-container').innerHTML = '<p>Немає збережених рецептів</p>';
+    return;
+  }
+
+  const allRecipes = await fetchRecipes();
+  const grouped = groupByRecipeNumber(allRecipes);
+  const filteredGroups = grouped.filter(group => {
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+    return favorites.includes(info["номер рецепту"]);
+  });
+
+  const container = document.getElementById('favorites-container');
+  container.innerHTML = '';
+  filteredGroups.forEach((group, index) => {
+    const id = `favorite-${index}`;
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    card.innerHTML = `
+      <h3>${info["назва рецепту"]}</h3>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+      <div id="${id}" style="display:none; margin-top:10px;"></div>
+    `;
+
+    container.appendChild(card);
+
+    const block = document.getElementById(id);
+    group.forEach(r => {
+      if (r["тип блоку"] === "текст") {
+        block.innerHTML += `<p>${r["контент"]}</p>`;
+      } else if (r["тип блоку"] === "фото") {
+        block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+      }
+    });
+  });
+}
+
 </script>
 
 </body>
