@@ -149,17 +149,15 @@ function renderGroupedRecipes(groups, category) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.innerHTML = `
-      <h3>${info["назва рецепту"]}</h3>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <div class="recipe-buttons">
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">
-          ${isFavorite ? '💛 У списку' : '❤️ Улюблене'}
-        </button>
-      </div>
-      <div id="${id}" style="display:none; margin-top:10px;"></div>
-    `;
+  <h3>${info["назва рецепту"]}</h3>
+  <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+  <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+  <div class="recipe-buttons">
+    <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+    <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
+  </div>
+  <div id="${id}" style="display:none; margin-top:10px;"></div>
+`;
     container.appendChild(card);
 
     const block = document.getElementById(id);
