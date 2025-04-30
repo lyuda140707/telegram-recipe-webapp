@@ -54,7 +54,7 @@
 <div class="section" id="section-buy">
   <h2>🛒 Що купити</h2>
   <div style="margin-top:10px;">
-    <input id="custom-input-buy" placeholder="Додати до списку..." style="padding:8px; width:80%;">
+    <input class="custom-list-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
     <button onclick="addToCustomList()" style="padding:8px;">➕</button>
   </div>
   <ul id="custom-list-buy" style="padding-left: 20px;"></ul>
@@ -79,7 +79,7 @@
   </div>
   <div class="accordion-content" id="custom-wrapper">
     <div style="margin-top:10px;">
-      <input id="custom-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
+      <input class="custom-list-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
       <button onclick="addToCustomList()" style="padding:8px;">➕</button>
     </div>
     <ul id="custom-list" style="padding-left: 20px;"></ul>
@@ -379,7 +379,10 @@ function loadCustomList() {
   });
 }
 function addToCustomList() {
-  const input = document.getElementById('custom-input') || document.getElementById('custom-input-buy');
+  const inputs = document.querySelectorAll('.custom-list-input');
+  const input = Array.from(inputs).find(el => el.offsetParent !== null); // Знаходимо той, що видно
+  if (!input) return;
+
   const value = input.value.trim();
   if (!value) return;
 
@@ -387,8 +390,9 @@ function addToCustomList() {
   items.push(value);
   localStorage.setItem('custom_list', JSON.stringify(items));
   input.value = '';
-  loadCustomList(); // оновлюємо список
+  loadCustomList();
 }
+
 
 function removeFromCustomList(index) {
   const items = JSON.parse(localStorage.getItem('custom_list')) || [];
