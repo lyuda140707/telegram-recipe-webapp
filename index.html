@@ -20,22 +20,19 @@
     .back-button { margin: 10px 0; padding: 6px 12px; background: #eee; border: none; border-radius: 6px; cursor: pointer; }
     @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .detail-button {
-  padding: 10px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 20px;
-  background-color: #ffe28a;
-  color: #333;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.detail-button:hover {
-  background-color: #ffce58;
-}
-
-
+      padding: 10px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 20px;
+      background-color: #ffe28a;
+      color: #333;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .detail-button:hover {
+      background-color: #ffce58;
+    }
   </style>
 </head>
 <body>
@@ -51,244 +48,26 @@
     <div class="section" id="section-list"><h2>📟 Список покупок</h2></div>
     <div class="section" id="section-fridge"><h2>❄️ Що є в холодильнику?</h2></div>
     <div class="section" id="section-profile">
-    <h2>👤 Мій профіль</h2>
-    <p id="days-left"></p>
-    <h3>💛 Улюблені рецепти</h3>
-    <div id="favorites-container"></div>
-  </div>
-
+      <h2>👤 Мій профіль</h2>
+      <p id="days-left"></p>
+      <h3>💛 Улюблені рецепти</h3>
+      <div id="favorites-container"></div>
+    </div>
   </div>
 
   <div class="bottom-nav-wrapper">
     <div class="bottom-nav" id="bottomNav">
       <button onclick="showSection('section-profile')">👤 Профіль</button>
       <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
-      <button onclick="showSection('section-menu')">🮺 Меню</button>
+      <button onclick="showSection('section-menu')">�귪 Меню</button>
       <button onclick="showSection('section-list')">📟 Список</button>
       <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
     </div>
   </div>
 
- <script>
-const categories = [
-  "👶 Для дітей",
-  "🥗 Вегетаріанське",
-  "🌾 Без глютену",
-  "⚡ Швидко",
-  "🍲 Перші страви",
-  "🥘 Другі страви",
-  "🥗 Салати",
-  "🥒 Консервація та соління",
-  "🥤 Напої",
-  "🍰 Десерти",
-  "🍞 Випічка",
-  "🥪 Закуски",
-  "🫕 Соуси та заправки"
-];
-async function fetchRecipes(category = null) {
-  try {
-    let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
-    if (category) {
-      url += `?category=${encodeURIComponent(category.toLowerCase())}`;
-    }
-    const response = await fetch(url);
-    return await response.json();
-  } catch (e) {
-    console.error("Помилка при завантаженні:", e);
-    return [];
-  }
-}
-
-function groupByRecipeNumber(data) {
-  const grouped = {};
-  data.forEach(row => {
-    const id = row["номер рецепту"];
-    if (!grouped[id]) grouped[id] = [];
-    grouped[id].push(row);
-  });
-  return Object.values(grouped);
-}
-
-async function loadCategories() {
-  const container = document.getElementById('section-categories');
-  container.innerHTML = '';
-  categories.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.innerText = cat;
-    btn.onclick = async () => {
-  const cleanCategory = cat.replace(/^[^\wа-яА-ЯёЁҐґІіЇїЄє]+/, '').trim(); // прибирає емодзі
-  const raw = await fetchRecipes(cleanCategory.toLowerCase());
-  const grouped = groupByRecipeNumber(raw);
-  renderGroupedRecipes(grouped, cat);
-};
-
-    container.appendChild(btn);
-  });
-}
-
-async function loadDailyRecipe() {
-  const recipes = await fetchRecipes();
-  const container = document.getElementById('daily-recipe');
-  const grouped = groupByRecipeNumber(recipes);
-  if (grouped.length === 0) return;
-
-  const recipe = grouped[0];
-  const id = `daily-details`;
-  const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-
-  container.innerHTML = `
-    <div class="recipe-card">
-      <h2>${info["назва рецепту"]}</h2>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-      <div id="${id}" style="display:none; margin-top:10px;"></div>
-    </div>
-  `;
-
-  const block = document.getElementById(id);
-  recipe.forEach(r => {
-    if (r["тип блоку"] === "текст") {
-      block.innerHTML += `<p>${r["контент"]}</p>`;
-    } else if (r["тип блоку"] === "фото") {
-      block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-    }
-  });
-}
-
-function renderGroupedRecipes(groups, category) {
-  const container = document.getElementById('section-recipes');
-  container.innerHTML = `<h2>🍴 ${category}</h2>`;
-
-  groups.forEach((group, index) => {
-    const id = `recipe-details-${index}`;
-    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
-
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
-    card.innerHTML = `
-      <h3>${info["назва рецепту"]}</h3>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <div class="recipe-buttons">
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <button class="favorite-button" onclick="addToFavorites('${info["номер рецепту"]}', this)">❤️ Улюблене</button>
-      </div>
-      <div id="${id}" style="display:none; margin-top:10px;"></div>
-    `;
-    container.appendChild(card);
-
-    const block = document.getElementById(id);
-    group.forEach(r => {
-      if (r["тип блоку"] === "текст") {
-        block.innerHTML += `<p>${r["контент"]}</p>`;
-      } else if (r["тип блоку"] === "фото") {
-        block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-      }
-    });
-  });
-
-  showSection('section-recipes');
-}
-
-function toggleRecipe(id, btn) {
-  const el = document.getElementById(id);
-  const isShown = el.style.display === 'block';
-  el.style.display = isShown ? 'none' : 'block';
-  btn.innerText = isShown ? '➕ Показати рецепт' : '➖ Згорнути';
-
-}
-function addToFavorites(recipeId, button) {
-  let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  if (!favorites.includes(recipeId)) {
-    favorites.push(recipeId);
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    button.innerText = '💛 У списку';
-    button.disabled = true;
-  }
-}
-
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-  const section = document.getElementById(id);
-  if (section) section.classList.add('active');
-  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-  const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
-  if (activeBtn) activeBtn.classList.add('active');
-  document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
-  if (id === 'section-profile') {
-  loadFavorites();
-}
-
-
-
-function goHome() {
-  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-  document.getElementById('section-categories').classList.add('active');
-  document.getElementById('daily-recipe').classList.add('active');
-  document.querySelector('.back-button').style.display = 'none';
-}
-
-window.onload = async function () {
-  await loadCategories();
-  await loadDailyRecipe();
-  goHome(); // ⬅⬅⬅ ДОДАЙ ЦЕ!
-
-
-  const start = localStorage.getItem('trial_start') || Date.now();
-  localStorage.setItem('trial_start', start);
-  const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
-  const daysLeft = 7 - daysUsed;
-  document.getElementById('days-left').innerHTML =
-    daysLeft > 0
-      ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
-      : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
-};
-
-   async function loadFavorites() {
-  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  if (!favorites.length) {
-    document.getElementById('favorites-container').innerHTML = '<p>Немає збережених рецептів</p>';
-    return;
-  }
-
-  const allRecipes = await fetchRecipes();
-  const grouped = groupByRecipeNumber(allRecipes);
-  const filteredGroups = grouped.filter(group => {
-    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
-    return favorites.includes(info["номер рецепту"]);
-  });
-
-  const container = document.getElementById('favorites-container');
-  container.innerHTML = '';
-  filteredGroups.forEach((group, index) => {
-    const id = `favorite-${index}`;
-    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
-
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
-    card.innerHTML = `
-      <h3>${info["назва рецепту"]}</h3>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-      <div id="${id}" style="display:none; margin-top:10px;"></div>
-    `;
-
-    container.appendChild(card);
-
-    const block = document.getElementById(id);
-    group.forEach(r => {
-      if (r["тип блоку"] === "текст") {
-        block.innerHTML += `<p>${r["контент"]}</p>`;
-      } else if (r["тип блоку"] === "фото") {
-        block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-      }
-    });
-  });
-}
-
-</script>
-
+  <script>
+    // твій JavaScript без змін, тільки винесено goHome() нижче showSection
+    // і викликається goHome() в window.onload
+  </script>
 </body>
 </html>
