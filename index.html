@@ -85,6 +85,7 @@
     <ul id="custom-list" style="padding-left: 20px;"></ul>
   </div>
 </div>
+
 </div>
 </div>
   <!-- Нижнє меню -->
@@ -254,16 +255,11 @@ function showSection(id) {
   // Кнопка "На головну"
   document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
 
-  // Якщо це профіль — підгружаємо улюблене і список
-  if (id === 'section-profile') {
-    loadFavorites();
-    loadCustomList();
-  }
-
-  // Якщо це "Що купити" — теж завантажуємо список
-  if (id === 'section-buy') {
-    loadCustomList();
-  }
+  // Якщо це профіль або розділ покупок — завантажуємо потрібне
+if (id === 'section-profile' || id === 'section-buy') {
+  loadFavorites();
+  loadCustomList();
+}
 }
 function goHome() {
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
