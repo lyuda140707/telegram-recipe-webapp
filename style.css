@@ -474,5 +474,13 @@ h1 {
 .accordion-open .accordion-content {
   display: block;
 }
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.accordion-open .accordion-content {
+  max-height: 500px; /* можеш змінити, головне — більше за висоту контенту */
+}
 
 
