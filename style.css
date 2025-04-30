@@ -227,10 +227,6 @@ h1 {
   white-space: nowrap;
 }
 
-.bottom-nav button:hover {
-  background-color: #fff1b8;
-}
-
 .bottom-nav button.active {
   background-color: #ffe082;
   font-weight: bold;
@@ -481,6 +477,22 @@ h1 {
 }
 .accordion-open .accordion-content {
   max-height: 500px; /* можеш змінити, головне — більше за висоту контенту */
+}
+button:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+ul li {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.bottom-nav button:hover {
+  background: #ffe28a;
+  border-radius: 10px;
 }
 
 
