@@ -49,9 +49,15 @@
       <p id="days-left"></p>
       <h3 id="open-favorites" style="cursor:pointer;">💛 Улюблені рецепти</h3>
       <h3 id="open-list" style="cursor:pointer;">🛒 Що купити</h3>
-      <ul id="custom-list" style="padding-left: 20px;"></ul>
+      <div style="margin-top:10px;">
+  <input id="custom-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
+  <button onclick="addToCustomList()" style="padding:8px;">➕</button>
+</div>
 
-      <div id="favorites-container"></div>
+      <div id="favorites-container">
+  <!-- сюди буде додаватись картка з кнопкою та прихованим блоком -->
+</div>
+
     </div>
   </div>
 
@@ -272,7 +278,8 @@ async function loadFavorites() {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.innerHTML = `
+  
+card.innerHTML = `
   <h3>${info["назва рецепту"]}</h3>
   <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
   <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
@@ -308,6 +315,17 @@ function loadCustomList() {
     li.innerText = `• ${item}`;
     container.appendChild(li);
   });
+}
+function addToCustomList() {
+  const input = document.getElementById('custom-input');
+  const value = input.value.trim();
+  if (!value) return;
+
+  const items = JSON.parse(localStorage.getItem('custom_list')) || [];
+  items.push(value);
+  localStorage.setItem('custom_list', JSON.stringify(items));
+  input.value = '';
+  loadCustomList(); // оновлюємо список
 }
 
 </script>
