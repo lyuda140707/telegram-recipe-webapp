@@ -33,6 +33,15 @@
     .detail-button:hover {
       background-color: #ffce58;
     }
+    .accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.accordion-open .accordion-content {
+  max-height: 1000px;
+}
+
   </style>
 </head>
 <body>
@@ -380,7 +389,7 @@ function loadCustomList() {
 }
 function addToCustomList() {
   const inputs = document.querySelectorAll('.custom-list-input');
-  const input = Array.from(inputs).find(el => el.offsetParent !== null); // Знаходимо той, що видно
+  const input = Array.from(inputs).find(el => el.offsetParent !== null);
   if (!input) return;
 
   const value = input.value.trim();
@@ -391,7 +400,11 @@ function addToCustomList() {
   localStorage.setItem('custom_list', JSON.stringify(items));
   input.value = '';
   loadCustomList();
+
+  // ✅ Автоматичне фокусування на поле
+  setTimeout(() => input.focus(), 0);
 }
+
 
 
 function removeFromCustomList(index) {
