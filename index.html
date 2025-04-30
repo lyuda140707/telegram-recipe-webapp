@@ -230,8 +230,10 @@ function goHome() {
 }
 
 window.onload = async function () {
-  loadCategories();
-  loadDailyRecipe();
+  await loadCategories();
+  await loadDailyRecipe();
+  goHome(); // ⬅⬅⬅ ДОДАЙ ЦЕ!
+
 
   const start = localStorage.getItem('trial_start') || Date.now();
   localStorage.setItem('trial_start', start);
