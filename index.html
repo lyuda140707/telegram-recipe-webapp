@@ -47,19 +47,19 @@
     <div class="section" id="section-profile">
       <h2>👤 Мій профіль</h2>
       <p id="days-left"></p>
-      <h3 id="open-favorites" style="cursor:pointer;">💛 Улюблені рецепти</h3>
+     <h3 id="open-favorites" style="cursor:pointer;">💛 Улюблені рецепти <span id="arrow-fav">🔽</span></h3>
 <div id="favorites-wrapper" style="display:none;">
   <div id="favorites-container"></div>
 </div>
-      <h3 id="open-list" style="cursor:pointer;">🛒 Що купити</h3>
-      <div style="margin-top:10px;">
-  <input id="custom-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
-  <button onclick="addToCustomList()" style="padding:8px;">➕</button>
-</div>
-      <ul id="custom-list" style="padding-left: 20px;"></ul>
-      
- 
-  <!-- сюди буде додаватись картка з кнопкою та прихованим блоком -->
+     <h3 id="open-list" style="cursor:pointer;">🛒 Що купити <span id="arrow-list">🔽</span></h3>
+<div id="custom-wrapper" style="display:none;">
+  <div style="margin-top:10px;">
+    <input id="custom-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
+    <button onclick="addToCustomList()" style="padding:8px;">➕</button>
+  </div>
+  <ul id="custom-list" style="padding-left: 20px;"></ul>
+  
+ <!-- сюди буде додаватись картка з кнопкою та прихованим блоком -->
     </div>
   </div>
 
@@ -68,7 +68,7 @@
       <button onclick="showSection('section-profile')">👤 Профіль</button>
       <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
       <button onclick="showSection('section-menu')">🍽 Меню</button>
-      <button id="open-list">🛒 Що купити</button>
+      <button onclick="toggleListSection()">🛒 Що купити</button>
       <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
     </div>
   </div>
@@ -247,18 +247,27 @@ window.onload = async function () {
     daysLeft > 0
       ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
       : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
-
-
-  document.getElementById('open-list').addEventListener('click', () => {
-    showSection('section-profile');
-    loadCustomList();
-  });
 };
-document.getElementById('open-favorites').addEventListener('click', () => {
-  const wrapper = document.getElementById('favorites-wrapper');
+
+// ✅ А ось функція ЗОВНІ:
+function toggleListSection() {
+  showSection('section-profile');
+  const wrapper = document.getElementById('custom-wrapper');
+  const arrow = document.getElementById('arrow-list');
   const isVisible = wrapper.style.display === 'block';
   wrapper.style.display = isVisible ? 'none' : 'block';
-  if (!isVisible) loadFavorites(); // якщо відкрили — завантажуємо
+  arrow.innerText = isVisible ? '🔽' : '🔼';
+  if (!isVisible) loadCustomList();
+}
+
+
+document.getElementById('open-favorites').addEventListener('click', () => {
+  const wrapper = document.getElementById('favorites-wrapper');
+  const arrow = document.getElementById('arrow-fav');
+  const isVisible = wrapper.style.display === 'block';
+  wrapper.style.display = isVisible ? 'none' : 'block';
+  arrow.innerText = isVisible ? '🔽' : '🔼';
+  if (!isVisible) loadFavorites();
 });
 
 async function loadFavorites() {
