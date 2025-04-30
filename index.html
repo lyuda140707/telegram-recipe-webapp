@@ -47,21 +47,28 @@
     <div class="section" id="section-profile">
       <h2>👤 Мій профіль</h2>
       <p id="days-left"></p>
-     <h3 id="open-favorites" style="cursor:pointer;">💛 Улюблені рецепти <span id="arrow-fav">🔽</span></h3>
-<div id="favorites-wrapper" style="display:none;">
-  <div id="favorites-container"></div>
+     <div class="accordion-block" id="fav-accordion">
+  <div class="accordion-title" id="open-favorites">
+    💛 Улюблені рецепти <span id="arrow-fav">🔽</span>
+  </div>
+  <div class="accordion-content" id="favorites-wrapper">
+    <div id="favorites-container"></div>
+  </div>
 </div>
-     <h3 id="open-list" style="cursor:pointer;">🛒 Що купити <span id="arrow-list">🔽</span></h3>
-<div id="custom-wrapper" style="display:none;">
-  <div style="margin-top:10px;">
-    <input id="custom-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
-    <button onclick="addToCustomList()" style="padding:8px;">➕</button>
+
+<div class="accordion-block" id="list-accordion">
+  <div class="accordion-title" id="open-list">
+    🛒 Що купити <span id="arrow-list">🔽</span>
   </div>
-  <ul id="custom-list" style="padding-left: 20px;"></ul>
-  
- <!-- сюди буде додаватись картка з кнопкою та прихованим блоком -->
+  <div class="accordion-content" id="custom-wrapper">
+    <div style="margin-top:10px;">
+      <input id="custom-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
+      <button onclick="addToCustomList()" style="padding:8px;">➕</button>
     </div>
+    <ul id="custom-list" style="padding-left: 20px;"></ul>
   </div>
+</div>
+
 
   <div class="bottom-nav-wrapper">
     <div class="bottom-nav" id="bottomNav">
@@ -262,12 +269,24 @@ function toggleListSection() {
 
 
 document.getElementById('open-favorites').addEventListener('click', () => {
+  const block = document.getElementById('fav-accordion');
   const wrapper = document.getElementById('favorites-wrapper');
   const arrow = document.getElementById('arrow-fav');
-  const isVisible = wrapper.style.display === 'block';
-  wrapper.style.display = isVisible ? 'none' : 'block';
-  arrow.innerText = isVisible ? '🔽' : '🔼';
-  if (!isVisible) loadFavorites();
+  const isOpen = block.classList.contains('accordion-open');
+  block.classList.toggle('accordion-open');
+  arrow.innerText = isOpen ? '🔽' : '🔼';
+  if (!isOpen) loadFavorites();
+});
+
+document.getElementById('open-list').addEventListener('click', () => {
+  showSection('section-profile');
+  const block = document.getElementById('list-accordion');
+  const wrapper = document.getElementById('custom-wrapper');
+  const arrow = document.getElementById('arrow-list');
+  const isOpen = block.classList.contains('accordion-open');
+  block.classList.toggle('accordion-open');
+  arrow.innerText = isOpen ? '🔽' : '🔼';
+  if (!isOpen) loadCustomList();
 });
 
 async function loadFavorites() {
