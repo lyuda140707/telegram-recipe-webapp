@@ -286,7 +286,7 @@ h1 {
 }
 .back-button {
   position: fixed;
-  top: 15px;
+  top: 50px; /* 🟡 Було 15px — стало 50px */
   left: 15px;
   background: #fff8d6;
   color: #333;
