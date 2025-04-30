@@ -312,10 +312,11 @@ function loadCustomList() {
   }
   items.forEach((item, index) => {
     const li = document.createElement('li');
-    li.innerText = `• ${item}`;
+    li.innerHTML = `• ${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
     container.appendChild(li);
   });
 }
+
 function addToCustomList() {
   const input = document.getElementById('custom-input');
   const value = input.value.trim();
@@ -326,6 +327,12 @@ function addToCustomList() {
   localStorage.setItem('custom_list', JSON.stringify(items));
   input.value = '';
   loadCustomList(); // оновлюємо список
+}
+function removeFromCustomList(index) {
+  const items = JSON.parse(localStorage.getItem('custom_list')) || [];
+  items.splice(index, 1); // видаляємо обраний
+  localStorage.setItem('custom_list', JSON.stringify(items));
+  loadCustomList(); // оновлюємо список на сторінці
 }
 
 </script>
