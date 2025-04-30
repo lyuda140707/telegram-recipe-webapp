@@ -451,3 +451,28 @@ h1 {
   }
 }
 
+.accordion-block {
+  background: #fff3c4;
+  border-radius: 12px;
+  margin: 10px 0;
+  padding: 10px 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+.accordion-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+.accordion-content {
+  display: none;
+  margin-top: 10px;
+}
+.accordion-open .accordion-content {
+  display: block;
+}
+
+
