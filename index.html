@@ -48,7 +48,7 @@
     <div class="section" id="section-profile">
       <h2>👤 Мій профіль</h2>
       <p id="days-left"></p>
-      <h3>💛 Улюблені рецепти</h3>
+      <h3 id="open-favorites" style="cursor:pointer;">💛 Улюблені рецепти</h3>
       <div id="favorites-container"></div>
     </div>
   </div>
@@ -144,6 +144,8 @@ function renderGroupedRecipes(groups, category) {
   groups.forEach((group, index) => {
     const id = `recipe-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+    const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
+
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.innerHTML = `
@@ -152,7 +154,9 @@ function renderGroupedRecipes(groups, category) {
       <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
       <div class="recipe-buttons">
         <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <button class="favorite-button" onclick="addToFavorites('${info["номер рецепту"]}', this)">❤️ Улюблене</button>
+        <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">
+          ${isFavorite ? '💛 У списку' : '❤️ Улюблене'}
+        </button>
       </div>
       <div id="${id}" style="display:none; margin-top:10px;"></div>
     `;
@@ -160,12 +164,16 @@ function renderGroupedRecipes(groups, category) {
 
     const block = document.getElementById(id);
     group.forEach(r => {
-      if (r["тип блоку"] === "текст") block.innerHTML += `<p>${r["контент"]}</p>`;
-      else if (r["тип блоку"] === "фото") block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+      if (r["тип блоку"] === "текст") {
+        block.innerHTML += `<p>${r["контент"]}</p>`;
+      } else if (r["тип блоку"] === "фото") {
+        block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+      }
     });
   });
   showSection('section-recipes');
 }
+
 
 function toggleRecipe(id, btn) {
   const el = document.getElementById(id);
@@ -174,13 +182,23 @@ function toggleRecipe(id, btn) {
   btn.innerText = isShown ? '➕ Показати рецепт' : '➖ Згорнути';
 }
 
-function addToFavorites(recipeId, button) {
+function toggleFavorite(recipeId, button) {
   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  if (!favorites.includes(recipeId)) {
+  const index = favorites.indexOf(recipeId);
+
+  if (index === -1) {
     favorites.push(recipeId);
-    localStorage.setItem('favorites', JSON.stringify(favorites));
     button.innerText = '💛 У списку';
-    button.disabled = true;
+  } else {
+    favorites.splice(index, 1);
+    button.innerText = '❤️ Улюблене';
+  }
+
+  button.disabled = false;
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+
+  if (document.getElementById('favorites-container')) {
+    loadFavorites(); // оновлюємо профіль після видалення
   }
 }
 
@@ -216,7 +234,14 @@ window.onload = async function () {
     daysLeft > 0
       ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
       : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+
+  // ⬇️ Правильне місце для додавання слухача на клік
+  document.getElementById('open-favorites').addEventListener('click', () => {
+    showSection('section-profile');
+    loadFavorites();
+  });
 };
+
 
 async function loadFavorites() {
   const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -244,7 +269,10 @@ async function loadFavorites() {
       <h3>${info["назва рецепту"]}</h3>
       <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
       <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+      <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">
+  💛 У списку
+</button>
+
       <div id="${id}" style="display:none; margin-top:10px;"></div>
     `;
 
