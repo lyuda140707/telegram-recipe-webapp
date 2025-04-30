@@ -375,18 +375,38 @@ async function loadFavorites() {
 
 function loadCustomList() {
   const items = JSON.parse(localStorage.getItem('custom_list')) || [];
-  const container = document.getElementById('custom-list');
-  container.innerHTML = '';
-  if (!items.length) {
-    container.innerHTML = '<li>Порожньо</li>';
-    return;
+
+  // 🔁 1. Оновлюємо список у профілі
+  const containerProfile = document.getElementById('custom-list');
+  if (containerProfile) {
+    containerProfile.innerHTML = '';
+    if (!items.length) {
+      containerProfile.innerHTML = '<li>Порожньо</li>';
+    } else {
+      items.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `• ${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
+        containerProfile.appendChild(li);
+      });
+    }
   }
-  items.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `• ${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
-    container.appendChild(li);
-  });
+
+  // 🔁 2. Оновлюємо список у секції "Що купити"
+  const containerBuy = document.getElementById('custom-list-buy');
+  if (containerBuy) {
+    containerBuy.innerHTML = '';
+    if (!items.length) {
+      containerBuy.innerHTML = '<li>Порожньо</li>';
+    } else {
+      items.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `• ${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
+        containerBuy.appendChild(li);
+      });
+    }
+  }
 }
+
 function addToCustomList() {
   const inputs = document.querySelectorAll('.custom-list-input');
   const input = Array.from(inputs).find(el => el.offsetParent !== null);
