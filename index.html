@@ -62,6 +62,39 @@
   display: none;
   margin-top: 10px;
 }
+.weekly-item {
+  background: #fffbe6;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background: #fffef5;
+  margin-left: 8px;
+  outline: none;
+}
+
+.main-button {
+  padding: 10px 20px;
+  background: linear-gradient(to right, #ffe17b, #ffd95a);
+  border: none;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+.main-button:hover {
+  background: linear-gradient(to right, #ffc300, #ffb347);
+}
 
   </style>
 </head>
@@ -95,8 +128,8 @@
 <div class="section" id="section-planner">
   <h2>📅 Мій тижневий план</h2>
   <p>Натисніть кнопку нижче, щоб згенерувати меню на тиждень 👇</p>
-  <button onclick="generateWeeklyMenu()" style="padding:10px 16px;">🔄 Згенерувати меню</button>
-  <button onclick="clearWeeklyMenu()" style="padding:6px 12px; margin-top:10px;">🗑 Очистити меню</button>
+ <button class="main-button" onclick="generateWeeklyMenu()">🔄 Згенерувати меню</button>
+<button class="main-button" onclick="clearWeeklyMenu()">🗑 Очистити меню</button>
   <ul id="weekly-menu-list" style="padding-left:20px; margin-top:10px;"></ul>
 </div>
 
@@ -442,6 +475,7 @@ function loadCustomList() {
     } else {
       items.forEach((item, index) => {
         const li = document.createElement('li');
+            li.className = 'weekly-item';;
         li.innerHTML = `• ${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
         containerProfile.appendChild(li);
       });
@@ -567,7 +601,8 @@ function renderWeeklyMenu(menu) {
   ];
 
   menu.forEach((item, index) => {
-    const li = document.createElement('li');
+   const li = document.createElement('li');
+    li.className = 'weekly-item';
     const select = document.createElement('select');
     const recipeContainer = document.createElement('div'); // 🟢 перенесли сюди!
 
