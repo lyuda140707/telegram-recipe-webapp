@@ -524,5 +524,20 @@ ul li {
   border-radius: 10px;
   display: inline-block;
 }
+.main-button.generate {
+  background: linear-gradient(to right, #88e1f2, #5ecfea); /* синя */
+  color: #003344;
+}
+.main-button.generate:hover {
+  background: linear-gradient(to right, #5ecfea, #42c1e0);
+}
+
+.main-button.clear {
+  background: linear-gradient(to right, #ffd1d1, #ffaaaa); /* рожева */
+  color: #5a0000;
+}
+.main-button.clear:hover {
+  background: linear-gradient(to right, #ffb3b3, #ff8c8c);
+}
 
 
