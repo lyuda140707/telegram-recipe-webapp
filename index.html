@@ -63,6 +63,19 @@
 </div>
 <div class="section" id="section-fridge">
   <h2>❄️ Що є в холодильнику?</h2>
+  <div style="margin-top:10px;">
+    <input id="fridge-input" placeholder="Що є в холодильнику..." style="padding:8px; width:80%;">
+    <button onclick="searchFridge()" style="padding:8px;">🔍 Знайти рецепти</button>
+  </div>
+  <div id="fridge-results" style="margin-top:15px;"></div>
+</div>
+
+<!-- ✅ Генератор меню -->
+<div class="section" id="section-planner">
+  <h2>📅 Мій тижневий план</h2>
+  <p>Натисніть кнопку нижче, щоб згенерувати меню на тиждень 👇</p>
+  <button onclick="generateWeeklyMenu()" style="padding:10px 16px;">🔄 Згенерувати меню</button>
+  <ul id="weekly-menu-list" style="padding-left:20px; margin-top:10px;"></ul>
 </div>
 
 <!-- ✅ окрема секція -->
@@ -108,7 +121,7 @@
   <div class="bottom-nav" id="bottomNav">
     <button onclick="showSection('section-profile')">👤 Профіль</button>
     <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
-    <button onclick="showSection('section-menu')">🍽 Меню</button>
+    <button onclick="showSection('section-planner')">📅 Меню на тиждень</button>
     <button onclick="showSection('section-buy')">🛒 Що купити</button>
     <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
   </div>
@@ -376,6 +389,7 @@ async function loadFavorites() {
         block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
       }
     });
+    localStorage.setItem('all_recipes', JSON.stringify(recipes));
   });
 }
 
@@ -447,6 +461,39 @@ setTimeout(() => {
     setTimeout(() => hint.remove(), 400); // Повністю прибере з DOM
   }
 }, 10000); // 10 000 мс = 10 секунд
+function generateWeeklyMenu() {
+  const categories = [
+    "Перші страви", "Другі страви", "Салати", "Десерти", "Випічка", "Закуски", "Напої"
+  ];
+  const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
+  const list = document.getElementById('weekly-menu-list');
+  list.innerHTML = '';
+
+  days.forEach(day => {
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    const li = document.createElement('li');
+    li.textContent = `${day}: ${randomCategory}`;
+    list.appendChild(li);
+  });
+}
+function searchFridge() {
+  const input = document.getElementById('fridge-input').value.toLowerCase();
+  const fridgeItems = input.split(',').map(i => i.trim()).filter(Boolean);
+  const results = [];
+  const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
+
+  all.forEach(r => {
+    const ingredients = (r["інгредієнти"] || "").toLowerCase();
+    if (fridgeItems.every(i => ingredients.includes(i))) {
+      results.push(r);
+    }
+  });
+
+  const container = document.getElementById('fridge-results');
+  container.innerHTML = results.length
+    ? results.map(r => `<div class="recipe-card"><h3>${r["назва рецепту"]}</h3><p>${r["інгредієнти"]}</p></div>`).join('')
+    : '<p>Нічого не знайдено 😞</p>';
+}
 
 </script>
 </body>
