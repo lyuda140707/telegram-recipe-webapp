@@ -127,8 +127,8 @@
   </div>
 </div>
 
+
   
-  <script>
 const categories = [
   "👶 Для дітей", "🥗 Вегетаріанське", "🌾 Без глютену", "⚡ Швидко", "🍲 Перші страви",
   "🥘 Другі страви", "🥗 Салати", "🥒 Консервація та соління", "🥤 Напої", "🍰 Десерти",
@@ -503,6 +503,43 @@ function searchFridge() {
     ? results.map(r => `<div class="recipe-card"><h3>${r["назва рецепту"]}</h3><p>${r["інгредієнти"]}</p></div>`).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
+<script>
+  async function loadWeeklyMenu() {
+    const container = document.getElementById("weeklyMenu");
+    container.innerHTML = "<p>Завантаження меню...</p>";
+
+    try {
+      const res = await fetch("https://recipe-backend-0gz1.onrender.com/weekly-menu");
+      const data = await res.json();
+
+      let html = "<h2>🍽 Меню на тиждень</h2><ul>";
+
+      for (const [day, blocks] of Object.entries(data)) {
+        if (blocks.length > 0) {
+          const title = blocks.find(b => b["назва рецепту"])?.["назва рецепту"] || "Без назви";
+          html += `<li><b>${day}:</b> ${title}</li>`;
+        } else {
+          html += `<li><b>${day}:</b> немає рецепта 😢</li>`;
+        }
+      }
+
+      html += "</ul>";
+      container.innerHTML = html;
+
+    } catch (error) {
+      container.innerHTML = "<p>Помилка завантаження меню 🛑</p>";
+      console.error("loadWeeklyMenu error:", error);
+    }
+  }
+
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    if (id === 'section-planner') {
+      loadWeeklyMenu();
+    }
+  }
 
 </script>
 </body>
