@@ -622,7 +622,12 @@ function renderWeeklyMenu(menu) {
       loadRecipesForDay(item.day, select.value, recipeContainer); // ✅ тепер працює
     };
 
-    li.innerHTML = `<strong>${item.day}:</strong> `;
+    const dayIcons = {
+  'Пн': '🌞', 'Вт': '🌿', 'Ср': '🥕', 'Чт': '🍅',
+  'Пт': '🍝', 'Сб': '🍰', 'Нд': '☕'
+};
+li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
+
     li.appendChild(select);
 
     const toggleBtn = document.createElement('button');
