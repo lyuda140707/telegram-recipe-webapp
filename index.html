@@ -41,6 +41,27 @@
 .accordion-open .accordion-content {
   max-height: 1000px;
 }
+.recipe-toggle {
+  background: linear-gradient(to right, #ffda77, #ffd166);
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin: 10px 0;
+  transition: background 0.3s;
+}
+
+.recipe-toggle:hover {
+  background: linear-gradient(to right, #ffc300, #ffb347);
+}
+
+.recipe-card.hidden {
+  display: none;
+  margin-top: 10px;
+}
 
   </style>
 </head>
@@ -251,12 +272,6 @@ card.innerHTML = `
 }
 
 
-function toggleRecipe(id, btn) {
-  const el = document.getElementById(id);
-  const isShown = el.style.display === 'block';
-  el.style.display = isShown ? 'none' : 'block';
-  btn.innerText = isShown ? '➕ Показати рецепт' : '➖ Згорнути';
-}
 
 function toggleFavorite(recipeId, button) {
   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -277,7 +292,13 @@ function toggleFavorite(recipeId, button) {
     loadFavorites(); // оновлюємо профіль після видалення
   }
 }
-
+function toggleRecipe(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const shown = !el.classList.contains('hidden');
+  el.classList.toggle('hidden', shown);
+  btn.innerText = shown ? `📖 Показати рецепт` : `🔽 Згорнути`;
+}
 function showSection(id) {
   // Приховуємо всі секції
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
@@ -564,12 +585,25 @@ function renderWeeklyMenu(menu) {
     };
 
     li.innerHTML = `<strong>${item.day}:</strong> `;
-    li.appendChild(select);
-    li.appendChild(recipeContainer);
-    container.appendChild(li);
+li.appendChild(select);
 
-    // Завантажити одразу при рендері
-    loadRecipesForDay(item.day, item.category, recipeContainer);
+// Кнопка + рецепт
+const toggleBtn = document.createElement('button');
+toggleBtn.className = 'recipe-toggle';
+toggleBtn.textContent = '📖 Показати рецепт';
+toggleBtn.onclick = () => toggleRecipe(`${item.day}-${index}`, toggleBtn);
+
+const recipeContainer = document.createElement('div');
+recipeContainer.className = 'recipe-card hidden';
+recipeContainer.id = `${item.day}-${index}`;
+
+li.appendChild(toggleBtn);
+li.appendChild(recipeContainer);
+container.appendChild(li);
+
+// Завантажити одразу
+loadRecipesForDay(item.day, item.category, recipeContainer);
+
   });
 }
 
