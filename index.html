@@ -175,6 +175,7 @@ async function loadCategories() {
 
 async function loadDailyRecipe() {
   const recipes = await fetchRecipes();
+  localStorage.setItem('all_recipes', JSON.stringify(recipes));
   const container = document.getElementById('daily-recipe');
   const grouped = groupByRecipeNumber(recipes);
   if (grouped.length === 0) return;
@@ -389,7 +390,6 @@ async function loadFavorites() {
         block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
       }
     });
-    localStorage.setItem('all_recipes', JSON.stringify(recipes));
   });
 }
 
