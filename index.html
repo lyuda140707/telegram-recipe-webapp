@@ -479,12 +479,17 @@ function generateWeeklyMenu() {
 function renderWeeklyMenu(menu) {
   const container = document.getElementById('weekly-menu-list');
   container.innerHTML = '';
-  menu.forEach(item => {
+
+  menu.forEach((item, index) => {
     const li = document.createElement('li');
-    li.textContent = `${item.day}: ${item.category}`;
+    li.innerHTML = `
+      <strong>${item.day}:</strong>
+      <input type="text" value="${item.category}" style="margin-left: 8px; padding: 4px;" onchange="updateMenuCategory(${index}, this.value)">
+    `;
     container.appendChild(li);
   });
 }
+
 function searchFridge() {
   const input = document.getElementById('fridge-input').value.toLowerCase();
   const fridgeItems = input.split(',').map(i => i.trim()).filter(Boolean);
@@ -502,6 +507,13 @@ function searchFridge() {
   container.innerHTML = results.length
     ? results.map(r => `<div class="recipe-card"><h3>${r["назва рецепту"]}</h3><p>${r["інгредієнти"]}</p></div>`).join('')
     : '<p>Нічого не знайдено 😞</p>';
+}
+function updateMenuCategory(index, newValue) {
+  const menu = JSON.parse(localStorage.getItem('weekly_menu')) || [];
+  if (menu[index]) {
+    menu[index].category = newValue.trim();
+    localStorage.setItem('weekly_menu', JSON.stringify(menu));
+  }
 }
 
 </body>
