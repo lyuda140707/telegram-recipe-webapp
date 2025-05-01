@@ -525,19 +525,21 @@ ul li {
   display: inline-block;
 }
 .main-button.generate {
-  background: linear-gradient(to right, #88e1f2, #5ecfea); /* синя */
-  color: #003344;
+  background: linear-gradient(to right, #e8dff5, #d5c4f2);
+  color: #4b3263;
 }
 .main-button.generate:hover {
-  background: linear-gradient(to right, #5ecfea, #42c1e0);
+  background: linear-gradient(to right, #d5c4f2, #c8b1ed);
 }
 
+
 .main-button.clear {
-  background: linear-gradient(to right, #ffd1d1, #ffaaaa); /* рожева */
-  color: #5a0000;
+  background: linear-gradient(to right, #ffe0e9, #ffc2d1);
+  color: #802744;
 }
 .main-button.clear:hover {
-  background: linear-gradient(to right, #ffb3b3, #ff8c8c);
+  background: linear-gradient(to right, #ffc2d1, #ff9ab3);
 }
+
 
 
