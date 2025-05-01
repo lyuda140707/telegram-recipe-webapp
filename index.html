@@ -543,15 +543,9 @@ function removeFromCustomList(index) {
   loadCustomList(); // оновлюємо список на сторінці
 } // ← ✅ оце було потрібно
 function toggleWeeklyInProfile() {
-  const block = document.getElementById('weekly-accordion');
-  const arrow = document.getElementById('arrow-weekly');
-  const isOpen = block.classList.contains('accordion-open');
-
-  block.classList.toggle('accordion-open');
-  arrow.innerText = isOpen ? '🔽' : '🔼';
-
-  if (!isOpen) loadWeeklyInProfile();
+  showSection('section-planner'); // просто показуємо основну секцію меню
 }
+
 
 
 function loadWeeklyInProfile() {
