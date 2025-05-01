@@ -494,5 +494,17 @@ ul li {
   background: #ffe28a;
   border-radius: 10px;
 }
+.recipe-card.hidden {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.recipe-card {
+  transition: all 0.3s ease;
+  opacity: 1;
+  max-height: 1000px;
+}
 
 
