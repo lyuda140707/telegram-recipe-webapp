@@ -111,8 +111,17 @@
       <input class="custom-list-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
       <button onclick="addToCustomList()" style="padding:8px;">➕</button>
     </div>
-    <ul id="custom-list" style="padding-left: 20px;"></ul>
+     <ul id="custom-list" style="padding-left: 20px;"></ul>
+  </div> <!-- ✅ оце має бути тут -->
+  <div class="accordion-block">
+  <div class="accordion-title" onclick="toggleWeeklyInProfile()">
+    📅 Моє меню <span id="arrow-weekly">🔽</span>
   </div>
+  <div class="accordion-content" id="weekly-wrapper">
+    <ul id="weekly-list-profile" style="padding-left: 20px;"></ul>
+  </div>
+</div>
+
 </div>
 
 </div>
@@ -278,12 +287,20 @@ function showSection(id) {
 
   // ✅ Якщо це "Меню на тиждень" — завантажити
   if (id === 'section-planner') {
-  const saved = JSON.parse(localStorage.getItem('weekly_menu'));
-  if (saved && Array.isArray(saved)) {
-    renderWeeklyMenu(saved);
+    const saved = JSON.parse(localStorage.getItem('weekly_menu'));
+    if (saved && Array.isArray(saved)) {
+      renderWeeklyMenu(saved);
+    }
+  }
+
+  // ✅ Якщо це профіль або список покупок — завантажити все
+  if (id === 'section-profile' || id === 'section-buy') {
+    loadFavorites();
+    loadCustomList();
+    loadWeeklyInProfile(); // ➕ додали!
   }
 }
-}
+
 function clearWeeklyMenu() {
   localStorage.removeItem('weekly_menu');
   document.getElementById('weekly-menu-list').innerHTML = '<li>Меню очищено</li>';
@@ -451,6 +468,27 @@ function removeFromCustomList(index) {
   items.splice(index, 1); // видаляємо обраний
   localStorage.setItem('custom_list', JSON.stringify(items));
   loadCustomList(); // оновлюємо список на сторінці
+} // ← ✅ оце було потрібно
+function toggleWeeklyInProfile() {
+  const block = document.getElementById('weekly-wrapper');
+  const arrow = document.getElementById('arrow-weekly');
+  const isOpen = block.style.maxHeight && block.style.maxHeight !== '0px';
+
+  block.style.maxHeight = isOpen ? '0px' : '1000px';
+  arrow.innerText = isOpen ? '🔽' : '🔼';
+
+  if (!isOpen) loadWeeklyInProfile();
+}
+
+function loadWeeklyInProfile() {
+  const list = document.getElementById('weekly-list-profile');
+  const saved = JSON.parse(localStorage.getItem("weekly_menu")) || [];
+
+  list.innerHTML = saved.length
+    ? saved.map(item => `<li><strong>${item.day}:</strong> ${item.category}</li>`).join('')
+    : '<li>Нічого не збережено</li>';
+}
+
 }
 setTimeout(() => {
   const hint = document.querySelector('.swipe-hint');
@@ -480,12 +518,27 @@ function renderWeeklyMenu(menu) {
   const container = document.getElementById('weekly-menu-list');
   container.innerHTML = '';
 
+  const allCategories = [
+    "Перші страви", "Другі страви", "Салати", "Десерти",
+    "Випічка", "Закуски", "Напої"
+  ];
+
   menu.forEach((item, index) => {
     const li = document.createElement('li');
-    li.innerHTML = `
-      <strong>${item.day}:</strong>
-      <input type="text" value="${item.category}" style="margin-left: 8px; padding: 4px;" onchange="updateMenuCategory(${index}, this.value)">
-    `;
+    const select = document.createElement('select');
+
+    allCategories.forEach(cat => {
+      const option = document.createElement('option');
+      option.value = cat;
+      option.textContent = cat;
+      if (cat === item.category) option.selected = true;
+      select.appendChild(option);
+    });
+
+    select.onchange = () => updateMenuCategory(index, select.value);
+
+    li.innerHTML = `<strong>${item.day}:</strong> `;
+    li.appendChild(select);
     container.appendChild(li);
   });
 }
