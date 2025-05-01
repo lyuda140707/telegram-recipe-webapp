@@ -288,24 +288,7 @@ function clearWeeklyMenu() {
   localStorage.removeItem('weekly_menu');
   document.getElementById('weekly-menu-list').innerHTML = '<li>Меню очищено</li>';
 }
-  // Показуємо потрібну
-  const section = document.getElementById(id);
-  if (section) section.classList.add('active');
-
-  // Підсвічування активної кнопки
-  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-  const activeBtn = document.querySelector(`.bottom-nav button[onclick*="${id}"]`);
-  if (activeBtn) activeBtn.classList.add('active');
-
-  // Кнопка "На головну"
-  document.querySelector('.back-button').style.display = id !== 'section-categories' ? 'inline-block' : 'none';
-
-  // Якщо це профіль або розділ покупок — завантажуємо потрібне
-if (id === 'section-profile' || id === 'section-buy') {
-  loadFavorites();
-  loadCustomList();
-}
-}
+  
 function goHome() {
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
   document.getElementById('section-categories').classList.add('active');
