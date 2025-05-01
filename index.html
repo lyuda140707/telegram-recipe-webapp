@@ -95,6 +95,19 @@ select {
 .main-button:hover {
   background: linear-gradient(to right, #ffc300, #ffb347);
 }
+.swipe-hint {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  animation: pulse 1.5s infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
 
   </style>
 </head>
@@ -339,7 +352,10 @@ function showSection(id) {
   // Активуємо поточну
   document.getElementById(id).classList.add('active');
 
-  // ✅ Якщо це "Меню на тиждень" — завантажити
+  // ✅ Показуємо кнопку "⬅ На головну"
+  document.querySelector('.back-button').style.display = 'block';
+
+  // Якщо це "Меню на тиждень" — завантажити
   if (id === 'section-planner') {
     const saved = JSON.parse(localStorage.getItem('weekly_menu'));
     if (saved && Array.isArray(saved)) {
@@ -347,13 +363,14 @@ function showSection(id) {
     }
   }
 
-  // ✅ Якщо це профіль або список покупок — завантажити все
+  // Якщо це профіль або список покупок — завантажити все
   if (id === 'section-profile' || id === 'section-buy') {
     loadFavorites();
     loadCustomList();
-    loadWeeklyInProfile(); // ➕ додали!
+    loadWeeklyInProfile();
   }
 }
+
 
 function clearWeeklyMenu() {
   localStorage.removeItem('weekly_menu');
@@ -552,7 +569,7 @@ setTimeout(() => {
     hint.style.pointerEvents = 'none';
     setTimeout(() => hint.remove(), 400);
   }
-}, 10000); // 10 секунд
+}, 30000); // 10 секунд
 
 // ✅ ВИНЕСЕНА ЗОВНІ ФУНКЦІЯ:
 async function loadRecipesForDay(day, category, container) {
