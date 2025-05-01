@@ -272,6 +272,15 @@ function showSection(id) {
   // Приховуємо всі секції
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
 
+  // Активуємо поточну
+  document.getElementById(id).classList.add('active');
+
+  // ✅ Якщо це "Меню на тиждень" — завантажити
+  if (id === 'section-planner') {
+    loadWeeklyMenu();
+  }
+}
+
   // Показуємо потрібну
   const section = document.getElementById(id);
   if (section) section.classList.add('active');
