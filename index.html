@@ -159,6 +159,14 @@ select {
 <div class="section" id="section-profile">
   <h2>👤 Мій профіль</h2>
   <p id="days-left"></p>
+<div class="accordion-block">
+  <div class="accordion-title" onclick="toggleWeeklyInProfile()">
+    📅 Моє меню <span id="arrow-weekly">🔽</span>
+  </div>
+  <div class="accordion-content" id="weekly-wrapper">
+    <ul id="weekly-list-profile" style="padding-left: 20px;"></ul>
+  </div>
+</div>
 
      <div class="accordion-block" id="fav-accordion">
   <div class="accordion-title" id="open-favorites">
@@ -180,14 +188,7 @@ select {
     </div>
      <ul id="custom-list" style="padding-left: 20px;"></ul>
   </div> <!-- ✅ оце має бути тут -->
-  <div class="accordion-block">
-  <div class="accordion-title" onclick="toggleWeeklyInProfile()">
-    📅 Моє меню <span id="arrow-weekly">🔽</span>
-  </div>
-  <div class="accordion-content" id="weekly-wrapper">
-    <ul id="weekly-list-profile" style="padding-left: 20px;"></ul>
-  </div>
-</div>
+  
 
 </div>
 
