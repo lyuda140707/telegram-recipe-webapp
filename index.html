@@ -45,7 +45,7 @@
   </style>
 </head>
 <body>
- <body>
+ 
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
     <div class="scroll-menu section active" id="section-categories"></div>
@@ -75,6 +75,7 @@
   <h2>📅 Мій тижневий план</h2>
   <p>Натисніть кнопку нижче, щоб згенерувати меню на тиждень 👇</p>
   <button onclick="generateWeeklyMenu()" style="padding:10px 16px;">🔄 Згенерувати меню</button>
+  <button onclick="clearWeeklyMenu()" style="padding:6px 12px; margin-top:10px;">🗑 Очистити меню</button>
   <ul id="weekly-menu-list" style="padding-left:20px; margin-top:10px;"></ul>
 </div>
 
@@ -277,10 +278,16 @@ function showSection(id) {
 
   // ✅ Якщо це "Меню на тиждень" — завантажити
   if (id === 'section-planner') {
-    loadWeeklyMenu();
+  const saved = JSON.parse(localStorage.getItem('weekly_menu'));
+  if (saved && Array.isArray(saved)) {
+    renderWeeklyMenu(saved);
   }
 }
-
+}
+function clearWeeklyMenu() {
+  localStorage.removeItem('weekly_menu');
+  document.getElementById('weekly-menu-list').innerHTML = '<li>Меню очищено</li>';
+}
   // Показуємо потрібну
   const section = document.getElementById(id);
   if (section) section.classList.add('active');
@@ -475,14 +482,24 @@ function generateWeeklyMenu() {
     "Перші страви", "Другі страви", "Салати", "Десерти", "Випічка", "Закуски", "Напої"
   ];
   const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
-  const list = document.getElementById('weekly-menu-list');
-  list.innerHTML = '';
+  const list = [];
 
   days.forEach(day => {
     const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    list.push({ day, category: randomCategory });
+  });
+
+  // Зберігаємо в localStorage
+  localStorage.setItem("weekly_menu", JSON.stringify(list));
+  renderWeeklyMenu(list);
+}
+function renderWeeklyMenu(menu) {
+  const container = document.getElementById('weekly-menu-list');
+  container.innerHTML = '';
+  menu.forEach(item => {
     const li = document.createElement('li');
-    li.textContent = `${day}: ${randomCategory}`;
-    list.appendChild(li);
+    li.textContent = `${item.day}: ${item.category}`;
+    container.appendChild(li);
   });
 }
 function searchFridge() {
@@ -503,44 +520,6 @@ function searchFridge() {
     ? results.map(r => `<div class="recipe-card"><h3>${r["назва рецепту"]}</h3><p>${r["інгредієнти"]}</p></div>`).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
-<script>
-  async function loadWeeklyMenu() {
-    const container = document.getElementById("weeklyMenu");
-    container.innerHTML = "<p>Завантаження меню...</p>";
 
-    try {
-      const res = await fetch("https://recipe-backend-0gz1.onrender.com/weekly-menu");
-      const data = await res.json();
-
-      let html = "<h2>🍽 Меню на тиждень</h2><ul>";
-
-      for (const [day, blocks] of Object.entries(data)) {
-        if (blocks.length > 0) {
-          const title = blocks.find(b => b["назва рецепту"])?.["назва рецепту"] || "Без назви";
-          html += `<li><b>${day}:</b> ${title}</li>`;
-        } else {
-          html += `<li><b>${day}:</b> немає рецепта 😢</li>`;
-        }
-      }
-
-      html += "</ul>";
-      container.innerHTML = html;
-
-    } catch (error) {
-      container.innerHTML = "<p>Помилка завантаження меню 🛑</p>";
-      console.error("loadWeeklyMenu error:", error);
-    }
-  }
-
-  function showSection(id) {
-    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-
-    if (id === 'section-planner') {
-      loadWeeklyMenu();
-    }
-  }
-
-</script>
 </body>
 </html>
