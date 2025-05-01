@@ -159,7 +159,7 @@ select {
 <div class="section" id="section-profile">
   <h2>👤 Мій профіль</h2>
   <p id="days-left"></p>
-<div class="accordion-block">
+<div class="accordion-block" id="weekly-accordion">
   <div class="accordion-title" onclick="toggleWeeklyInProfile()">
     📅 Моє меню <span id="arrow-weekly">🔽</span>
   </div>
@@ -543,15 +543,16 @@ function removeFromCustomList(index) {
   loadCustomList(); // оновлюємо список на сторінці
 } // ← ✅ оце було потрібно
 function toggleWeeklyInProfile() {
-  const block = document.getElementById('weekly-wrapper');
+  const block = document.getElementById('weekly-accordion');
   const arrow = document.getElementById('arrow-weekly');
-  const isOpen = block.style.maxHeight && block.style.maxHeight !== '0px';
+  const isOpen = block.classList.contains('accordion-open');
 
-  block.style.maxHeight = isOpen ? '0px' : '1000px';
+  block.classList.toggle('accordion-open');
   arrow.innerText = isOpen ? '🔽' : '🔼';
 
   if (!isOpen) loadWeeklyInProfile();
 }
+
 
 function loadWeeklyInProfile() {
   const list = document.getElementById('weekly-list-profile');
