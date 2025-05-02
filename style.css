@@ -2,7 +2,7 @@
 body {
   margin: 0;
   font-family: 'Nunito', sans-serif;
-  background: linear-gradient(to bottom, #d9fdd3, #fffcd9);
+  background: linear-gradient(to bottom, #fff7fb, #ffeef5);
   color: #333;
 }
 
@@ -41,23 +41,25 @@ h1 {
   padding: 10px 16px;
   font-size: 14px;
   border: none;
-  border-radius: 20px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 25px;
+  background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s ease;
   white-space: nowrap;
+  color: #3b2042;
+  font-weight: bold;
 }
 
 .scroll-menu button:hover {
-  background-color: #fff1b8;
+  background: linear-gradient(to right, #eeb1e8, #92b2f0);
+  transform: scale(1.05);
 }
 
 .scroll-menu button:active {
   transform: scale(0.98);
 }
 
-/* Рецепт-картка */
 .recipe-card {
   background-color: #fff8d6;
   border-radius: 20px;
@@ -67,17 +69,42 @@ h1 {
   text-align: center;
 }
 
-.recipe-card h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
-  font-family: 'Lobster', cursive;
+.recipe-buttons button,
+.shopping-list,
+.main-button,
+.detail-button,
+.recipe-toggle,
+.favorite-button {
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  color: #4b2c5e;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-.recipe-card .details,
-.recipe-card .ingredients {
-  font-size: 14px;
-  color: #444;
-  margin-bottom: 10px;
+.main-button.generate {
+  background: linear-gradient(to right, #c9e4ff, #e5c2ff);
+  color: #42246b;
+}
+
+.main-button.clear {
+  background: linear-gradient(to right, #ffd6e0, #ffb3c6);
+  color: #742727;
+}
+
+.recipe-toggle {
+  background: linear-gradient(to right, #ffdde1, #ee9ca7);
+  color: #5d2c3e;
+}
+
+.favorite-button {
+  background: linear-gradient(to right, #ffe0f0, #fbc2eb);
+  color: #5c3e59;
 }
 
 .recipe-buttons {
@@ -88,133 +115,27 @@ h1 {
   flex-wrap: wrap;
 }
 
-.recipe-buttons button,
-.shopping-list {
-  padding: 10px 14px;
-  font-size: 14px;
-  border: none;
-  border-radius: 16px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  cursor: pointer;
-}
-
-.shopping-list {
-  width: 100%;
-}
-
-/* Холодильник */
-.fridge-block {
-  background: #d8faff;
-  border-radius: 16px;
-  padding: 20px;
-  margin: 20px 10px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-  text-align: center;
-}
-
-.fridge-block h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.fridge-block input {
-  padding: 10px;
-  width: 80%;
-  max-width: 400px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  margin-bottom: 10px;
-}
-
-.fridge-block button {
-  padding: 10px 16px;
-  font-size: 14px;
-  background-color: #fff;
-  border: none;
-  border-radius: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  cursor: pointer;
-}
-
-/* Профіль */
-.profile-block {
-  background: #ffe6f1;
-  border-radius: 16px;
-  padding: 20px;
-  margin: 20px 10px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-  text-align: center;
-}
-
-.profile-block h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.profile-block p {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.profile-block button {
-  padding: 10px 16px;
-  font-size: 14px;
-  background-color: #fff;
-  border: none;
-  border-radius: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  cursor: pointer;
-}
-
-/* Нижнє меню */
 .bottom-nav-wrapper {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
-  background: linear-gradient(to right, #fffbe6, #ffffff);
-  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(to right, #ffe4f0, #fef6ff);
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
   padding: 12px 0;
   z-index: 999;
   border-radius: 16px 16px 0 0;
-  -webkit-overflow-scrolling: touch;
-}
-
-.bottom-nav-wrapper::before,
-.bottom-nav-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 24px;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.bottom-nav-wrapper::before {
-  left: 0;
-  background: linear-gradient(to right, #ffffff, transparent);
-}
-
-.bottom-nav-wrapper::after {
-  right: 0;
-  background: linear-gradient(to left, #ffffff, transparent);
 }
 
 .bottom-nav {
   display: flex;
   gap: 12px;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: space-around;
   padding: 0 16px;
-  min-width: max-content;
 }
 
 .bottom-nav button {
-  flex: 0 0 auto;
+  flex: 1;
   padding: 10px 18px;
   border: none;
   border-radius: 20px;
@@ -222,19 +143,27 @@ h1 {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   font-size: 14px;
   cursor: pointer;
-  color: #333;
+  color: #7a2c5c;
   transition: all 0.3s ease;
-  white-space: nowrap;
 }
 
-.bottom-nav button.active {
-  background-color: #ffe082;
-  font-weight: bold;
+.bottom-nav button.active,
+.bottom-nav button:hover {
+  background: linear-gradient(to right, #ffd6e0, #ff9ab3);
   color: #000;
-  box-shadow: 0 3px 8px rgba(255, 152, 0, 0.2);
+  font-weight: bold;
 }
 
-/* Підказка свайпу */
+.back-button {
+  background: linear-gradient(to right, #ffe0f0, #fbc2eb);
+  color: #5c3e59;
+}
+
+.back-button:hover {
+  background: linear-gradient(to right, #fbc2eb, #ffd6e0);
+}
+
+/* swipe hint */
 .swipe-hint {
   position: fixed;
   bottom: 70px;
@@ -249,298 +178,3 @@ h1 {
   animation: hintSwipe 2s ease-in-out infinite;
   z-index: 1000;
 }
-
-@keyframes hintSwipe {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-53%) translateY(-2px); }
-}
-
-.section {
-}
-
-.active {
-  display: block !important;
-}
-
-.recipe-buttons button[disabled] {
-  background-color: #d6ffd6;
-  color: #444;
-}
-
-.bg-decor {
-  display: none !important;
-  background: none !important;
-}
-/* Анімація появи секцій */
-.section {
-  display: none;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.section.active {
-  display: block !important;
-  opacity: 1;
-  transform: translateY(0);
-}
-.back-button {
-  position: fixed;
-  top: 50px; /* 🟡 Було 15px — стало 50px */
-  left: 15px;
-  background: #fff8d6;
-  color: #333;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  z-index: 1000;
-  transition: all 0.3s ease;
-}
-
-.back-button:hover {
-  background: #ffe082;
-  color: #000;
-}
-/* Модальне вікно */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  padding-top: 60px;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.9);
-}
-
-.modal-content {
-  margin: auto;
-  display: block;
-  max-width: 90%;
-  max-height: 80%;
-  border-radius: 10px;
-  animation: zoom 0.4s;
-}
-
-@keyframes zoom {
-  from {transform: scale(0)}
-  to {transform: scale(1)}
-}
-
-.close {
-  position: absolute;
-  top: 20px;
-  right: 35px;
-  color: #fff;
-  font-size: 30px;
-  font-weight: bold;
-  cursor: pointer;
-}
-/*.detail-button {
-  padding: 10px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 20px;
-  background-color: #ffe28a;
-  color: #333;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.detail-button:hover {
-  background-color: #ffce58;
-}/*
-
-/* 📱 Смартфони */
-@media screen and (max-width: 480px) {
-  h1 {
-    font-size: 22px;
-    text-align: center;
-  }
-
-  .scroll-menu button {
-    font-size: 13px;
-    padding: 8px 12px;
-  }
-
-  .recipe-card {
-    padding: 15px;
-    margin: 10px 5px;
-  }
-
-  .recipe-card h2 {
-    font-size: 18px;
-  }
-
-  .detail-button {
-    padding: 8px 12px;
-    font-size: 13px;
-  }
-  .favorite-button {
-  padding: 10px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 20px;
-  background-color: #ffd6d6;
-  color: #333;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.favorite-button:hover {
-  background-color: #ffb3b3;
-}
-
-
-  .bottom-nav {
-    gap: 6px;
-    padding: 0 8px;
-  }
-
-  .bottom-nav button {
-    padding: 8px 10px;
-    font-size: 12px;
-  }
-
-  .back-button {
-    padding: 6px 10px;
-    font-size: 13px;
-  }
-}
-
-/* 📱📲 Планшети */
-@media screen and (max-width: 768px) {
-  .app {
-    padding: 16px;
-    padding-bottom: 100px;
-  }
-
-  .recipe-card {
-    margin: 15px 8px;
-    padding: 18px;
-  }
-
-  .scroll-menu {
-    padding: 8px;
-  }
-
-  .scroll-menu button {
-    font-size: 14px;
-    padding: 10px 14px;
-  }
-
-  .bottom-nav {
-    gap: 10px;
-    padding: 0 12px;
-  }
-
-  .bottom-nav button {
-    font-size: 14px;
-    padding: 10px 14px;
-  }
-}
-
-.accordion-block {
-  background: #fff3c4;
-  border-radius: 12px;
-  margin: 10px 0;
-  padding: 10px 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-.accordion-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-}
-.accordion-content {
-  display: none;
-  margin-top: 10px;
-}
-.accordion-open .accordion-content {
-  display: block;
-}
-.accordion-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
-}
-.accordion-open .accordion-content {
-  max-height: 500px; /* можеш змінити, головне — більше за висоту контенту */
-}
-button:active {
-  transform: scale(0.95);
-  transition: transform 0.1s;
-}
-ul li {
-  animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.bottom-nav button:hover {
-  background: #ffe28a;
-  border-radius: 10px;
-}
-.recipe-card.hidden {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.recipe-card {
-  transition: all 0.3s ease;
-  opacity: 1;
-  max-height: 1000px;
-}
-#daily-recipe .recipe-card {
-  background: linear-gradient(to right, #fff3c4, #ffe17b);
-  background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=60');
-  background-size: cover;
-  background-position: center;
-  color: #333;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  backdrop-filter: blur(3px);
-}
-#daily-recipe .recipe-card h2,
-#daily-recipe .recipe-card p {
-  background: rgba(255,255,255,0.8);
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: inline-block;
-}
-.main-button.generate {
-  background: linear-gradient(to right, #e8dff5, #d5c4f2);
-  color: #4b3263;
-}
-.main-button.generate:hover {
-  background: linear-gradient(to right, #d5c4f2, #c8b1ed);
-}
-
-
-.main-button.clear {
-  background: linear-gradient(to right, #ffe0e9, #ffc2d1);
-  color: #802744;
-}
-.main-button.clear:hover {
-  background: linear-gradient(to right, #ffc2d1, #ff9ab3);
-}
-
-
-
