@@ -140,6 +140,16 @@ strong {
     <input id="fridge-input" placeholder="Що є в холодильнику..." style="padding:8px; width:80%;">
     <button onclick="searchFridge()" style="padding:8px;">🔍 Знайти рецепти</button>
   </div>
+<div style="margin-top:10px;">
+  <label for="match-threshold">Мінімум збігів:</label>
+  <select id="match-threshold" style="padding:4px 8px; margin-left:5px;">
+    <option value="1">1</option>
+    <option value="2" selected>2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  </select>
+</div>
+
   <div id="fridge-results" style="margin-top:15px;"></div>
 </div>
 
@@ -672,7 +682,7 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
   return word;
 }
 
-function searchFridge() {
+  function searchFridge() {
   const input = document.getElementById('fridge-input').value.toLowerCase();
   const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
   const normFridgeItems = fridgeItems.map(normalizeWord);
@@ -686,39 +696,49 @@ function searchFridge() {
       .map(i => normalizeWord(i.trim()))
       .join(' ');
 
-const ingredientWords = new Set(normalizedIngredients.split(/\s+/));
-const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
-if (matches >= Math.max(1, Math.floor(normFridgeItems.length * 0.5))) {
-
+    const ingredientWords = new Set(normalizedIngredients.split(/\s+/));
+    const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
+    const threshold = parseInt(document.getElementById('match-threshold').value, 10);
+    if (matches >= threshold) {
       // Підсвічуємо інгредієнти
       let highlighted = r["інгредієнти"];
       fridgeItems.forEach(word => {
-  const normWord = normalizeWord(word);
-  const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
-  highlighted = highlighted.replace(regex, '<strong>$1</strong>');
-});
-
+        const normWord = normalizeWord(word);
+        const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+        highlighted = highlighted.replace(regex, '<strong>$1</strong>');
+      });
 
       results.push({
         ...r,
+        matches,
+        hasFirst: ingredientWords.has(normFridgeItems[0]),
         highlighted
       });
     }
   });
 
+  results.sort((a, b) => {
+    if (b.hasFirst !== a.hasFirst) return b.hasFirst - a.hasFirst;
+    return b.matches - a.matches;
+  });
+
   const container = document.getElementById('fridge-results');
   container.innerHTML = results.length
     ? results.map(r => {
-  let title = r["назва рецепту"];
-  fridgeItems.forEach(word => {
-    const normWord = normalizeWord(word);
-    const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
-    title = title.replace(regex, '<strong>$1</strong>');
-  });
+        let title = r["назва рецепту"];
+        fridgeItems.forEach(word => {
+          const normWord = normalizeWord(word);
+          const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+          title = title.replace(regex, '<strong>$1</strong>');
+        });
 
-  return `<div class="recipe-card"><h3>${title}</h3><p>${r["highlighted"]}</p></div>`;
-}).join('')
+        return `<div class="recipe-card">
+  <h3>${title}</h3>
+  <p>${r["highlighted"]}</p>
+  <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
+</div>`;
 
+      }).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
 
