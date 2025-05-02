@@ -481,10 +481,12 @@ function toggleFavorite(recipeId, button) {
 function toggleRecipe(id, btn) {
   const el = document.getElementById(id);
   if (!el) return;
-  const shown = !el.classList.contains('hidden');
-  el.classList.toggle('hidden', shown);
-  btn.innerText = shown ? `📖 Показати рецепт` : `🔽 Згорнути`;
+
+  const isVisible = el.style.display === 'block';
+  el.style.display = isVisible ? 'none' : 'block';
+  btn.innerText = isVisible ? `📖 Показати рецепт` : `🔽 Згорнути`;
 }
+
 function showSection(id) {
   // Приховуємо всі секції
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
