@@ -194,3 +194,12 @@ h1 {
   animation: hintSwipe 2s ease-in-out infinite;
   z-index: 1000;
 }
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.accordion-open .accordion-content {
+  max-height: 500px; /* достатньо для великого списку */
+}
