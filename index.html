@@ -373,14 +373,18 @@ async function loadDailyRecipe() {
   const recipe = grouped[0];
   const id = `daily-details`;
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
+  const image = recipe.find(r => r["тип блоку"] === "фото");
 
   container.innerHTML = `
-    <div class="recipe-card">
-      <h2>${info["назва рецепту"]}</h2>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-      <div id="${id}" style="display:none; margin-top:10px;"></div>
+    <div class="recipe-card" style="padding: 0; overflow: hidden;">
+      ${image ? `<img src="${image["контент"]}" style="width:100%; max-height:250px; object-fit:cover;">` : ""}
+      <div style="padding: 15px;">
+        <h2 style="margin-top: 0;">${info["назва рецепту"]}</h2>
+        <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+        <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        <div id="${id}" style="display:none; margin-top:10px;"></div>
+      </div>
     </div>
   `;
 
@@ -389,7 +393,8 @@ async function loadDailyRecipe() {
     if (r["тип блоку"] === "текст") {
       block.innerHTML += `<p>${r["контент"]}</p>`;
     } else if (r["тип блоку"] === "фото") {
-      block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+      // додаткові фото під текстом, якщо є
+      block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
     }
   });
 }
