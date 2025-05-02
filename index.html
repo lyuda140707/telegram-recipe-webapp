@@ -687,7 +687,9 @@ function searchFridge() {
       .join(' ');
 
 const ingredientWords = new Set(normalizedIngredients.split(/\s+/));
-if (normFridgeItems.every(i => ingredientWords.has(i))) {
+const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
+if (matches >= Math.max(1, Math.floor(normFridgeItems.length * 0.5))) {
+
       // Підсвічуємо інгредієнти
       let highlighted = r["інгредієнти"];
       fridgeItems.forEach(word => {
