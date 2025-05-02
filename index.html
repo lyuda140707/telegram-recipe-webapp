@@ -108,6 +108,12 @@ select {
   50% { opacity: 0.4; }
   100% { opacity: 1; }
 }
+    
+strong {
+  background-color: #ffef99;
+  padding: 0 4px;
+  border-radius: 4px;
+}
 
   </style>
 </head>
@@ -668,7 +674,7 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
 
 function searchFridge() {
   const input = document.getElementById('fridge-input').value.toLowerCase();
-  const fridgeItems = input.split(',').map(i => i.trim()).filter(Boolean);
+  const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
   const normFridgeItems = fridgeItems.map(normalizeWord);
   const results = [];
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
@@ -685,10 +691,11 @@ if (normFridgeItems.every(i => ingredientWords.has(i))) {
       // Підсвічуємо інгредієнти
       let highlighted = r["інгредієнти"];
       fridgeItems.forEach(word => {
-        const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // екрануємо спецсимволи
-        const regex = new RegExp(`\\b(${escaped})\\b`, 'gi');
-        highlighted = highlighted.replace(regex, '<strong>$1</strong>');
-      });
+  const normWord = normalizeWord(word);
+  const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+  highlighted = highlighted.replace(regex, '<strong>$1</strong>');
+});
+
 
       results.push({
         ...r,
@@ -699,7 +706,17 @@ if (normFridgeItems.every(i => ingredientWords.has(i))) {
 
   const container = document.getElementById('fridge-results');
   container.innerHTML = results.length
-    ? results.map(r => `<div class="recipe-card"><h3>${r["назва рецепту"]}</h3><p>${r["highlighted"]}</p></div>`).join('')
+    ? results.map(r => {
+  let title = r["назва рецепту"];
+  fridgeItems.forEach(word => {
+    const normWord = normalizeWord(word);
+    const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+    title = title.replace(regex, '<strong>$1</strong>');
+  });
+
+  return `<div class="recipe-card"><h3>${title}</h3><p>${r["highlighted"]}</p></div>`;
+}).join('')
+
     : '<p>Нічого не знайдено 😞</p>';
 }
 
