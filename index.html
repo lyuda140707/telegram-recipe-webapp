@@ -364,17 +364,18 @@ async function loadDailyRecipe() {
   const recipes = await fetchRecipes();
   localStorage.setItem('all_recipes', JSON.stringify(recipes));
   const container = document.getElementById('daily-recipe');
-  const grouped = groupByRecipeNumber(recipes);
+
+  const grouped = groupByRecipeNumber(recipes); // <-- Спочатку це
   if (grouped.length === 0) return;
 
-  const recipe = grouped[0];
+  const dayIndex = new Date().getDate() % grouped.length;
+  const recipe = grouped[dayIndex]; // <-- І тепер можна взяти рецепт
+
   const id = `daily-details`;
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
- const image = {
-  контент: "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?w=800&q=80"
-};
-
-
+  const image = {
+    контент: "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?w=800&q=80"
+  };
 
   container.innerHTML = `
   <div class="recipe-card" style="padding: 0; overflow: hidden;">
