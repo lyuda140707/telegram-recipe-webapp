@@ -488,6 +488,27 @@ window.onload = async function () {
   await loadCategories();
   await loadDailyRecipe();
   goHome();
+  // ✅ Додаємо слухачів кліку після повного завантаження DOM
+  document.getElementById('open-favorites')?.addEventListener('click', () => {
+    const block = document.getElementById('fav-accordion');
+    const wrapper = document.getElementById('favorites-wrapper');
+    const arrow = document.getElementById('arrow-fav');
+    const isOpen = block.classList.contains('accordion-open');
+    block.classList.toggle('accordion-open');
+    arrow.innerText = isOpen ? '🔽' : '🔼';
+    if (!isOpen) loadFavorites();
+  });
+
+  document.getElementById('open-list')?.addEventListener('click', () => {
+    showSection('section-profile');
+    const block = document.getElementById('list-accordion');
+    const wrapper = document.getElementById('custom-wrapper');
+    const arrow = document.getElementById('arrow-list');
+    const isOpen = block.classList.contains('accordion-open');
+    block.classList.toggle('accordion-open');
+    arrow.innerText = isOpen ? '🔽' : '🔼';
+    if (!isOpen) loadCustomList();
+  });
 
   const start = localStorage.getItem('trial_start') || Date.now();
   localStorage.setItem('trial_start', start);
@@ -511,26 +532,7 @@ function toggleListSection() {
 }
 
 
-document.getElementById('open-favorites').addEventListener('click', () => {
-  const block = document.getElementById('fav-accordion');
-  const wrapper = document.getElementById('favorites-wrapper');
-  const arrow = document.getElementById('arrow-fav');
-  const isOpen = block.classList.contains('accordion-open');
-  block.classList.toggle('accordion-open');
-  arrow.innerText = isOpen ? '🔽' : '🔼';
-  if (!isOpen) loadFavorites();
-});
 
-document.getElementById('open-list').addEventListener('click', () => {
-  showSection('section-profile');
-  const block = document.getElementById('list-accordion');
-  const wrapper = document.getElementById('custom-wrapper');
-  const arrow = document.getElementById('arrow-list');
-  const isOpen = block.classList.contains('accordion-open');
-  block.classList.toggle('accordion-open');
-  arrow.innerText = isOpen ? '🔽' : '🔼';
-  if (!isOpen) loadCustomList();
-});
 
 async function loadFavorites() {
   const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
