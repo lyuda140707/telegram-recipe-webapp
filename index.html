@@ -504,14 +504,20 @@ window.onload = async function () {
   goHome();
   // ✅ Додаємо слухачів кліку після повного завантаження DOM
   document.getElementById('open-favorites')?.addEventListener('click', () => {
-    const block = document.getElementById('fav-accordion');
-    const wrapper = document.getElementById('favorites-wrapper');
-    const arrow = document.getElementById('arrow-fav');
-    const isOpen = block.classList.contains('accordion-open');
-    block.classList.toggle('accordion-open');
-    arrow.innerText = isOpen ? '🔽' : '🔼';
-    if (!isOpen) loadFavorites();
-  });
+  const block = document.getElementById('fav-accordion');
+  const wrapper = document.getElementById('favorites-wrapper');
+  const arrow = document.getElementById('arrow-fav');
+  const isOpen = block.classList.contains('accordion-open');
+  block.classList.toggle('accordion-open');
+  arrow.innerText = isOpen ? '🔽' : '🔼';
+  if (!isOpen) {
+    loadFavorites();
+    setTimeout(() => {
+      block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300); // трохи затримки, щоб встигла анімація
+  }
+});
+
 
   document.getElementById('open-list')?.addEventListener('click', () => {
     showSection('section-profile');
