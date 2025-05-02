@@ -370,9 +370,10 @@ async function loadDailyRecipe() {
   const recipe = grouped[0];
   const id = `daily-details`;
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  const image = {
-  контент: "https://i.pinimg.com/564x/9e/7b/84/9e7b84cf6e2ac79cfaa424f524f74b20.jpg"
+ const image = {
+  контент: "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?w=800&q=80"
 };
+
 
 
   container.innerHTML = `
