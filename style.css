@@ -203,3 +203,14 @@ h1 {
 .accordion-open .accordion-content {
   max-height: 500px; /* достатньо для великого списку */
 }
+.accordion-block {
+  background-color: #fff;
+  border-radius: 12px;
+  margin: 10px 0;
+  transition: background-color 0.4s ease;
+}
+
+.accordion-open {
+  background-color: #ffeef8; /* можна змінити на будь-який ніжний колір */
+}
+
