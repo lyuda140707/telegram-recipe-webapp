@@ -342,7 +342,7 @@ h1 {
   font-weight: bold;
   cursor: pointer;
 }
-.detail-button {
+/*.detail-button {
   padding: 10px 16px;
   font-size: 14px;
   border: none;
@@ -356,7 +356,8 @@ h1 {
 
 .detail-button:hover {
   background-color: #ffce58;
-}
+}/*
+
 /* 📱 Смартфони */
 @media screen and (max-width: 480px) {
   h1 {
