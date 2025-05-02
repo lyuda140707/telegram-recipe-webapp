@@ -373,7 +373,10 @@ async function loadDailyRecipe() {
   const recipe = grouped[0];
   const id = `daily-details`;
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  const image = recipe.find(r => r["тип блоку"] === "фото");
+  const image = {
+  контент: "https://i.pinimg.com/564x/9e/7b/84/9e7b84cf6e2ac79cfaa424f524f74b20.jpg"
+};
+
 
   container.innerHTML = `
     <div class="recipe-card" style="padding: 0; overflow: hidden;">
