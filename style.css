@@ -42,8 +42,8 @@ h1 {
   font-size: 14px;
   border: none;
   border-radius: 25px;
-  background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); /* легка тінь */
+  background: linear-gradient(145deg, #fbc2eb, #a6c1ee);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s ease;
   white-space: nowrap;
@@ -52,8 +52,9 @@ h1 {
 }
 
 .scroll-menu button:hover {
-  background: linear-gradient(to right, #eeb1e8, #92b2f0);
-  transform: scale(1.05);
+  background: linear-gradient(145deg, #eeb1e8, #92b2f0);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
 }
 
 .scroll-menu button:active {
@@ -79,31 +80,40 @@ h1 {
   font-size: 14px;
   border: none;
   border-radius: 25px;
-  background: linear-gradient(to right, #e0c3fc, #8ec5fc);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, #e0c3fc, #8ec5fc);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   color: #4b2c5e;
   font-weight: bold;
   transition: all 0.3s ease;
 }
 
+.recipe-buttons button:hover,
+.main-button:hover,
+.detail-button:hover,
+.recipe-toggle:hover,
+.favorite-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
 .main-button.generate {
-  background: linear-gradient(to right, #c9e4ff, #e5c2ff);
+  background: linear-gradient(145deg, #c9e4ff, #e5c2ff);
   color: #42246b;
 }
 
 .main-button.clear {
-  background: linear-gradient(to right, #ffd6e0, #ffb3c6);
+  background: linear-gradient(145deg, #ffd6e0, #ffb3c6);
   color: #742727;
 }
 
 .recipe-toggle {
-  background: linear-gradient(to right, #ffdde1, #ee9ca7);
+  background: linear-gradient(145deg, #ffdde1, #ee9ca7);
   color: #5d2c3e;
 }
 
 .favorite-button {
-  background: linear-gradient(to right, #ffe0f0, #fbc2eb);
+  background: linear-gradient(145deg, #ffe0f0, #fbc2eb);
   color: #5c3e59;
 }
 
@@ -138,32 +148,35 @@ h1 {
   flex: 0 0 auto;
   padding: 8px 12px;
   border: none;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.1),
-    0 6px 20px rgba(0, 0, 0, 0.15); /* подвійна тінь */
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffd6e0, #ffb3c6);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   font-size: 14px;
   cursor: pointer;
   color: #333;
   transition: all 0.3s ease;
   white-space: nowrap;
+  font-weight: bold;
 }
 
 .bottom-nav button.active,
 .bottom-nav button:hover {
-  background: linear-gradient(to right, #ffd6e0, #ff9ab3);
+  background: linear-gradient(145deg, #ffb3c6, #ff9ab3);
   color: #000;
   font-weight: bold;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
 .back-button {
-  background: linear-gradient(to right, #ffe0f0, #fbc2eb);
+  background: linear-gradient(145deg, #ffe0f0, #fbc2eb);
   color: #5c3e59;
 }
 
 .back-button:hover {
-  background: linear-gradient(to right, #fbc2eb, #ffd6e0);
+  background: linear-gradient(145deg, #fbc2eb, #ffd6e0);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* swipe hint */
