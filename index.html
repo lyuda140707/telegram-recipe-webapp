@@ -656,24 +656,53 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
   });
 }
 
+  function normalizeWord(word) {
+  const endings = ['и', 'і', 'я', 'а', 'у', 'ю', 'е', 'о', 'ь', 'ей', 'ів', 'ем', 'ам', 'ям'];
+  for (const end of endings) {
+    if (word.endsWith(end) && word.length > end.length + 2) {
+      return word.slice(0, -end.length);
+    }
+  }
+  return word;
+}
+
 function searchFridge() {
   const input = document.getElementById('fridge-input').value.toLowerCase();
   const fridgeItems = input.split(',').map(i => i.trim()).filter(Boolean);
+  const normFridgeItems = fridgeItems.map(normalizeWord);
   const results = [];
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
 
   all.forEach(r => {
-    const ingredients = (r["інгредієнти"] || "").toLowerCase();
-    if (fridgeItems.every(i => ingredients.includes(i))) {
-      results.push(r);
+    const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
+    const normalizedIngredients = rawIngredients
+      .split(/[,\n]+/)
+      .map(i => normalizeWord(i.trim()))
+      .join(' ');
+
+const ingredientWords = new Set(normalizedIngredients.split(/\s+/));
+if (normFridgeItems.every(i => ingredientWords.has(i))) {
+      // Підсвічуємо інгредієнти
+      let highlighted = r["інгредієнти"];
+      fridgeItems.forEach(word => {
+        const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // екрануємо спецсимволи
+        const regex = new RegExp(`\\b(${escaped})\\b`, 'gi');
+        highlighted = highlighted.replace(regex, '<strong>$1</strong>');
+      });
+
+      results.push({
+        ...r,
+        highlighted
+      });
     }
   });
 
   const container = document.getElementById('fridge-results');
   container.innerHTML = results.length
-    ? results.map(r => `<div class="recipe-card"><h3>${r["назва рецепту"]}</h3><p>${r["інгредієнти"]}</p></div>`).join('')
+    ? results.map(r => `<div class="recipe-card"><h3>${r["назва рецепту"]}</h3><p>${r["highlighted"]}</p></div>`).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
+
 function updateMenuCategory(index, newValue) {
   const menu = JSON.parse(localStorage.getItem('weekly_menu')) || [];
   if (menu[index]) {
