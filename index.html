@@ -772,7 +772,7 @@ function loadCustomList() {
       items.forEach((item, index) => {
         const li = document.createElement('li');
             li.className = 'weekly-item';;
-        li.innerHTML = `• ${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
+        li.innerHTML = `${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
         containerProfile.appendChild(li);
       });
     }
