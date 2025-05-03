@@ -664,7 +664,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tg = window.Telegram.WebApp;
   const user = tg.initDataUnsafe?.user;
 
-  if (user?.first_name && isPro) {
+  // 👤 Привітання користувача
+  if (user?.first_name) {
     const profileSection = document.getElementById('section-profile');
 
     const greeting = document.createElement('p');
@@ -673,45 +674,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     greeting.style.marginTop = '0';
     profileSection.insertBefore(greeting, profileSection.children[1]);
 
-    const proIcon = document.createElement('img');
-    proIcon.src = 'https://cdn-icons-png.flaticon.com/512/5223/5223460.png';
-    proIcon.alt = 'PRO';
-    proIcon.style.width = '60px';
-    proIcon.style.display = 'block';
-    proIcon.style.margin = '10px auto 0';
-    proIcon.classList.add('pro-crown');
-    profileSection.insertBefore(proIcon, profileSection.children[2]);
+    if (isPro) {
+      const proIcon = document.createElement('img');
+      proIcon.src = 'https://cdn-icons-png.flaticon.com/512/5223/5223460.png';
+      proIcon.alt = 'PRO';
+      proIcon.style.width = '60px';
+      proIcon.style.display = 'block';
+      proIcon.style.margin = '10px auto 0';
+      proIcon.classList.add('pro-crown');
+      profileSection.insertBefore(proIcon, profileSection.children[2]);
+    }
   }
 
+  // 🧠 ЦЕ ОСНОВНЕ: завантаження категорій та рецепту дня
   console.log("⬇️ DOM готовий, завантажуємо...");
   await loadCategories();
   await loadDailyRecipe();
   goHome();
 
+  // 🧩 Далі залиш все, що вже було у цьому блоці:
   document.getElementById('open-favorites')?.addEventListener('click', () => {
-    const block = document.getElementById('fav-accordion');
-    const wrapper = document.getElementById('favorites-wrapper');
-    const arrow = document.getElementById('arrow-fav');
-    const isOpen = block.classList.contains('accordion-open');
-    block.classList.toggle('accordion-open');
-    arrow.innerText = isOpen ? '🔽' : '🔼';
-    if (!isOpen) {
-      loadFavorites();
-      setTimeout(() => {
-        block.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    }
+    ...
   });
 
   document.getElementById('open-list')?.addEventListener('click', () => {
-    showSection('section-profile');
-    const block = document.getElementById('list-accordion');
-    const wrapper = document.getElementById('custom-wrapper');
-    const arrow = document.getElementById('arrow-list');
-    const isOpen = block.classList.contains('accordion-open');
-    block.classList.toggle('accordion-open');
-    arrow.innerText = isOpen ? '🔽' : '🔼';
-    if (!isOpen) loadCustomList();
+    ...
   });
 
   const start = localStorage.getItem('trial_start') || Date.now();
@@ -1109,7 +1096,6 @@ function toggleProInfo() {
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 const isPro = localStorage.getItem('is_pro') === 'true';
-  const isPro = localStorage.getItem('is_pro') === 'true';
 // 🥇 Вітання після переходу на PRO
 const greeted = localStorage.getItem('pro_greeted') === 'true';
 if (isPro && !greeted) {
