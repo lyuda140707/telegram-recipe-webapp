@@ -442,7 +442,7 @@ async function fetchRecipes(category = null) {
 function groupByRecipeNumber(data) {
   const grouped = {};
   data.forEach(row => {
-    const id = row["номер рецепту"];
+    const id = row["номер рецепту"] || `unknown_${Math.random()}`;
     if (!grouped[id]) grouped[id] = [];
     grouped[id].push(row);
   });
