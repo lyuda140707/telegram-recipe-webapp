@@ -505,14 +505,9 @@ function toggleFavorite(recipeId, button) {
 function toggleRecipe(id, btn) {
   const el = document.getElementById(id);
   if (!el) return;
-
-  const isOpen = el.classList.contains('open');
   el.classList.toggle('open');
-
-  btn.innerHTML = isOpen
-    ? '<span class="rotate-toggle">📖</span> Показати рецепт'
-    : '<span class="rotate-toggle">🔽</span> Згорнути';
 }
+
 
 function showSection(id) {
   // Приховуємо всі секції
