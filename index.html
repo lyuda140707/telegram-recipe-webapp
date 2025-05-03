@@ -689,7 +689,7 @@ const user = tg.initDataUnsafe?.user;
   // 🧠 Головне завантаження
   console.log("⬇️ DOM готовий, завантажуємо...");
 await loadCategories();
-document.getElementById('section-categories').style.display = 'block'; // ✅ показує верхнє меню
+document.getElementById('section-categories').classList.add('active');
 await loadDailyRecipe();
 goHome(); // ✅ Переходить на головну
 
