@@ -388,13 +388,19 @@ h1, h2, h3 {
   </div>
   <div id="bot-response" style="margin-top:15px;"></div>
 </div>
+<div class="section" id="section-search">
+  <h2>🔍 Розумний пошук рецептів</h2>
+  <input id="smart-search-input" placeholder="Наприклад: картопля з грибами..." style="padding:8px; width:80%;">
+  <button onclick="runSmartSearch()" style="padding:8px;">🔎 Знайти</button>
+  <div id="smart-search-results" style="margin-top:15px;"></div>
+</div>
 
   <!-- Нижнє меню -->
 <div class="bottom-nav-wrapper">
   <div class="bottom-nav" id="bottomNav">
     <button onclick="showSection('section-profile')">👤 Профіль</button>
     <button onclick="showSection('section-askbot')">🤖 Асистент</button>
-    <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
+    <button onclick="showSection('section-search')">🔍 Пошук</button>
     <button onclick="showSection('section-planner')">📅 Меню на тиждень</button>
     <button onclick="showSection('section-buy')">🛒 Що купити</button>
     <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
@@ -1026,6 +1032,47 @@ function updateMenuCategory(index, newValue) {
       `).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
+  function normalizeWord(word) {
+  const endings = ['и', 'і', 'я', 'а', 'у', 'ю', 'е', 'о', 'ь', 'ей', 'ів', 'ем', 'ам', 'ям'];
+  for (const end of endings) {
+    if (word.endsWith(end) && word.length > end.length + 2) {
+      return word.slice(0, -end.length);
+    }
+  }
+  return word;
+}
+
+function runSmartSearch() {
+  const query = document.getElementById('smart-search-input').value.toLowerCase();
+  const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
+  const words = query.split(/\s+/).map(normalizeWord).filter(Boolean);
+  const results = [];
+
+  all.forEach(r => {
+    const name = (r["назва рецепту"] || "").toLowerCase();
+    const normName = name.split(/\s+/).map(normalizeWord);
+    const matches = words.filter(w => normName.includes(w)).length;
+    if (matches > 0) {
+      let title = r["назва рецепту"];
+      words.forEach(word => {
+        const reg = new RegExp(`(${word}\\w*)`, 'gi');
+        title = title.replace(reg, '<strong>$1</strong>');
+      });
+
+      results.push(`
+        <div class="recipe-card">
+          <h3>${title}</h3>
+          <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
+          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+        </div>
+      `);
+    }
+  });
+
+  const container = document.getElementById('smart-search-results');
+  container.innerHTML = results.length ? results.join('') : '<p>Нічого не знайдено 😞</p>';
+}
+
 function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
