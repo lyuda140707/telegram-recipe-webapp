@@ -667,7 +667,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 👤 Привітання користувача
   if (user?.first_name) {
     const profileSection = document.getElementById('section-profile');
-
     const greeting = document.createElement('p');
     greeting.innerHTML = `👋 Привіт, <strong>${user.first_name}</strong>!`;
     greeting.style.fontSize = '18px';
@@ -686,20 +685,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // 🧠 ЦЕ ОСНОВНЕ: завантаження категорій та рецепту дня
+  // 🧠 Головне завантаження
   console.log("⬇️ DOM готовий, завантажуємо...");
   await loadCategories();
   await loadDailyRecipe();
   goHome();
 
-  // 🧩 Далі залиш все, що вже було у цьому блоці:
+  // 🧩 Оновлені події
   document.getElementById('open-favorites')?.addEventListener('click', () => {
-    ...
+    const wrapper = document.getElementById('favorites-wrapper');
+    const arrow = document.getElementById('arrow-fav');
+    const isVisible = wrapper.style.display === 'block';
+    wrapper.style.display = isVisible ? 'none' : 'block';
+    arrow.innerText = isVisible ? '🔽' : '🔼';
+    if (!isVisible) loadFavorites();
   });
 
   document.getElementById('open-list')?.addEventListener('click', () => {
-    ...
-  });
+  const wrapper = document.getElementById('custom-wrapper');
+  const arrow = document.getElementById('arrow-list');
+  const isVisible = wrapper.style.display === 'block';
+  wrapper.style.display = isVisible ? 'none' : 'block';
+  arrow.innerText = isVisible ? '🔽' : '🔼';
+  if (!isVisible) loadCustomList();
+});
 
   const start = localStorage.getItem('trial_start') || Date.now();
   localStorage.setItem('trial_start', start);
