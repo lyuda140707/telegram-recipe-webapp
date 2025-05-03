@@ -515,7 +515,12 @@ function toggleRecipe(id, btn) {
 
 function showSection(id) {
   // Приховуємо всі секції
-  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(el => {
+  el.classList.remove('active');
+});
+document.getElementById('section-categories').classList.remove('active'); // явно сховати
+document.getElementById('daily-recipe').classList.remove('active');
+
 
   // Активуємо поточну
   document.getElementById(id).classList.add('active');
@@ -546,11 +551,20 @@ function clearWeeklyMenu() {
 }
   
 function goHome() {
+  // Приховує всі секції
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+
+  // Активує верхнє меню категорій і рецепт дня
   document.getElementById('section-categories').classList.add('active');
   document.getElementById('daily-recipe').classList.add('active');
+
+  // Ховає кнопку "⬅ На головну"
   document.querySelector('.back-button').style.display = 'none';
+
+  // Повторно завантажує рецепт дня
+  loadDailyRecipe();
 }
+
 
 window.onload = async function () {
   console.log("⬇️ Починаю завантаження...");
