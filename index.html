@@ -315,10 +315,28 @@ body {
   </div> <!-- ✅ оце має бути тут -->
 </div>
   </div>
+    <div class="section" id="section-askbot">
+ <h2>🤖 Запитай у Бота</h2>
+<p style="font-size: 15px; color: #5c3e59; background: #fff0f5; padding: 10px; border-radius: 12px;">
+  Тут ти можеш ввести будь-яке питання, наприклад:
+  <br><strong>• Що приготувати з куркою?</strong><br>
+  <strong>• Чим замінити яйця?</strong><br>
+  <strong>• Страва без молока</strong><br>
+  <br>Асистент знайде рецепти, які відповідають твоєму запиту ✨
+</p>
+
+  <div style="margin-top:10px;">
+    <input id="bot-query" placeholder="напр. щось з куркою..." style="padding:8px; width:80%;">
+    <button onclick="askBot()" style="padding:8px;">🔍 Знайти</button>
+  </div>
+  <div id="bot-response" style="margin-top:15px;"></div>
+</div>
+
   <!-- Нижнє меню -->
 <div class="bottom-nav-wrapper">
   <div class="bottom-nav" id="bottomNav">
     <button onclick="showSection('section-profile')">👤 Профіль</button>
+    <button onclick="showSection('section-askbot')">🤖 Асистент</button>
     <button onclick="showSection('section-recipes')">🍽 Рецепти</button>
     <button onclick="showSection('section-planner')">📅 Меню на тиждень</button>
     <button onclick="showSection('section-buy')">🛒 Що купити</button>
@@ -925,6 +943,33 @@ function updateMenuCategory(index, newValue) {
     localStorage.setItem('weekly_menu', JSON.stringify(menu));
   }
 }
+  function askBot() {
+  const query = document.getElementById('bot-query').value.trim().toLowerCase();
+  const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
+  const results = [];
+
+  all.forEach(r => {
+    const text = `${r["назва рецепту"]} ${r["інгредієнти"]} ${r["контент"]}`.toLowerCase();
+    if (text.includes(query)) results.push(r);
+  });
+
+  const container = document.getElementById('bot-response');
+  if (!query) {
+    container.innerHTML = '<p>Будь ласка, введіть запит 🙃</p>';
+    return;
+  }
+
+  container.innerHTML = results.length
+    ? results.map(r => `
+        <div class="recipe-card">
+          <h3>${r["назва рецепту"]}</h3>
+          <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
+          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+        </div>
+      `).join('')
+    : '<p>Нічого не знайдено 😞</p>';
+}
+
 </script>
 </body>
 </html>
