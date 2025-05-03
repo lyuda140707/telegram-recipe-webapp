@@ -688,9 +688,11 @@ const user = tg.initDataUnsafe?.user;
 
   // 🧠 Головне завантаження
   console.log("⬇️ DOM готовий, завантажуємо...");
-  await loadCategories();
-  await loadDailyRecipe();
-  goHome();
+await loadCategories();
+document.getElementById('section-categories').style.display = 'block'; // ✅ показує верхнє меню
+await loadDailyRecipe();
+goHome(); // ✅ Переходить на головну
+
 
   // 🧩 Оновлені події
   document.getElementById('open-favorites')?.addEventListener('click', () => {
