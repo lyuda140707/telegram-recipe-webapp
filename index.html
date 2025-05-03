@@ -463,19 +463,27 @@ card.innerHTML = `
     container.appendChild(card);
 
     const block = document.getElementById(id);
-    group.forEach(r => {
-      if (r["тип блоку"] === "текст") {
-        block.innerHTML += `<p>${r["контент"]}</p>`;
-      } else if (r["тип блоку"] === "фото") {
-        block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-      }
-    });
-    block.innerHTML += `
-  <div style="text-align: center; margin-top: 20px;">
-  <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
-</div>
+ let contentAdded = false;
 
-`;
+group.forEach(r => {
+  if (r["тип блоку"] === "текст") {
+    block.innerHTML += `<p>${r["контент"]}</p>`;
+    contentAdded = true;
+  } else if (r["тип блоку"] === "фото") {
+    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+    contentAdded = true;
+  }
+});
+
+if (contentAdded) {
+  block.innerHTML += `
+    <div style="text-align: center; margin-top: 20px;">
+      <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+    </div>`;
+} else {
+  block.innerHTML = `<p>🤷 У цього рецепту немає детального опису.</p>`;
+}
+
 
   });
   showSection('section-recipes');
