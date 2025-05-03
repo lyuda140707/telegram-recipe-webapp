@@ -103,12 +103,15 @@
       }
     }
 
-    document.querySelectorAll('.scroll-menu button').forEach(button => {
-      button.addEventListener('click', () => {
-        const category = button.textContent.replace(/^[^\w\u0400-\u04FF]+/, '').trim();
-        loadCategory(category);
-      });
+    document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.scroll-menu button').forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.textContent.replace(/^[^\w\u0400-\u04FF]+/, '').trim();
+      loadCategory(category);
     });
+  });
+});
+
 
     function openImageModal(src) {
       const modal = document.createElement('div');
