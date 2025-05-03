@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
@@ -190,7 +191,6 @@ h1, h2, h3 {
       100% { opacity: 1; }
     }
 
-
     strong {
       background-color: #fff2aa;
       padding: 0 4px;
@@ -232,19 +232,22 @@ h1, h2, h3 {
 }
 
   </style>
+
 </head>
 <body>
- 
+
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
     <div class="scroll-menu section active" id="section-categories"></div>
 
-    <!-- ✅ Підказка всередині .app -->
-    <div class="swipe-hint">⬅ Гортай меню ➡</div>
+```
+<!-- ✅ Підказка всередині .app -->
+<div class="swipe-hint">⬅ Гортай меню ➡</div>
 
-    <div id="daily-recipe" class="section active"></div>
-    <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
-    <div id="section-recipes" class="section"></div>
+<div id="daily-recipe" class="section active"></div>
+<button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
+<div id="section-recipes" class="section"></div>
+```
 
 <div class="section" id="section-menu">
   <h2>📋 Моє меню</h2>
@@ -270,6 +273,7 @@ h1, h2, h3 {
 </div>
 
 <!-- ✅ Генератор меню -->
+
 <div class="section" id="section-planner">
   <h2>📅 Мій тижневий план</h2>
   <p>Натисніть кнопку нижче, щоб згенерувати меню на тиждень 👇</p>
@@ -279,6 +283,7 @@ h1, h2, h3 {
 </div>
 
 <!-- ✅ окрема секція -->
+
 <div class="section" id="section-buy">
   <h2>🛒 Що купити</h2>
   <div style="margin-top:10px;">
@@ -351,7 +356,10 @@ h1, h2, h3 {
   </div>
 </div>
 
-     <div class="accordion-block" id="fav-accordion">
+```
+ <div class="accordion-block" id="fav-accordion">
+```
+
   <div class="accordion-title" id="open-favorites">
     💛 Улюблені рецепти <span id="arrow-fav">🔽</span>
   </div>
@@ -397,6 +405,7 @@ h1, h2, h3 {
 </div>
 
   <!-- Нижнє меню -->
+
 <div class="bottom-nav-wrapper">
   <div class="bottom-nav" id="bottomNav">
     <button onclick="showSection('section-profile')">👤 Профіль</button>
@@ -418,7 +427,7 @@ const categories = [
 
 async function fetchRecipes(category = null) {
   try {
-   let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
+    let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
     if (category) url += `?category=${encodeURIComponent(category.toLowerCase())}`;
     const response = await fetch(url);
     const data = await response.json();
@@ -434,7 +443,7 @@ async function fetchRecipes(category = null) {
 function groupByRecipeNumber(data) {
   const grouped = {};
   data.forEach(row => {
-    const id = row["номер рецепту"] || `unknown_${Math.random()}`;
+    const id = row["номер рецепту"];
     if (!grouped[id]) grouped[id] = [];
     grouped[id].push(row);
   });
@@ -654,35 +663,56 @@ function goHome() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const tg = window.Telegram.WebApp;
-  tg.ready();
-
-  goHome(); // ✅ Головний екран одразу запускається
-
   const user = tg.initDataUnsafe?.user;
-  const profileSection = document.getElementById('section-profile');
 
-  if (user?.first_name && profileSection) {
+  if (user?.first_name && isPro) {
+    const profileSection = document.getElementById('section-profile');
+
     const greeting = document.createElement('p');
     greeting.innerHTML = `👋 Привіт, <strong>${user.first_name}</strong>!`;
     greeting.style.fontSize = '18px';
     greeting.style.marginTop = '0';
-    profileSection.insertBefore(greeting, profileSection.children[1] || null);
+    profileSection.insertBefore(greeting, profileSection.children[1]);
+
+    const proIcon = document.createElement('img');
+    proIcon.src = 'https://cdn-icons-png.flaticon.com/512/5223/5223460.png';
+    proIcon.alt = 'PRO';
+    proIcon.style.width = '60px';
+    proIcon.style.display = 'block';
+    proIcon.style.margin = '10px auto 0';
+    profileSection.insertBefore(proIcon, profileSection.children[2]);
   }
 
-  
   console.log("⬇️ DOM готовий, завантажуємо...");
   await loadCategories();
   await loadDailyRecipe();
-});
+  goHome();
+
+  document.getElementById('open-favorites')?.addEventListener('click', () => {
+    const block = document.getElementById('fav-accordion');
+    const wrapper = document.getElementById('favorites-wrapper');
+    const arrow = document.getElementById('arrow-fav');
+    const isOpen = block.classList.contains('accordion-open');
+    block.classList.toggle('accordion-open');
+    arrow.innerText = isOpen ? '🔽' : '🔼';
+    if (!isOpen) {
+      loadFavorites();
+      setTimeout(() => {
+        block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  });
 
   document.getElementById('open-list')?.addEventListener('click', () => {
-  const wrapper = document.getElementById('custom-wrapper');
-  const arrow = document.getElementById('arrow-list');
-  const isVisible = wrapper.style.display === 'block';
-  wrapper.style.display = isVisible ? 'none' : 'block';
-  arrow.innerText = isVisible ? '🔽' : '🔼';
-  if (!isVisible) loadCustomList();
-});
+    showSection('section-profile');
+    const block = document.getElementById('list-accordion');
+    const wrapper = document.getElementById('custom-wrapper');
+    const arrow = document.getElementById('arrow-list');
+    const isOpen = block.classList.contains('accordion-open');
+    block.classList.toggle('accordion-open');
+    arrow.innerText = isOpen ? '🔽' : '🔼';
+    if (!isOpen) loadCustomList();
+  });
 
   const start = localStorage.getItem('trial_start') || Date.now();
   localStorage.setItem('trial_start', start);
@@ -1033,7 +1063,15 @@ function updateMenuCategory(index, newValue) {
       `).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
- 
+  function normalizeWord(word) {
+  const endings = ['и', 'і', 'я', 'а', 'у', 'ю', 'е', 'о', 'ь', 'ей', 'ів', 'ем', 'ам', 'ям'];
+  for (const end of endings) {
+    if (word.endsWith(end) && word.length > end.length + 2) {
+      return word.slice(0, -end.length);
+    }
+  }
+  return word;
+}
 
 function runSmartSearch() {
   const query = document.getElementById('smart-search-input').value.toLowerCase();
@@ -1070,9 +1108,19 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-
+const isPro = localStorage.getItem('is_pro') === 'true';
+  const isPro = localStorage.getItem('is_pro') === 'true';
+// 🥇 Вітання після переходу на PRO
+const greeted = localStorage.getItem('pro_greeted') === 'true';
+if (isPro && !greeted) {
+  setTimeout(() => {
+    alert("🎉 Вітаємо з переходом на PRO! Відкриваємо нові можливості ✨");
+    localStorage.setItem('pro_greeted', 'true');
+  }, 300);
+}
 
 
 </script>
+
 </body>
 </html>
