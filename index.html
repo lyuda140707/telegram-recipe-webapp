@@ -662,7 +662,8 @@ function goHome() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const tg = window.Telegram.WebApp;
-  const user = tg.initDataUnsafe?.user;
+tg.ready(); // 🟢 ВАЖЛИВО
+const user = tg.initDataUnsafe?.user;
 
   // 👤 Привітання користувача
   if (user?.first_name) {
