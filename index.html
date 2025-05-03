@@ -407,9 +407,6 @@ container.innerHTML = `
     </div>
   </div>
 `;
-
-
-
   const block = document.getElementById(id);
   recipe.forEach(r => {
     if (r["тип блоку"] === "текст") {
@@ -419,8 +416,12 @@ container.innerHTML = `
       block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
     }
   });
+  block.innerHTML += `
+  <div style="text-align: center; margin-top: 20px;">
+  <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+</div>
+`;
 }
-
 function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
@@ -453,6 +454,13 @@ card.innerHTML = `
         block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
       }
     });
+    block.innerHTML += `
+  <div style="text-align: center; margin-top: 20px;">
+  <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+</div>
+
+`;
+
   });
   showSection('section-recipes');
 }
