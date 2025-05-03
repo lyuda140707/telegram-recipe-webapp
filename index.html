@@ -189,6 +189,15 @@ h1, h2, h3 {
       50% { opacity: 0.4; }
       100% { opacity: 1; }
     }
+@keyframes crown-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  75% { transform: rotate(-3deg); }
+}
+
+.pro-crown {
+  animation: crown-wiggle 1.5s ease-in-out infinite;
+}
 
     strong {
       background-color: #fff2aa;
@@ -652,6 +661,28 @@ function goHome() {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const tg = window.Telegram.WebApp;
+  const user = tg.initDataUnsafe?.user;
+
+  if (user?.first_name && isPro) {
+    const profileSection = document.getElementById('section-profile');
+
+    const greeting = document.createElement('p');
+    greeting.innerHTML = `👋 Привіт, <strong>${user.first_name}</strong>!`;
+    greeting.style.fontSize = '18px';
+    greeting.style.marginTop = '0';
+    profileSection.insertBefore(greeting, profileSection.children[1]);
+
+    const proIcon = document.createElement('img');
+    proIcon.src = 'https://cdn-icons-png.flaticon.com/512/5223/5223460.png';
+    proIcon.alt = 'PRO';
+    proIcon.style.width = '60px';
+    proIcon.style.display = 'block';
+    proIcon.style.margin = '10px auto 0';
+    proIcon.classList.add('pro-crown');
+    profileSection.insertBefore(proIcon, profileSection.children[2]);
+  }
+
   console.log("⬇️ DOM готовий, завантажуємо...");
   await loadCategories();
   await loadDailyRecipe();
@@ -1077,6 +1108,17 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
+const isPro = localStorage.getItem('is_pro') === 'true';
+  const isPro = localStorage.getItem('is_pro') === 'true';
+// 🥇 Вітання після переходу на PRO
+const greeted = localStorage.getItem('pro_greeted') === 'true';
+if (isPro && !greeted) {
+  setTimeout(() => {
+    alert("🎉 Вітаємо з переходом на PRO! Відкриваємо нові можливості ✨");
+    localStorage.setItem('pro_greeted', 'true');
+  }, 300);
+}
+
 
 </script>
 </body>
