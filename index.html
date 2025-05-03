@@ -240,14 +240,12 @@ h1, h2, h3 {
     <h1>🍽 Що приготувати?</h1>
     <div class="scroll-menu section active" id="section-categories"></div>
 
-```
 <!-- ✅ Підказка всередині .app -->
 <div class="swipe-hint">⬅ Гортай меню ➡</div>
 
 <div id="daily-recipe" class="section active"></div>
 <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
 <div id="section-recipes" class="section"></div>
-```
 
 <div class="section" id="section-menu">
   <h2>📋 Моє меню</h2>
@@ -356,9 +354,7 @@ h1, h2, h3 {
   </div>
 </div>
 
-```
  <div class="accordion-block" id="fav-accordion">
-```
 
   <div class="accordion-title" id="open-favorites">
     💛 Улюблені рецепти <span id="arrow-fav">🔽</span>
@@ -438,7 +434,6 @@ async function fetchRecipes(category = null) {
     return [];
   }
 }
-
 
 function groupByRecipeNumber(data) {
   const grouped = {};
