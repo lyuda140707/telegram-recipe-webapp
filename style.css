@@ -250,6 +250,14 @@ h1 {
   90% { opacity: 1; transform: translate(-50%, 0); }
   100% { opacity: 0; transform: translate(-50%, -10px); }
 }
+.rotate-toggle {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.rotate-toggle.open {
+  transform: rotate(180deg);
+}
 
 
 
