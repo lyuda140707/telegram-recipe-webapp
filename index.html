@@ -114,6 +114,18 @@ body {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .recipe-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.recipe-content.open {
+  max-height: 1000px; /* достатньо для будь-якого рецепта */
+  opacity: 1;
+}
+
 
     .detail-button, .main-button, .recipe-toggle, .favorite-button {
       padding: 10px 18px;
@@ -490,10 +502,14 @@ function toggleRecipe(id, btn) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  const isVisible = el.style.display === 'block';
-  el.style.display = isVisible ? 'none' : 'block';
-  btn.innerText = isVisible ? `📖 Показати рецепт` : `🔽 Згорнути`;
+  const isOpen = el.classList.contains('open');
+  el.classList.toggle('open');
+  el.classList.toggle('recipe-content'); // забезпечує анімацію
+  btn.innerHTML = isOpen
+  ? '<span class="rotate-toggle">📖</span> Показати рецепт'
+  : '<span class="rotate-toggle">🔽</span> Згорнути';
 }
+
 
 function showSection(id) {
   // Приховуємо всі секції
@@ -622,7 +638,7 @@ async function loadFavorites() {
         <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
         <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
       </div>
-      <div id="${id}" style="display:none; margin-top:10px;"></div>
+      <div id="${id}" class="recipe-content"></div>
     `;
 
     container.appendChild(card);
@@ -802,7 +818,7 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
 
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'recipe-toggle';
-    toggleBtn.textContent = '📖 Показати рецепт';
+    toggleBtn.innerHTML = '<span class="rotate-toggle">🔽</span> Згорнути';
     toggleBtn.onclick = () => toggleRecipe(`${item.day}-${index}`, toggleBtn);
 
     li.appendChild(toggleBtn);
