@@ -426,7 +426,7 @@ const categories = [
 
 async function fetchRecipes(category = null) {
   try {
-    let url = 'https://recipe-backend-0gz1.onrender.com/recipes
+    let url = 'https://recipe-backend-0gz1.onrender.com/recipes;
 
     if (category) url += `?category=${encodeURIComponent(category.toLowerCase())}`;
     const response = await fetch(url);
