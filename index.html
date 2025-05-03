@@ -663,47 +663,36 @@ function goHome() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const tg = window.Telegram.WebApp;
-tg.ready(); // 🟢 ВАЖЛИВО
-const user = tg.initDataUnsafe?.user;
+  tg.ready();
 
-  // 👤 Привітання користувача
-  if (user?.first_name) {
-    const profileSection = document.getElementById('section-profile');
+  goHome(); // ✅ Головний екран одразу запускається
+
+  const user = tg.initDataUnsafe?.user;
+  const profileSection = document.getElementById('section-profile');
+
+  if (user?.first_name && profileSection) {
     const greeting = document.createElement('p');
     greeting.innerHTML = `👋 Привіт, <strong>${user.first_name}</strong>!`;
     greeting.style.fontSize = '18px';
     greeting.style.marginTop = '0';
-    profileSection.insertBefore(greeting, profileSection.children[1]);
-
-    if (isPro) {
-      const proIcon = document.createElement('img');
-      proIcon.src = 'https://cdn-icons-png.flaticon.com/512/5223/5223460.png';
-      proIcon.alt = 'PRO';
-      proIcon.style.width = '60px';
-      proIcon.style.display = 'block';
-      proIcon.style.margin = '10px auto 0';
-      proIcon.classList.add('pro-crown');
-      profileSection.insertBefore(proIcon, profileSection.children[2]);
-    }
+    profileSection.insertBefore(greeting, profileSection.children[1] || null);
   }
 
-  // 🧠 Головне завантаження
+  if (isPro && profileSection) {
+    const proIcon = document.createElement('img');
+    proIcon.src = 'https://cdn-icons-png.flaticon.com/512/5223/5223460.png';
+    proIcon.alt = 'PRO';
+    proIcon.style.width = '60px';
+    proIcon.style.display = 'block';
+    proIcon.style.margin = '10px auto 0';
+    proIcon.classList.add('pro-crown');
+    profileSection.insertBefore(proIcon, profileSection.children[2] || null);
+  }
+
   console.log("⬇️ DOM готовий, завантажуємо...");
-await loadCategories();
-await loadDailyRecipe();
-goHome(); // 👈 залишаємо лише ОДИН раз
-
-
-
-  // 🧩 Оновлені події
-  document.getElementById('open-favorites')?.addEventListener('click', () => {
-    const wrapper = document.getElementById('favorites-wrapper');
-    const arrow = document.getElementById('arrow-fav');
-    const isVisible = wrapper.style.display === 'block';
-    wrapper.style.display = isVisible ? 'none' : 'block';
-    arrow.innerText = isVisible ? '🔽' : '🔼';
-    if (!isVisible) loadFavorites();
-  });
+  await loadCategories();
+  await loadDailyRecipe();
+});
 
   document.getElementById('open-list')?.addEventListener('click', () => {
   const wrapper = document.getElementById('custom-wrapper');
