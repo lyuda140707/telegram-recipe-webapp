@@ -284,6 +284,56 @@ body {
 <div class="section" id="section-profile">
   <h2>👤 Мій профіль</h2>
   <p id="days-left"></p>
+  <!-- ℹ️ Кнопка та інформація про PRO -->
+<div style="position: relative; margin-bottom: 10px;">
+  <button onclick="toggleProInfo()" style="
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #fbeaff;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  ">ℹ️</button>
+</div>
+
+<div id="pro-info" style="
+  display: none;
+  background: #fff3fb;
+  border: 1px solid #e0b3e0;
+  padding: 15px;
+  margin-top: 40px;
+  border-radius: 12px;
+  font-size: 14px;
+">
+  <h3 style="margin-top: 0;">🥇 Чому варто перейти на PRO?</h3>
+  <ul style="padding-left: 20px;">
+    <li>🔓 Необмежений Асистент</li>
+    <li>💛 До 100 улюблених рецептів</li>
+    <li>📅 Повне тижневе меню</li>
+    <li>🛒 Експорт покупок у PDF</li>
+    <li>📦 Унікальний рецепт тижня</li>
+  </ul>
+  <p style="margin-top:10px;">
+    🟢 Активуй <strong>PRO</strong>, щоб відкрити весь функціонал!
+  </p>
+  <button onclick="alert('🤖 Оплата тимчасово вимкнена.')" style="
+    margin-top:10px;
+    padding: 8px 16px;
+    background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #4b2c5e;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  ">💳 Отримати PRO</button>
+</div>
+
 <div class="accordion-block" id="weekly-accordion">
   <div class="accordion-title" onclick="toggleWeeklyInProfile()">
   📅 Моє меню
@@ -968,6 +1018,10 @@ function updateMenuCategory(index, newValue) {
         </div>
       `).join('')
     : '<p>Нічого не знайдено 😞</p>';
+}
+function toggleProInfo() {
+  const el = document.getElementById('pro-info');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 </script>
