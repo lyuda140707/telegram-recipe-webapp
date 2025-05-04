@@ -1070,15 +1070,7 @@ function updateMenuCategory(index, newValue) {
       `).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
-  function normalizeWord(word) {
-  const endings = ['и', 'і', 'я', 'а', 'у', 'ю', 'е', 'о', 'ь', 'ей', 'ів', 'ем', 'ам', 'ям'];
-  for (const end of endings) {
-    if (word.endsWith(end) && word.length > end.length + 2) {
-      return word.slice(0, -end.length);
-    }
-  }
-  return word;
-}
+  
 
 function runSmartSearch() {
   const query = document.getElementById('smart-search-input').value.toLowerCase();
