@@ -294,6 +294,10 @@ h1, h2, h3 {
 <div class="section" id="section-profile">
   <h2>👤 Мій профіль</h2>
   <p id="days-left"></p>
+  
+  <!-- 🔽 Ось це додаємо -->
+  <div id="pro-button-container"></div>
+  
   <!-- ℹ️ Кнопка та інформація про PRO -->
 <div style="position: relative; margin-bottom: 10px;">
   <button onclick="toggleProInfo()" style="
@@ -1082,6 +1086,54 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
+  document.addEventListener("DOMContentLoaded", () => {
+  const proContainer = document.getElementById("pro-button-container");
+
+  if (proContainer) {
+    const proBtn = document.createElement("button");
+    proBtn.id = "buy-pro";
+    proBtn.innerText = "💳 Отримати PRO";
+
+    proBtn.style.marginTop = "10px";
+    proBtn.style.padding = "10px 20px";
+    proBtn.style.background = "linear-gradient(to right, #fbc2eb, #a6c1ee)";
+    proBtn.style.border = "2px solid red";
+    proBtn.style.borderRadius = "20px";
+    proBtn.style.fontWeight = "600";
+    proBtn.style.color = "#4b2c5e";
+    proBtn.style.cursor = "pointer";
+    proBtn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
+
+    proContainer.appendChild(proBtn);
+
+    // Слухач на клік
+    const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
+
+    proBtn.addEventListener("click", async () => {
+      try {
+        const res = await fetch(`https://recipe-backend-0gz1.onrender.com/create-payment?user_id=${userId}`);
+        const data = await res.json();
+
+        const formHtml = `
+          <form id="wfp_form" method="POST" action="https://secure.wayforpay.com/pay">
+            ${Object.entries(data).map(([k, v]) => `
+              <input type="hidden" name="${k}" value="${Array.isArray(v) ? v.join(';') : v}">
+            `).join("")}
+          </form>
+          <script>document.getElementById('wfp_form').submit();<\/script>
+        `;
+
+        const win = window.open('', '_blank');
+        win.document.write(formHtml);
+        win.document.close();
+      } catch (err) {
+        alert("😢 Не вдалося створити платіж");
+        console.error(err);
+      }
+    });
+  }
+});
+
 
 </script>
 
