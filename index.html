@@ -706,6 +706,8 @@ function goHome() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("TG:", window.Telegram);
+  console.log("WebApp:", window.Telegram?.WebApp);
   if (typeof window.Telegram === 'undefined' || !window.Telegram.WebApp) {
     document.body.innerHTML = '<div style="padding: 20px; font-size: 18px;">🛑 Цей вебдодаток потрібно відкривати через Telegram.</div>';
     return;
