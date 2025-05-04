@@ -295,10 +295,21 @@ h1, h2, h3 {
 <div class="section" id="section-profile">
   <h2>👤 Мій профіль</h2>
   <p id="days-left"></p>
+  <div id="pro-check" style="margin-top: 20px;">
+  <input type="text" id="donate-name" placeholder="Імʼя або останні 4 цифри картки" style="padding: 8px; width: 80%;">
+  <button onclick="submitPaymentCheck()" style="padding: 8px;">✅ Я оплатив</button>
+</div>
+<div id="pro-confirmation" style="margin-top: 10px;"></div>
+
 
   <!-- 🔽 Ось це додаємо -->
 
-  <div id="pro-button-container"></div>
+ <!-- 🔽 Вартість PRO + кнопка -->
+<p style="margin-top: 10px; font-size: 15px; color: #5c3e59; background: #fff0f5; padding: 10px; border-radius: 12px;">
+  🌟 <strong>PRO доступ</strong> коштує <strong>50 грн</strong><br>
+  Оплати суму нижче через Monobank, а потім натисни “Я оплатив” для активації.
+</p>
+<div id="pro-button-container"></div>
 
   <!-- ℹ️ Кнопка та інформація про PRO -->
 
@@ -664,7 +675,7 @@ document.addEventListener("DOMContentLoaded", () => {
 proBtn.innerText = "🌟 Отримати PRO";
 proBtn.className = "main-button";
 proBtn.onclick = () => {
-  window.open("https://your-payment-link.com", "_blank");
+  window.open("https://send.monobank.ua/jar/6agGfuJmcv", "_blank");
 };
 document.getElementById("pro-button-container")?.appendChild(proBtn);
 
@@ -699,10 +710,15 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
   localStorage.setItem('trial_start', start);
   const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
   const daysLeft = 7 - daysUsed;
+  if (localStorage.getItem('pro_verified') === 'true') {
+  document.getElementById('days-left').innerHTML = '🌟 PRO доступ активований';
+} else {
   document.getElementById('days-left').innerHTML =
     daysLeft > 0
       ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
       : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+}
+
 });
 
   // 🔽 Динамічна кнопка "Отримати PRO"
@@ -1091,6 +1107,16 @@ function runSmartSearch() {
 function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+function submitPaymentCheck() {
+  const value = document.getElementById('donate-name').value.trim();
+  if (!value) {
+    document.getElementById('pro-confirmation').innerHTML = '❗ Введіть імʼя або цифри';
+    return;
+  }
+
+  localStorage.setItem('pro_verified', 'true');
+  document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
 }
 
 
