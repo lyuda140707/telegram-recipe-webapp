@@ -671,6 +671,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   init();
   goHome();
+    // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
+  ['section-askbot', 'section-buy', 'section-fridge'].forEach(sectionId => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    section.addEventListener('click', (e) => {
+      const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+      if (!isInput) {
+        document.activeElement.blur();
+      }
+    });
+  });
+
   const proBtn = document.createElement('button');
 proBtn.innerText = "🌟 Отримати PRO";
 proBtn.className = "main-button";
