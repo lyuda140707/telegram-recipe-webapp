@@ -1198,9 +1198,28 @@ function submitPaymentCheck() {
     return;
   }
 
-  localStorage.setItem('pro_verified', 'true');
-  document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
+  const tg = window.Telegram.WebApp;
+  const user = tg.initDataUnsafe?.user;
+
+  if (!user) {
+    alert("Не вдалося отримати інформацію про користувача.");
+    return;
+  }
+
+  fetch("https://твій_бекенд/notify-payment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      user_id: user.id,
+      username: user.username || "",
+      first_name: user.first_name || "",
+      donate_name: value
+    }),
+  });
+
+  document.getElementById('pro-confirmation').innerHTML = '📬 Запит на підтвердження надіслано. Очікуйте підтвердження.';
 }
+
 
 
 </script>
