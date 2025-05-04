@@ -241,6 +241,7 @@ h1, h2, h3 {
     <div class="scroll-menu section active" id="section-categories"></div>
 
 <!-- ✅ Підказка всередині .app -->
+
 <div class="swipe-hint">⬅ Гортай меню ➡</div>
 
 <div id="daily-recipe" class="section active"></div>
@@ -294,25 +295,27 @@ h1, h2, h3 {
 <div class="section" id="section-profile">
   <h2>👤 Мій профіль</h2>
   <p id="days-left"></p>
-  
+
   <!-- 🔽 Ось це додаємо -->
+
   <div id="pro-button-container"></div>
-  
+
   <!-- ℹ️ Кнопка та інформація про PRO -->
+
 <div style="position: relative; margin-bottom: 10px;">
   <button onclick="toggleProInfo()" style="
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: #fbeaff;
-  border: none;
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-">ℹ️</button>
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #fbeaff;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  ">ℹ️</button>
 </div>
 
 <div id="pro-info" style="
@@ -649,13 +652,11 @@ function goHome() {
 }
 
 
-
-async function init() {
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("⬇️ DOM готовий, завантажуємо...");
   await loadCategories();
   await loadDailyRecipe();
   goHome();
-}
-init();
 
   document.getElementById('open-favorites')?.addEventListener('click', () => {
     const block = document.getElementById('fav-accordion');
@@ -1077,7 +1078,8 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-
+document.addEventListener("DOMContentLoaded", () => {
+  const proContainer = document.getElementById("pro-button-container");
 
   if (proContainer) {
     const proBtn = document.createElement("button");
@@ -1159,57 +1161,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
-
-  function addProButton(containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    const btn = document.createElement("button");
-    btn.innerText = "💳 Отримати PRO";
-    btn.className = "buy-pro-button";
-    btn.style.cssText = `
-      margin-top:10px;
-      padding: 8px 16px;
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-      border: none;
-      border-radius: 20px;
-      font-weight: 600;
-      color: #4b2c5e;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    `;
-
-    btn.onclick = async () => {
-      try {
-        const res = await fetch(`https://wfp-pro-backend-abc.onrender.com/create-payment?user_id=${userId}`);
-        const data = await res.json();
-
-        const formHtml = `
-          <form id="wfp_form" method="POST" action="https://secure.wayforpay.com/pay">
-            ${Object.entries(data).map(([k, v]) => `
-              <input type="hidden" name="${k}" value="${Array.isArray(v) ? v.join(';') : v}">
-            `).join("")}
-          </form>
-          <script>document.getElementById('wfp_form').submit();<\/script>
-        `;
-
-        const win = window.open('', '_blank');
-        win.document.write(formHtml);
-        win.document.close();
-      } catch (err) {
-        alert("😢 Не вдалося створити платіж");
-        console.error(err);
-      }
-    };
-
-    container.appendChild(btn);
-  }
-
-  addProButton("pro-button-container");
-  addProButton("pro-button-info");
-});
 
 
 </script>
