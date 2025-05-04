@@ -1207,14 +1207,12 @@ function submitPaymentCheck() {
   }
 
   fetch('https://recipe-backend-0gz1.onrender.com/notify-payment', {
-
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       user_id: user.id,
       username: user.username || "",
-      first_name: user.first_name || "",
-      donate_name: value
+      name: value  // ✅ правильне поле!
     }),
   });
 
