@@ -230,6 +230,11 @@ h1, h2, h3 {
   transform: translateY(0);
   opacity: 1;
 }
+@keyframes pulse-info {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
 
   </style>
 
@@ -327,16 +332,17 @@ h1, h2, h3 {
 </div>-->
 <div style="text-align: right; margin-top: 10px; margin-bottom: 5px;">
   <button onclick="toggleProInfo()" style="
-    background: #fbeaff;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 16px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  ">ℹ️</button>
+  background: #fbeaff;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  animation: pulse-info 1.5s infinite;
+">ℹ️</button>
 </div>
 
 
