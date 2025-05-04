@@ -134,30 +134,42 @@
       modal.onclick = () => modal.remove();
       document.body.appendChild(modal);
     }
-const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
+document.addEventListener("DOMContentLoaded", () => {
+  // 👉 категорії
+  document.querySelectorAll('.scroll-menu button').forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.textContent.replace(/^[^\w\u0400-\u04FF]+/, '').trim();
+      loadCategory(category);
+    });
+  });
 
-document.getElementById("buy-pro")?.addEventListener("click", async () => {
-  try {
-    const res = await fetch(`https://recipe-backend-0gz1.onrender.com/create-payment?user_id=${userId}`);
-    const data = await res.json();
+  // 👉 buy-pro кнопка
+  const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
 
-    const formHtml = `
-      <form id="wfp_form" method="POST" action="https://secure.wayforpay.com/pay">
-        ${Object.entries(data).map(([k, v]) => `
-          <input type="hidden" name="${k}" value="${Array.isArray(v) ? v.join(';') : v}">
-        `).join("")}
-      </form>
-      <script>document.getElementById('wfp_form').submit();<\/script>
-    `;
+  document.getElementById("buy-pro")?.addEventListener("click", async () => {
+    try {
+      const res = await fetch(`https://recipe-backend-0gz1.onrender.com/create-payment?user_id=${userId}`);
+      const data = await res.json();
 
-    const win = window.open('', '_blank');
-    win.document.write(formHtml);
-    win.document.close();
-  } catch (err) {
-    alert("😢 Не вдалося створити платіж");
-    console.error(err);
-  }
+      const formHtml = `
+        <form id="wfp_form" method="POST" action="https://secure.wayforpay.com/pay">
+          ${Object.entries(data).map(([k, v]) => `
+            <input type="hidden" name="${k}" value="${Array.isArray(v) ? v.join(';') : v}">
+          `).join("")}
+        </form>
+        <script>document.getElementById('wfp_form').submit();<\/script>
+      `;
+
+      const win = window.open('', '_blank');
+      win.document.write(formHtml);
+      win.document.close();
+    } catch (err) {
+      alert("😢 Не вдалося створити платіж");
+      console.error(err);
+    }
+  });
 });
+
 
   </script>
 </body>
