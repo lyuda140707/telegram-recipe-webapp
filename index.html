@@ -1038,7 +1038,10 @@ function updateMenuCategory(index, newValue) {
   }
 }
   function askBot() {
-  const query = document.getElementById('bot-query').value.trim().toLowerCase();
+  const inputEl = document.getElementById('bot-query');
+  const query = inputEl.value.trim().toLowerCase();
+  inputEl.blur(); // ✅ Знімає фокус — ховає клавіатуру
+
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
   const results = [];
 
