@@ -44,9 +44,23 @@
     </div>
 
     <div class="profile-block section" id="section-profile">
-      <h2>👤 Профіль</h2>
-      <p id="days-left">✨ Залишилось <strong>7 днів</strong> пробної версії</p>
-    </div>
+  <h2>👤 Профіль</h2>
+  <p id="days-left">✨ Залишилось <strong>7 днів</strong> пробної версії</p>
+
+  <!-- 🔘 Додаємо кнопку -->
+  <button id="buy-pro" style="
+    margin-top:10px;
+    padding: 10px 20px;
+    background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #4b2c5e;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  ">💳 Отримати PRO</button>
+</div>
+
   </div>
 
   <div class="bottom-nav-wrapper">
@@ -120,6 +134,31 @@
       modal.onclick = () => modal.remove();
       document.body.appendChild(modal);
     }
+const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
+
+document.getElementById("buy-pro")?.addEventListener("click", async () => {
+  try {
+    const res = await fetch(`https://recipe-backend-0gz1.onrender.com/create-payment?user_id=${userId}`);
+    const data = await res.json();
+
+    const formHtml = `
+      <form id="wfp_form" method="POST" action="https://secure.wayforpay.com/pay">
+        ${Object.entries(data).map(([k, v]) => `
+          <input type="hidden" name="${k}" value="${Array.isArray(v) ? v.join(';') : v}">
+        `).join("")}
+      </form>
+      <script>document.getElementById('wfp_form').submit();<\/script>
+    `;
+
+    const win = window.open('', '_blank');
+    win.document.write(formHtml);
+    win.document.close();
+  } catch (err) {
+    alert("😢 Не вдалося створити платіж");
+    console.error(err);
+  }
+});
+
   </script>
 </body>
 </html>
