@@ -47,20 +47,19 @@
   <h2>👤 Профіль</h2>
   <p id="days-left">✨ Залишилось <strong>7 днів</strong> пробної версії</p>
 
-  <!-- 🔘 Додаємо кнопку -->
-  <button id="buy-pro" style="
-    margin-top:10px;
-    padding: 10px 20px;
-    background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-    border: none;
-    border-radius: 20px;
-    font-weight: 600;
-    color: #4b2c5e;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  ">💳 Отримати PRO</button>
+  <!-- 🔘 Додаємо кнопку з червоною рамкою -->
+<button id="buy-pro" style="
+  margin-top:10px;
+  padding: 10px 20px;
+  background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+  border: 2px solid red; /* ⬅️ ось це додає рамку */
+  border-radius: 20px;
+  font-weight: 600;
+  color: #4b2c5e;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+">💳 Отримати PRO</button>
 </div>
-
   </div>
 
   <div class="bottom-nav-wrapper">
