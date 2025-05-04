@@ -1,3 +1,5 @@
+Передивись , немає в мене такого document.getElementById('bot-query').blur(); // ⬅ ховає клавіатуру
+
 <!DOCTYPE html>
 
 <html lang="uk">
@@ -301,10 +303,10 @@ h1, h2, h3 {
 </div>
 <div id="pro-confirmation" style="margin-top: 10px;"></div>
 
-
   <!-- 🔽 Ось це додаємо -->
 
  <!-- 🔽 Вартість PRO + кнопка -->
+
 <p style="margin-top: 10px; font-size: 15px; color: #5c3e59; background: #fff0f5; padding: 10px; border-radius: 12px;">
   🌟 <strong>PRO доступ</strong> коштує <strong>50 грн</strong><br>
   Оплати суму нижче через Monobank, а потім натисни “Я оплатив” для активації.
@@ -834,10 +836,6 @@ function addToCustomList() {
   input.value = '';
   loadCustomList();
 
-  // ✅ Ховає клавіатуру
-  input.blur();
-}
-
   // ✅ Автоматичне фокусування на поле
   setTimeout(() => input.focus(), 0);
 }
@@ -1042,10 +1040,7 @@ function updateMenuCategory(index, newValue) {
   }
 }
   function askBot() {
-  const inputEl = document.getElementById('bot-query');
-  const query = inputEl.value.trim().toLowerCase();
-  inputEl.blur(); // ✅ Знімає фокус — ховає клавіатуру
-
+  const query = document.getElementById('bot-query').value.trim().toLowerCase();
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
   const results = [];
 
@@ -1070,7 +1065,15 @@ function updateMenuCategory(index, newValue) {
       `).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
-  
+  function normalizeWord(word) {
+  const endings = ['и', 'і', 'я', 'а', 'у', 'ю', 'е', 'о', 'ь', 'ей', 'ів', 'ем', 'ам', 'ям'];
+  for (const end of endings) {
+    if (word.endsWith(end) && word.length > end.length + 2) {
+      return word.slice(0, -end.length);
+    }
+  }
+  return word;
+}
 
 function runSmartSearch() {
   const query = document.getElementById('smart-search-input').value.toLowerCase();
@@ -1116,15 +1119,7 @@ function submitPaymentCheck() {
 
   localStorage.setItem('pro_verified', 'true');
   document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
-  // ✅ Ховає клавіатуру
-  document.getElementById('donate-name').blur();
 }
-document.addEventListener('click', (e) => {
-  const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-  if (!isInput) {
-    document.activeElement.blur();
-  }
-});
 
 
 </script>
