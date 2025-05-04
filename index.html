@@ -1206,7 +1206,8 @@ function submitPaymentCheck() {
     return;
   }
 
-  fetch("https://твій_бекенд/notify-payment", {
+  fetch('https://recipe-backend-0gz1.onrender.com/notify-payment', {
+
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
