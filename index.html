@@ -834,6 +834,10 @@ function addToCustomList() {
   input.value = '';
   loadCustomList();
 
+  // ✅ Ховає клавіатуру
+  input.blur();
+}
+
   // ✅ Автоматичне фокусування на поле
   setTimeout(() => input.focus(), 0);
 }
@@ -1120,7 +1124,15 @@ function submitPaymentCheck() {
 
   localStorage.setItem('pro_verified', 'true');
   document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
+  // ✅ Ховає клавіатуру
+  document.getElementById('donate-name').blur();
 }
+document.addEventListener('click', (e) => {
+  const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+  if (!isInput) {
+    document.activeElement.blur();
+  }
+});
 
 
 </script>
