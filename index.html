@@ -335,17 +335,6 @@ h1, h2, h3 {
   <p style="margin-top:10px;">
   🟢 Активуй <strong>PRO</strong>, щоб відкрити весь функціонал!
 </p>
-<button onclick="window.open('https://t.me/ReciptikBot?start=pro','_blank')" style="
-  margin-top:10px;
-  padding: 8px 16px;
-  background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-  border: none;
-  border-radius: 20px;
-  font-weight: 600;
-  color: #4b2c5e;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-">💳 Отримати PRO</button>
 
 </div>
 
@@ -1121,6 +1110,51 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error(err);
       }
     });
+  }
+});
+// 🔁 Динамічна кнопка в #pro-info
+document.addEventListener("DOMContentLoaded", () => {
+  const proInfo = document.getElementById("pro-info");
+  if (proInfo) {
+    const btn = document.createElement("button");
+    btn.innerText = "💳 Отримати PRO";
+    btn.style.cssText = `
+      margin-top:10px;
+      padding: 8px 16px;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      border: none;
+      border-radius: 20px;
+      font-weight: 600;
+      color: #4b2c5e;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    `;
+
+    btn.onclick = async () => {
+      try {
+        const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
+        const res = await fetch(`https://wfp-pro-backend-abc.onrender.com/create-payment?user_id=${userId}`);
+        const data = await res.json();
+
+        const formHtml = `
+          <form id="wfp_form" method="POST" action="https://secure.wayforpay.com/pay">
+            ${Object.entries(data).map(([k, v]) => `
+              <input type="hidden" name="${k}" value="${Array.isArray(v) ? v.join(';') : v}">
+            `).join("")}
+          </form>
+          <script>document.getElementById('wfp_form').submit();<\/script>
+        `;
+
+        const win = window.open('', '_blank');
+        win.document.write(formHtml);
+        win.document.close();
+      } catch (err) {
+        alert("😢 Не вдалося створити платіж");
+        console.error(err);
+      }
+    };
+
+    proInfo.appendChild(btn);
   }
 });
 
