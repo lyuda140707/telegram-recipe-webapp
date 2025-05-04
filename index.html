@@ -652,10 +652,13 @@ function goHome() {
 }
 
 
-document.addEventListener("DOMContentLoaded", async () => {
-  console.log("⬇️ DOM готовий, завантажуємо...");
-  await loadCategories();
-  await loadDailyRecipe();
+document.addEventListener("DOMContentLoaded", () => {
+  async function init() {
+    await loadCategories();
+    await loadDailyRecipe();
+    goHome();
+  }
+  init();
   goHome();
 
   document.getElementById('open-favorites')?.addEventListener('click', () => {
@@ -1078,49 +1081,17 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
+
 document.addEventListener("DOMContentLoaded", () => {
-  const proContainer = document.getElementById("pro-button-container");
+  const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
 
-  if (proContainer) {
-    const proBtn = document.createElement("button");
-    proBtn.id = "buy-pro";
-    proBtn.innerText = "💳 Отримати PRO";
-    proBtn.className = "buy-pro-button";
-    proContainer.appendChild(proBtn);
+  function addProButton(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-    // ✅ Переносимо сюди, всередину
-    const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
-
-    proBtn.addEventListener("click", async () => {
-      try {
-        const res = await fetch(`https://wfp-pro-backend-abc.onrender.com/create-payment?user_id=${userId}`);
-        const data = await res.json();
-
-        const formHtml = `
-          <form id="wfp_form" method="POST" action="https://secure.wayforpay.com/pay">
-            ${Object.entries(data).map(([k, v]) => `
-              <input type="hidden" name="${k}" value="${Array.isArray(v) ? v.join(';') : v}">
-            `).join("")}
-          </form>
-          <script>document.getElementById('wfp_form').submit();<\/script>
-        `;
-
-        const win = window.open('', '_blank');
-        win.document.write(formHtml);
-        win.document.close();
-      } catch (err) {
-        alert("😢 Не вдалося створити платіж");
-        console.error(err);
-      }
-    });
-  }
-});
-// 🔁 Динамічна кнопка в #pro-info
-document.addEventListener("DOMContentLoaded", () => {
-  const proInfo = document.getElementById("pro-info");
-  if (proInfo) {
     const btn = document.createElement("button");
     btn.innerText = "💳 Отримати PRO";
+    btn.className = "buy-pro-button";
     btn.style.cssText = `
       margin-top:10px;
       padding: 8px 16px;
@@ -1135,7 +1106,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btn.onclick = async () => {
       try {
-        const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
         const res = await fetch(`https://wfp-pro-backend-abc.onrender.com/create-payment?user_id=${userId}`);
         const data = await res.json();
 
@@ -1157,9 +1127,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    proInfo.appendChild(btn);
+    container.appendChild(btn);
   }
+
+  addProButton("pro-button-container");
+  addProButton("pro-button-info");
 });
+
 
 
 
