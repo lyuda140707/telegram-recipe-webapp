@@ -3,7 +3,6 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <meta name="telegram" content="web-app"> <!-- ✅ Ось тут -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>РецептБот Web App</title>
   <link rel="stylesheet" href="style.css">
@@ -231,11 +230,6 @@ h1, h2, h3 {
   transform: translateY(0);
   opacity: 1;
 }
-@keyframes pulse-info {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.6; }
-  100% { transform: scale(1); opacity: 1; }
-}
 
   </style>
 
@@ -319,8 +313,11 @@ h1, h2, h3 {
 
   <!-- ℹ️ Кнопка та інформація про PRO -->
 
-<!-- <div style="text-align: right; margin-top: -10px; margin-bottom: 10px;">
+<div style="position: relative; margin-bottom: 10px;">
   <button onclick="toggleProInfo()" style="
+    position: absolute;
+    top: 0;
+    right: 0;
     background: #fbeaff;
     border: none;
     border-radius: 50%;
@@ -330,22 +327,7 @@ h1, h2, h3 {
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   ">ℹ️</button>
-</div>-->
-<div style="text-align: right; margin-top: 10px; margin-bottom: 5px;">
-  <button onclick="toggleProInfo()" style="
-  background: #fbeaff;
-  border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  animation: pulse-info 1.5s infinite;
-">ℹ️</button>
 </div>
-
 
 <div id="pro-info" style="
   display: none;
@@ -357,24 +339,17 @@ h1, h2, h3 {
   font-size: 14px;
 ">
   <h3 style="margin-top: 0;">🥇 Чому варто перейти на PRO?</h3>
-
-
-  <ul style="padding-left: 20px; line-height: 1.6;">
-    <li>🔓 <strong>Всі категорії та рецепти</strong></li>
-    <li>🧠 Розумний пошук</li>
-    <li>❄️ Пошук за вмістом холодильника</li>
-    <li>🤖 Асистент із порадами</li>
-    <li>📅 Генерація тижневого меню</li>
+  <ul style="padding-left: 20px;">
+    <li>🔓 Необмежений Асистент</li>
     <li>💛 До 100 улюблених рецептів</li>
-    <li>🛒 Персональний список покупок</li>
-    <li>📤 Експорт списку у PDF</li>
-    <li>🍱 Унікальний рецепт тижня</li>
-    <li>👑 Іконка PRO у профілі</li>
-    <li>🎁 7 днів безкоштовного тесту</li>
+    <li>📅 Повне тижневе меню</li>
+    <li>🛒 Експорт покупок у PDF</li>
+    <li>📦 Унікальний рецепт тижня</li>
   </ul>
-  <p style="margin-top:10px; font-weight: bold;">
-    🟢 <strong>Активуй <span style="background:#fff2aa; padding:2px 6px; border-radius:4px;">PRO</span></strong>, щоб відкрити весь функціонал!
-  </p>
+  <p style="margin-top:10px;">
+  🟢 Активуй <strong>PRO</strong>, щоб відкрити весь функціонал!
+</p>
+
 </div>
 
 <div class="accordion-block" id="weekly-accordion">
@@ -480,22 +455,10 @@ function groupByRecipeNumber(data) {
 async function loadCategories() {
   const container = document.getElementById('section-categories');
   container.innerHTML = '';
-
-  const isActive = isProActive();
-  let limited = categories;
-
-  if (!isActive) {
-    limited = categories.slice(0, 3); // показати лише перші 3
-  }
-
-  limited.forEach(cat => {
+  categories.forEach(cat => {
     const btn = document.createElement('button');
     btn.innerText = cat;
     btn.onclick = async () => {
-      if (!isActive) {
-        alert("❗ Повний список доступний лише з PRO-доступом.");
-        return;
-      }
       const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
       const raw = await fetchRecipes(cleanCategory.toLowerCase());
       const grouped = groupByRecipeNumber(raw);
@@ -504,7 +467,6 @@ async function loadCategories() {
     container.appendChild(btn);
   });
 }
-
 
 async function loadDailyRecipe() {
   const recipes = await fetchRecipes();
@@ -623,10 +585,6 @@ if (contentAdded) {
 
 
 function toggleFavorite(recipeId, button) {
-  if (!isProActive()) {
-    alert("❗ Зберігати улюблені рецепти доступно лише з PRO-доступом.");
-    return;
-  }
   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
   const index = favorites.indexOf(recipeId);
 
@@ -706,22 +664,13 @@ function goHome() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("TG:", window.Telegram);
-  console.log("WebApp:", window.Telegram?.WebApp);
-  if (typeof window.Telegram === 'undefined' || !window.Telegram.WebApp) {
-    document.body.innerHTML = '<div style="padding: 20px; font-size: 18px;">🛑 Цей вебдодаток потрібно відкривати через Telegram.</div>';
-    return;
-  }
-
   async function init() {
     await loadCategories();
     await loadDailyRecipe();
     goHome();
   }
-
   init();
   goHome();
-
     // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
   ['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
   const section = document.getElementById(sectionId);
@@ -770,20 +719,18 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
     if (!isOpen) loadCustomList();
   });
 
-  const start = Number(localStorage.getItem('trial_start')) || Date.now();
+  const start = localStorage.getItem('trial_start') || Date.now();
   localStorage.setItem('trial_start', start);
   const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
   const daysLeft = 7 - daysUsed;
   if (localStorage.getItem('pro_verified') === 'true') {
   document.getElementById('days-left').innerHTML = '🌟 PRO доступ активований';
-} else if (daysLeft > 0) {
-  document.getElementById('days-left').innerHTML =
-    `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`;
 } else {
   document.getElementById('days-left').innerHTML =
-    `🔒 Доступ обмежено. Активуй <strong>PRO</strong> для розблокування всіх функцій.`;
+    daysLeft > 0
+      ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
+      : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
 }
-
 
 });
 
@@ -887,10 +834,6 @@ function loadCustomList() {
 }
 
 function addToCustomList() {
-  if (!isProActive()) {
-    alert("❗ Додати можна тільки з PRO-доступом.");
-    return;
-  }
   const inputs = document.querySelectorAll('.custom-list-input');
   const input = Array.from(inputs).find(el => el.offsetParent !== null);
   if (!input) return;
@@ -961,19 +904,8 @@ async function loadRecipesForDay(day, category, container) {
   `;
 
 }
-function isProActive() {
-  const verified = localStorage.getItem('pro_verified') === 'true';
-  const start = Number(localStorage.getItem('trial_start')) || Date.now();
-  const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
-  const trialActive = daysUsed <= 7;
-  return verified || trialActive;
-}
 
 function generateWeeklyMenu() {
-  if (!isProActive()) {
-    alert("❗ Ця функція доступна тільки з PRO-доступом.");
-    return;
-  }
   const categories = [
     "Перші страви", "Другі страви", "Салати", "Десерти", "Випічка", "Закуски", "Напої"
   ];
@@ -1052,10 +984,6 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
 }
 
   function searchFridge() {
-  if (!isProActive()) {
-    alert("❗ Ця функція доступна лише з PRO-доступом.");
-    return;
-  }
   const input = document.getElementById('fridge-input').value.toLowerCase();
   const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
   const normFridgeItems = fridgeItems.map(normalizeWord);
@@ -1122,11 +1050,7 @@ function updateMenuCategory(index, newValue) {
     localStorage.setItem('weekly_menu', JSON.stringify(menu));
   }
 }
-function askBot() {
-  if (!isProActive()) {
-    alert("❗ Асистент доступний лише з PRO-доступом.");
-    return;
-  }
+  function askBot() {
   const query = document.getElementById('bot-query').value.trim().toLowerCase();
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
   const results = [];
@@ -1163,10 +1087,6 @@ function askBot() {
 }
 
 function runSmartSearch() {
-  if (!isProActive()) {
-    alert("❗ Розумний пошук доступний лише з PRO-доступом.");
-    return;
-  }
   const query = document.getElementById('smart-search-input').value.toLowerCase();
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
   const words = query.split(/\s+/).map(normalizeWord).filter(Boolean);
@@ -1208,33 +1128,9 @@ function submitPaymentCheck() {
     return;
   }
 
-    if (typeof window.Telegram === 'undefined' || !window.Telegram.WebApp.initDataUnsafe?.user) {
-    document.getElementById('pro-confirmation').innerText = '🔒 Цей вебдодаток потрібно відкривати через Telegram.';
-    return;
-  }
-
-
-  const tg = window.Telegram.WebApp;
-  const user = tg.initDataUnsafe?.user;
-
-  if (!user) {
-    alert("Не вдалося отримати інформацію про користувача.");
-    return;
-  }
-
-  fetch('https://recipe-backend-0gz1.onrender.com/notify-payment', {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      user_id: user.id,
-      username: user.username || "",
-      name: value
-    }),
-  });
-
-  document.getElementById('pro-confirmation').innerHTML = '📬 Запит на підтвердження надіслано. Очікуйте підтвердження.';
+  localStorage.setItem('pro_verified', 'true');
+  document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
 }
-
 
 
 </script>
