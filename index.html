@@ -1086,27 +1086,17 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-  document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
   const proContainer = document.getElementById("pro-button-container");
 
   if (proContainer) {
     const proBtn = document.createElement("button");
     proBtn.id = "buy-pro";
     proBtn.innerText = "💳 Отримати PRO";
-
     proBtn.className = "buy-pro-button";
-    proBtn.style.padding = "10px 20px";
-    proBtn.style.background = "linear-gradient(to right, #fbc2eb, #a6c1ee)";
-    proBtn.style.border = "2px solid red";
-    proBtn.style.borderRadius = "20px";
-    proBtn.style.fontWeight = "600";
-    proBtn.style.color = "#4b2c5e";
-    proBtn.style.cursor = "pointer";
-    proBtn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
-
     proContainer.appendChild(proBtn);
 
-    // Слухач на клік
+    // ✅ Переносимо сюди, всередину
     const userId = Telegram.WebApp.initDataUnsafe?.user?.id || 123456789;
 
     proBtn.addEventListener("click", async () => {
@@ -1133,6 +1123,7 @@ function toggleProInfo() {
     });
   }
 });
+
 
 
 </script>
