@@ -1198,6 +1198,11 @@ function submitPaymentCheck() {
     return;
   }
 
+  if (typeof window.Telegram === 'undefined' || !window.Telegram.WebApp) {
+    alert("Цей вебдодаток потрібно відкривати через Telegram.");
+    return;
+  }
+
   const tg = window.Telegram.WebApp;
   const user = tg.initDataUnsafe?.user;
 
@@ -1212,7 +1217,7 @@ function submitPaymentCheck() {
     body: JSON.stringify({
       user_id: user.id,
       username: user.username || "",
-      name: value  // ✅ правильне поле!
+      name: value
     }),
   });
 
