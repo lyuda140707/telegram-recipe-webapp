@@ -1113,15 +1113,34 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-function submitPaymentCheck() {
+async function submitPaymentCheck() {
   const value = document.getElementById('donate-name').value.trim();
   if (!value) {
     document.getElementById('pro-confirmation').innerHTML = '❗ Введіть імʼя або цифри';
     return;
   }
 
-  localStorage.setItem('pro_verified', 'true');
-  document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
+  const user = Telegram.WebApp.initDataUnsafe?.user;
+  if (!user) {
+    document.getElementById('pro-confirmation').innerHTML = '❌ Не вдалося визначити користувача Telegram';
+    return;
+  }
+
+  try {
+    const res = await fetch('https://ВАШ_БЕКЕНД/send-payment-request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: user.id,
+        username: user.username,
+        name: value
+      })
+    });
+    const result = await res.json();
+    document.getElementById('pro-confirmation').innerHTML = result.message || '✅ Запит надіслано';
+  } catch (e) {
+    document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при надсиланні';
+  }
 }
 
 
