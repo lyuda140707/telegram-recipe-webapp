@@ -156,6 +156,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+#intro-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1s ease;
+}
+
+#intro-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#intro-screen.hide {
+  opacity: 0;
+  pointer-events: none;
+}
 
 
   </script>
