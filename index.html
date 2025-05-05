@@ -1130,25 +1130,24 @@ async function submitPaymentCheck() {
     return;
   }
 
+  const payload = { name, user_id, username };
+  console.log("📤 Відправляємо запит на оплату:", payload); // ✅ Додаємо лог
 
   try {
     await fetch("https://recipe-backend-0gz1.onrender.com/notify-payment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        user_id,
-        username
-      })
+      body: JSON.stringify(payload)
     });
 
     localStorage.setItem('pro_verified', 'true');
     document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
   } catch (err) {
     document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при відправці. Спробуйте пізніше';
-    console.error("Помилка надсилання запиту:", err);
+    console.error("❌ Помилка надсилання запиту:", err);
   }
 }
+
 
 
 </script>
