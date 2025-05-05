@@ -1160,7 +1160,7 @@ if (!tg) {
     });
 
     localStorage.setItem('pro_verified', 'true');
-    document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
+    document.getElementById('pro-confirmation').innerHTML = '✅ Запит на оплату надіслано. Чекаємо підтвердження…';
   } catch (err) {
     document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при відправці. Спробуйте пізніше';
     console.error("❌ Помилка надсилання запиту:", err);
