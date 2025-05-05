@@ -1135,18 +1135,14 @@ async function submitPaymentCheck() {
   }
 
   const tg = window.Telegram?.WebApp;
-if (!tg) {
-  document.getElementById('pro-confirmation').innerText = '❌ WebApp API не доступний. Запусти через Telegram бота';
-  return;
-}
+  if (!tg) {
+    document.getElementById('pro-confirmation').innerText = '❌ WebApp API не доступний. Запусти через Telegram бота';
+    return;
+  }
 
   const user = tg.initDataUnsafe?.user || {};
-const user_id = user.id;
-const username = user.username;
-
-console.log("👤 USER:", user);
-console.log("📛 USERNAME:", username);
-
+  const user_id = user.id;
+  const username = user.username || "";
 
   if (!user_id) {
     document.getElementById('pro-confirmation').innerHTML = '❗ Не вдалося отримати ID. Запусти бота ще раз.';
@@ -1154,7 +1150,7 @@ console.log("📛 USERNAME:", username);
   }
 
   const payload = { name, user_id, username };
-  console.log("📤 Відправляємо запит на оплату:", payload); // ✅ Додаємо лог
+  console.log("📤 Відправляємо запит на оплату:", payload);
 
   try {
     await fetch("https://recipe-backend-0gz1.onrender.com/notify-payment", {
@@ -1165,6 +1161,22 @@ console.log("📛 USERNAME:", username);
 
     localStorage.setItem('pro_verified', 'true');
     document.getElementById('pro-confirmation').innerHTML = '✅ Запит на оплату надіслано. Чекаємо підтвердження…';
+
+    // ⏱️ Перевірка кожні 5 секунд
+    let proInterval = setInterval(() => {
+      fetch(`https://recipe-backend-0gz1.onrender.com/is-pro?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.is_pro) {
+            clearInterval(proInterval);
+            document.body.classList.add("pro-user");
+            document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
+            document.getElementById("days-left").innerHTML = "🌟 PRO доступ активований до " + (data.expires || "невідомо");
+            document.getElementById("pro-confirmation").innerHTML = "🎉 Доступ активовано! Дякуємо 💛";
+          }
+        });
+    }, 5000);
+
   } catch (err) {
     document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при відправці. Спробуйте пізніше';
     console.error("❌ Помилка надсилання запиту:", err);
