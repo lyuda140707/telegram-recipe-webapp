@@ -235,10 +235,7 @@ h1, h2, h3 {
 
 </head>
 <body>
-<!-- ⬇️⬇️ Додано заставку -->
-<div id="intro-screen">
-  <img src="https://i.pinimg.com/736x/42/d0/47/42d0471e0094e28d71eaec86d78beec5.jpg" alt="Заставка" style="width:100%; height:100vh; object-fit:cover;">
-</div>
+
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
     <div class="scroll-menu section active" id="section-categories"></div>
@@ -672,12 +669,6 @@ document.addEventListener("DOMContentLoaded", () => {
   async function init() {
     await loadCategories();
     await loadDailyRecipe();
-
-    // Показуємо заставку 2 секунди
-setTimeout(() => {
-  document.getElementById('intro-screen')?.classList.add('hide');
-}, 2000);
-
     goHome();
   }
 init();
