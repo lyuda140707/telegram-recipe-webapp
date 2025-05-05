@@ -674,17 +674,14 @@ document.addEventListener("DOMContentLoaded", () => {
   init();
     // ✅ Перевірка PRO-доступу
   const tg = window.Telegram?.WebApp;
-  if (!tg || !tg.initDataUnsafe?.user?.id) {
-    document.getElementById('pro-status').innerText = '❌ Telegram WebApp не доступний';
-  } else {
-    const userId = tg.initDataUnsafe.user.id;
-   
+if (!tg || !tg.initDataUnsafe?.user?.id) {
+  document.getElementById('pro-status').innerText = '❌ Telegram WebApp не доступний';
+} else {
+  const userId = tg.initDataUnsafe.user.id;
 
-      .catch(err => {
-        document.getElementById("pro-status").innerText = "❌ Помилка перевірки PRO.";
-        console.error(err);
-      });
-  }
+  
+}
+
 
 
     // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
