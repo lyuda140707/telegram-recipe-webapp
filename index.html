@@ -672,6 +672,12 @@ document.addEventListener("DOMContentLoaded", () => {
   async function init() {
     await loadCategories();
     await loadDailyRecipe();
+
+    // Показуємо заставку 2 секунди
+setTimeout(() => {
+  document.getElementById('intro-screen')?.classList.add('hide');
+}, 2000);
+
     goHome();
   }
 init();
