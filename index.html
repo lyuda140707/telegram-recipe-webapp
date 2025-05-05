@@ -1114,32 +1114,33 @@ function toggleProInfo() {
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 async function submitPaymentCheck() {
-  const value = document.getElementById('donate-name').value.trim();
-  if (!value) {
+  const name = document.getElementById('donate-name').value.trim();
+  if (!name) {
     document.getElementById('pro-confirmation').innerHTML = '❗ Введіть імʼя або цифри';
     return;
   }
 
-  const user = Telegram.WebApp.initDataUnsafe?.user;
-  if (!user) {
-    document.getElementById('pro-confirmation').innerHTML = '❌ Не вдалося визначити користувача Telegram';
-    return;
-  }
+  const tg = window.Telegram.WebApp;
+  const user = tg.initDataUnsafe?.user || {};
+  const user_id = user.id;
+  const username = user.username || "";
 
   try {
-    const res = await fetch('https://ВАШ_БЕКЕНД/send-payment-request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    await fetch("https://recipe-backend-0gz1.onrender.com/notify-payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        user_id: user.id,
-        username: user.username,
-        name: value
+        name,
+        user_id,
+        username
       })
     });
-    const result = await res.json();
-    document.getElementById('pro-confirmation').innerHTML = result.message || '✅ Запит надіслано';
-  } catch (e) {
-    document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при надсиланні';
+
+    localStorage.setItem('pro_verified', 'true');
+    document.getElementById('pro-confirmation').innerHTML = '🎉 Дякуємо! PRO доступ активовано ✅';
+  } catch (err) {
+    document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при відправці. Спробуйте пізніше';
+    console.error("Помилка надсилання запиту:", err);
   }
 }
 
