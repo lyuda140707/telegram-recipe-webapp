@@ -678,16 +678,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('pro-status').innerText = '❌ Telegram WebApp не доступний';
   } else {
     const userId = tg.initDataUnsafe.user.id;
-    fetch(`https://recipe-backend-0gz1.onrender.com/check-pro?user_id=${userId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.is_pro) {
-          document.body.classList.add("pro-user");
-          document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
-        } else {
-          document.getElementById("pro-status").innerText = "🔒 PRO доступ ще не активовано.";
-        }
-      })
+   
+
       .catch(err => {
         document.getElementById("pro-status").innerText = "❌ Помилка перевірки PRO.";
         console.error(err);
@@ -743,18 +735,19 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
     if (!isOpen) loadCustomList();
   });
 
-  const start = localStorage.getItem('trial_start') || Date.now();
-  localStorage.setItem('trial_start', start);
-  const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
-  const daysLeft = 7 - daysUsed;
-  if (localStorage.getItem('pro_verified') === 'true') {
-  document.getElementById('days-left').innerHTML = '🌟 PRO доступ активований';
-} else {
-  document.getElementById('days-left').innerHTML =
-    daysLeft > 0
-      ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
-      : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
-}
+  fetch(`https://recipe-backend-0gz1.onrender.com/check-pro?user_id=${userId}`)
+  .then(res => res.json())
+  .then(data => {
+    if (data.is_pro) {
+      document.body.classList.add("pro-user");
+      document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
+      document.getElementById("days-left").innerHTML = "🌟 PRO доступ активований";
+    } else {
+      document.getElementById("pro-status").innerText = "🔒 PRO доступ ще не активовано.";
+      document.getElementById("days-left").innerHTML = "";
+    }
+  });
+
 
 });
 
