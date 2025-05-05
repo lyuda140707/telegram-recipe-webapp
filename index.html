@@ -671,29 +671,33 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadDailyRecipe();
     goHome();
   }
-  init();
-    // ✅ Перевірка PRO-доступу
-  const tg = window.Telegram?.WebApp;
+init();
+
+// ✅ Перевірка PRO-доступу
+const tg = window.Telegram?.WebApp;
+
 if (!tg || !tg.initDataUnsafe?.user?.id) {
   document.getElementById('pro-status').innerText = '❌ Telegram WebApp не доступний';
 } else {
   const userId = tg.initDataUnsafe.user.id;
-    // 🟢 Перевіряємо локальний статус PRO
-    if (localStorage.getItem('is_pro') === 'true') {
-      document.body.classList.add("pro-user");
 
-      const expires = localStorage.getItem('pro_expires') || '';
-      document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
-      document.getElementById("days-left").innerHTML = "👑 Дійсний до: " + expires;
+  // 🟢 Локальна перевірка (збереглася з попереднього разу)
+  if (localStorage.getItem('is_pro') === 'true') {
+    document.body.classList.add("pro-user");
 
-      const header = document.querySelector("h1");
-      if (header) {
-        header.innerText = "👑 Що приготувати?";
-      }
+    const expires = localStorage.getItem('pro_expires') || '';
+    document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
+    document.getElementById("days-left").innerHTML = "👑 Дійсний до: " + expires;
 
-      document.getElementById("pro-confirmation").innerHTML = "🎉 Доступ активовано! Дякуємо 💛";
+    const header = document.querySelector("h1");
+    if (header) {
+      header.innerText = "👑 Що приготувати?";
     }
 
+    document.getElementById("pro-confirmation").innerHTML = "🎉 Доступ активовано! Дякуємо 💛";
+  }
+
+  // 🟢 Онлайн-перевірка — навіть якщо localStorage порожній
   
 }
 
