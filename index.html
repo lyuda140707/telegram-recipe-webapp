@@ -670,7 +670,7 @@ document.addEventListener("DOMContentLoaded", () => {
     goHome();
   }
   init();
-  goHome();
+
     // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
   ['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
   const section = document.getElementById(sectionId);
@@ -973,15 +973,7 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
   });
 }
 
-  function normalizeWord(word) {
-  const endings = ['и', 'і', 'я', 'а', 'у', 'ю', 'е', 'о', 'ь', 'ей', 'ів', 'ем', 'ам', 'ям'];
-  for (const end of endings) {
-    if (word.endsWith(end) && word.length > end.length + 2) {
-      return word.slice(0, -end.length);
-    }
-  }
-  return word;
-}
+  
 
   function searchFridge() {
   const input = document.getElementById('fridge-input').value.toLowerCase();
