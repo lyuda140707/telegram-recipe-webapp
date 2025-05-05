@@ -678,6 +678,21 @@ if (!tg || !tg.initDataUnsafe?.user?.id) {
   document.getElementById('pro-status').innerText = '❌ Telegram WebApp не доступний';
 } else {
   const userId = tg.initDataUnsafe.user.id;
+    // 🟢 Перевіряємо локальний статус PRO
+    if (localStorage.getItem('is_pro') === 'true') {
+      document.body.classList.add("pro-user");
+
+      const expires = localStorage.getItem('pro_expires') || '';
+      document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
+      document.getElementById("days-left").innerHTML = "👑 Дійсний до: " + expires;
+
+      const header = document.querySelector("h1");
+      if (header) {
+        header.innerText = "👑 Що приготувати?";
+      }
+
+      document.getElementById("pro-confirmation").innerHTML = "🎉 Доступ активовано! Дякуємо 💛";
+    }
 
   
 }
@@ -737,6 +752,9 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
   .then(data => {
     if (data.is_pro) {
       document.body.classList.add("pro-user");
+      localStorage.setItem('is_pro', 'true');
+localStorage.setItem('pro_expires', data.expires || '');
+
       document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
       document.getElementById("days-left").innerHTML = "👑 Дійсний до: " + (data.expires || "невідомо");
 
