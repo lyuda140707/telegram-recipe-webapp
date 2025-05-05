@@ -738,12 +738,21 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
     if (data.is_pro) {
       document.body.classList.add("pro-user");
       document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
-      document.getElementById("days-left").innerHTML = "🌟 PRO доступ активований";
+      document.getElementById("days-left").innerHTML = "👑 Дійсний до: " + (data.expires || "невідомо");
+
+     const header = document.querySelector("h1");
+if (header) {
+  header.innerText = "👑 Що приготувати?";
+}
+
+
+      document.getElementById("pro-confirmation").innerHTML = "🎉 Доступ активовано! Дякуємо 💛";
     } else {
       document.getElementById("pro-status").innerText = "🔒 PRO доступ ще не активовано.";
       document.getElementById("days-left").innerHTML = "";
     }
   });
+
 
 
 });
