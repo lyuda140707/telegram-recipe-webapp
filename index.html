@@ -298,6 +298,7 @@ h1, h2, h3 {
   <div id="pro-check" style="margin-top: 20px;">
   <input type="text" id="donate-name" placeholder="Імʼя або останні 4 цифри картки" style="padding: 8px; width: 80%;">
   <button onclick="submitPaymentCheck()" style="padding: 8px;">✅ Я оплатив</button>
+    <p id="pro-status" style="margin-top: 10px; font-weight: bold;"></p>
 </div>
 <div id="pro-confirmation" style="margin-top: 10px;"></div>
 
@@ -671,6 +672,28 @@ document.addEventListener("DOMContentLoaded", () => {
     goHome();
   }
   init();
+    // ✅ Перевірка PRO-доступу
+  const tg = window.Telegram?.WebApp;
+  if (!tg || !tg.initDataUnsafe?.user?.id) {
+    document.getElementById('pro-status').innerText = '❌ Telegram WebApp не доступний';
+  } else {
+    const userId = tg.initDataUnsafe.user.id;
+    fetch(`https://recipe-backend-0gz1.onrender.com/check-pro?user_id=${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.is_pro) {
+          document.body.classList.add("pro-user");
+          document.getElementById("pro-status").innerText = "🌟 У тебе активований PRO доступ!";
+        } else {
+          document.getElementById("pro-status").innerText = "🔒 PRO доступ ще не активовано.";
+        }
+      })
+      .catch(err => {
+        document.getElementById("pro-status").innerText = "❌ Помилка перевірки PRO.";
+        console.error(err);
+      });
+  }
+
 
     // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
   ['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
