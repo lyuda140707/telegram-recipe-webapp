@@ -421,6 +421,93 @@ h1, h2, h3 {
 </div>
 
 <script>
+ document.addEventListener("DOMContentLoaded", () => {
+  if (!window.Telegram || !window.Telegram.WebApp || !Telegram.WebApp.initDataUnsafe?.user) {
+    document.body.innerHTML = '<h2 style="text-align:center;padding:20px;color:#91326b;">⚠️ Цей вебдодаток потрібно відкривати через Telegram</h2>';
+    return;
+  }
+
+  Telegram.WebApp.ready();
+
+  // 👉 Завантаження категорій, рецептів, головна
+  async function init() {
+    await loadCategories();
+    await loadDailyRecipe();
+    goHome();
+  }
+  init();
+
+  // 👉 Динамічна кнопка "Отримати PRO"
+  const proBtn = document.createElement('button');
+  proBtn.innerText = "🌟 Отримати PRO";
+  proBtn.className = "main-button";
+  proBtn.onclick = () => {
+    window.open("https://send.monobank.ua/jar/6agGfuJmcv", "_blank");
+  };
+  document.getElementById("pro-button-container")?.appendChild(proBtn);
+
+  // 👉 Обробники акордеонів
+  document.getElementById('open-favorites')?.addEventListener('click', () => {
+    const block = document.getElementById('fav-accordion');
+    const arrow = document.getElementById('arrow-fav');
+    const isOpen = block.classList.contains('accordion-open');
+    block.classList.toggle('accordion-open');
+    arrow.innerText = isOpen ? '🔽' : '🔼';
+    if (!isOpen) {
+      loadFavorites();
+      setTimeout(() => {
+        block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  });
+
+  document.getElementById('open-list')?.addEventListener('click', () => {
+    showSection('section-profile');
+    const block = document.getElementById('list-accordion');
+    const arrow = document.getElementById('arrow-list');
+    const isOpen = block.classList.contains('accordion-open');
+    block.classList.toggle('accordion-open');
+    arrow.innerText = isOpen ? '🔽' : '🔼';
+    if (!isOpen) loadCustomList();
+  });
+
+  // 👉 Показ днів пробної версії
+  const start = localStorage.getItem('trial_start') || Date.now();
+  localStorage.setItem('trial_start', start);
+  const daysUsed = Math.floor((Date.now() - start) / (1000 * 60 * 60 * 24));
+  const daysLeft = 7 - daysUsed;
+  if (localStorage.getItem('pro_verified') === 'true') {
+    document.getElementById('days-left').innerHTML = '🌟 PRO доступ активований';
+  } else {
+    document.getElementById('days-left').innerHTML =
+      daysLeft > 0
+        ? `🔓 Пробна версія: залишилось <strong>${daysLeft} дн${daysLeft === 1 ? 'ь' : 'і'}</strong>`
+        : `🔒 Платна версія активується після оформлення <strong>PRO</strong>`;
+  }
+
+  // 👉 Автозникнення підказки "гортай меню"
+  setTimeout(() => {
+    const hint = document.querySelector('.swipe-hint');
+    if (hint) {
+      hint.style.opacity = '0';
+      hint.style.pointerEvents = 'none';
+      setTimeout(() => hint.remove(), 400);
+    }
+  }, 30000);
+
+  // 👉 Приховування клавіатури при натиску поза input
+  ['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    section.addEventListener('click', (e) => {
+      const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+      if (!isInput) {
+        document.activeElement.blur();
+      }
+    });
+  });
+});
+
   
 const categories = [
   "👶 Для дітей", "🥗 Вегетаріанське", "🌾 Без глютену", "⚡ Швидко", "🍲 Перші страви",
@@ -662,26 +749,6 @@ function goHome() {
   loadDailyRecipe();
 }
 
-
-document.addEventListener("DOMContentLoaded", () => {
-  async function init() {
-    await loadCategories();
-    await loadDailyRecipe();
-    goHome();
-  }
-  init();
-  goHome();
-    // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
-  ['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
-  const section = document.getElementById(sectionId);
-  if (!section) return;
-  section.addEventListener('click', (e) => {
-    const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-    if (!isInput) {
-      document.activeElement.blur();
-    }
-  });
-});
 
 
   const proBtn = document.createElement('button');
