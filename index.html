@@ -1120,7 +1120,12 @@ async function submitPaymentCheck() {
     return;
   }
 
-  const tg = window.Telegram.WebApp;
+  const tg = window.Telegram?.WebApp;
+if (!tg) {
+  document.getElementById('pro-confirmation').innerText = '❌ WebApp API не доступний. Запусти через Telegram бота';
+  return;
+}
+
   const user = tg.initDataUnsafe?.user || {};
   const user_id = user.id;
   const username = user.username || "";
