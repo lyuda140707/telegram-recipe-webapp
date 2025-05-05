@@ -732,7 +732,7 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
     if (!isOpen) loadCustomList();
   });
 
-  fetch(`https://recipe-backend-0gz1.onrender.com/check-pro?user_id=${userId}`)
+  fetch(`https://recipe-backend-0gz1.onrender.com/is-pro?user_id=${userId}`)
   .then(res => res.json())
   .then(data => {
     if (data.is_pro) {
@@ -1141,8 +1141,12 @@ if (!tg) {
 }
 
   const user = tg.initDataUnsafe?.user || {};
-  const user_id = user.id;
-  const username = user.username || "";
+const user_id = user.id;
+const username = user.username;
+
+console.log("👤 USER:", user);
+console.log("📛 USERNAME:", username);
+
 
   if (!user_id) {
     document.getElementById('pro-confirmation').innerHTML = '❗ Не вдалося отримати ID. Запусти бота ще раз.';
