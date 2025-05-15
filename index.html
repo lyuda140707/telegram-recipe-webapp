@@ -1312,8 +1312,10 @@ setInterval(() => {
     const data = await resp.json();
 
     if (data.is_subscribed) {
-      // Користувач підписаний — показати основний інтерфейс
-      document.body.style.display = "block";
+  document.body.style.display = "block";
+  await init(); // Ініціалізація UI: завантаження категорій, рецептів і т.д.
+}
+
       // Тут додай ініціалізацію UI або виклик функції, що показує основний контент
     } else {
       // Користувач НЕ підписаний — показати повідомлення і кнопку підписки
