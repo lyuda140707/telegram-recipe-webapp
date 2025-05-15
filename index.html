@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>РецептБот Web App</title>
-  <link rel="stylesheet" href="style.css">
+ <!-- <link rel="stylesheet" href="style.css"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -772,35 +772,38 @@ document.addEventListener("DOMContentLoaded", () => {
   bottomNavWrapper.style.bottom = '0px';
 
   function adjustForKeyboard() {
-    if (window.visualViewport) {
-      const keyboardHeight = window.innerHeight - window.visualViewport.height;
-      if (keyboardHeight > 150) { // Якщо клавіатура відкрита (поріг 150px)
-        bottomNavWrapper.style.bottom = keyboardHeight + 'px';
-        app.style.paddingBottom = (keyboardHeight + bottomNavWrapper.offsetHeight + 20) + 'px';
-      } else {
-        bottomNavWrapper.style.bottom = '0px';
-        app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
-      }
+  if (window.visualViewport) {
+    const keyboardHeight = window.innerHeight - window.visualViewport.height;
+    if (keyboardHeight > 150) { // Якщо клавіатура відкрита (поріг 150px)
+      bottomNavWrapper.style.bottom = keyboardHeight + 'px';
+      app.style.paddingBottom = (keyboardHeight + bottomNavWrapper.offsetHeight + 20) + 'px';
     } else {
-      // fallback, якщо visualViewport немає
       bottomNavWrapper.style.bottom = '0px';
       app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
     }
+  } else {
+    bottomNavWrapper.style.bottom = '0px';
+    app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
   }
+}
 
-  // Першочергова корекція
-  adjustForKeyboard();
+let debounceTimeout;
 
-  // Слухаємо зміну viewport
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', adjustForKeyboard);
-    // Важливо: запускаємо одразу, щоб підлаштувати меню при завантаженні
-    window.visualViewport.dispatchEvent(new Event('resize'));
-  }
+function debouncedAdjust() {
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(adjustForKeyboard, 100);
+}
 
-  // Для старих браузерів слухаємо resize вікна
-  window.addEventListener('resize', adjustForKeyboard);
-});
+// Першочергова корекція
+adjustForKeyboard();
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', debouncedAdjust);
+  window.visualViewport.dispatchEvent(new Event('resize'));
+}
+
+window.addEventListener('resize', debouncedAdjust);
+
 
 
 // ✅ Перевірка PRO-доступу
@@ -850,17 +853,19 @@ if (!tg || !tg.initDataUnsafe?.user?.id) {
 
 
 
-    // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
-  ['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
-  const section = document.getElementById(sectionId);
-  if (!section) return;
-  section.addEventListener('click', (e) => {
-    const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-    if (!isInput) {
-      document.activeElement.blur();
-    }
-  });
+    // Автоматичне приховування клавіатури при кліку поза інпутами на всьому тілі сторінки
+document.body.addEventListener('click', function(e) {
+  const target = e.target;
+  const active = document.activeElement;
+  
+  const inputs = ['INPUT', 'TEXTAREA', 'SELECT'];
+  
+  // Якщо клік не по інпуту і є активний інпут/textarea/select — забираємо фокус, ховаємо клавіатуру
+  if (!inputs.includes(target.tagName) && active && inputs.includes(active.tagName)) {
+    active.blur();
+  }
 });
+
 
 
   const proBtn = document.createElement('button');
