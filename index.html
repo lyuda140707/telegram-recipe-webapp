@@ -759,7 +759,31 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadDailyRecipe();
     goHome();
   }
-init();
+  init();
+
+  // Підлаштування padding знизу під клавіатуру
+  const app = document.querySelector('.app');
+  if (window.visualViewport && app) {
+    window.visualViewport.addEventListener('resize', () => {
+      const keyboardHeight = window.innerHeight - window.visualViewport.height;
+      app.style.paddingBottom = (keyboardHeight > 0 ? keyboardHeight + 50 : 90) + 'px';
+    });
+  }
+
+  // Приховування підказки swipe при фокусі на input/textarea
+  document.querySelectorAll('input, textarea').forEach(el => {
+    el.addEventListener('focus', () => {
+      const hint = document.querySelector('.swipe-hint');
+      if (hint) hint.style.display = 'none';
+    });
+    el.addEventListener('blur', () => {
+      const hint = document.querySelector('.swipe-hint');
+      if (hint) hint.style.display = '';
+    });
+  });
+});
+
+
 
 // ✅ Перевірка PRO-доступу
 const tg = window.Telegram?.WebApp;
