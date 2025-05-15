@@ -328,8 +328,8 @@ h1 {
   bottom: 80px;
   right: 20px;
   z-index: 999;
-  background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-  color: #4b2c5e;
+  background: linear-gradient(135deg, #ff9a9e, #fecfef);
+  color: #5c2c3d;
   border: none;
   border-radius: 50%;
   width: 50px;
@@ -343,7 +343,7 @@ h1 {
 }
 
 #scrollTopBtn:hover {
-  background: linear-gradient(135deg, #eeb1e8, #92b2f0);
+  background: linear-gradient(135deg, #fecfef, #ff9a9e);
   box-shadow: 0 6px 20px rgba(171, 100, 255, 0.9);
   transform: scale(1.15);
 }
