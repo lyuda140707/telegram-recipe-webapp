@@ -229,12 +229,12 @@ h1, h2, h3 {
   max-height: 500px;
   transform: translateY(0);
   opacity: 1;
-
+}
 
   </style>
 
 </head>
-<body style="display:none;">
+<body>
 
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
@@ -420,25 +420,6 @@ h1, h2, h3 {
     <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
   </div>
 </div>
-    <button id="scrollTopBtn" style="
-  display:none;
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, #ff4e50, #f9d423);
-  border: none;
-  border-radius: 50%;
-  box-shadow: 0 4px 15px rgba(249, 212, 35, 0.6);
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  z-index: 1000;
-">
-  ⬆
-</button>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <script>
@@ -539,19 +520,13 @@ container.innerHTML = `
 `;
   const block = document.getElementById(id);
   recipe.forEach(r => {
-  if (r["тип блоку"] === "текст") {
-    block.innerHTML += `<p>${r["контент"]}</p>`;
-  } else if (r["тип блоку"] === "фото") {
-    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-  }
-  
-  // Вивід відео з окремої колонки
-  if (r["відео"]) {
-    block.innerHTML += renderVideoIfNeeded(r["відео"]);
-  }
-});
-
-
+    if (r["тип блоку"] === "текст") {
+      block.innerHTML += `<p>${r["контент"]}</p>`;
+    } else if (r["тип блоку"] === "фото") {
+      // додаткові фото під текстом, якщо є
+      block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+    }
+  });
   block.innerHTML += `
   <div style="text-align: center; margin-top: 20px;">
   <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
@@ -593,13 +568,7 @@ group.forEach(r => {
     block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
     contentAdded = true;
   }
-
-  if (r["відео"]) {
-    block.innerHTML += renderVideoIfNeeded(r["відео"]);
-    contentAdded = true;
-  }
 });
-
 
 if (contentAdded) {
   block.innerHTML += `
@@ -696,11 +665,17 @@ function goHome() {
 }
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  async function init() {
+    await loadCategories();
+    await loadDailyRecipe();
+    goHome();
+  }
+init();
 
 // ✅ Перевірка PRO-доступу
 const tg = window.Telegram?.WebApp;
 
-  
 if (!tg || !tg.initDataUnsafe?.user?.id) {
   document.getElementById('pro-status').innerText = '❌ Telegram WebApp не доступний';
 } else {
@@ -760,12 +735,11 @@ if (!tg || !tg.initDataUnsafe?.user?.id) {
 
   const proBtn = document.createElement('button');
 proBtn.innerText = "🌟 Отримати PRO";
-proBtn.className = "pro-button";
+proBtn.className = "main-button";
 proBtn.onclick = () => {
   window.open("https://send.monobank.ua/jar/6agGfuJmcv", "_blank");
 };
 document.getElementById("pro-button-container")?.appendChild(proBtn);
-
 
 
   document.getElementById('open-favorites')?.addEventListener('click', () => {
@@ -1234,95 +1208,9 @@ async function submitPaymentCheck() {
   }
 }
 
-function renderVideoIfNeeded(content) {
-  // Перевіряємо, чи content є посиланням на відео
-  if (!content) return '';
 
-  // YouTube (підтримуємо youtu.be та youtube.com)
-  if (content.includes('youtube.com') || content.includes('youtu.be')) {
-    // Витягуємо ID відео
-    let videoId = null;
-    if (content.includes('youtube.com')) {
-      const urlParams = new URLSearchParams(new URL(content).search);
-      videoId = urlParams.get('v');
-    }
-    if (!videoId && content.includes('youtu.be')) {
-      videoId = content.split('youtu.be/')[1].split('?')[0];
-    }
-    if (videoId) {
-      return `<iframe width="320" height="180" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-    }
-  }
-
- // Google Drive відео
-
-
-if (content.includes('drive.google.com')) {
-  const match = content.match(/\/d\/([^\/]+)(\/|$)/);
-  if (match && match[1]) {
-    const fileId = match[1];
-    return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="320" height="180" allow="autoplay" frameborder="0" allowfullscreen></iframe>`;
-  }
- }
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  // Скрол батон
-  const scrollTopBtn = document.getElementById('scrollTopBtn');
-
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 200) {
-      scrollTopBtn.style.display = 'block';
-      scrollTopBtn.style.opacity = '1';
-      scrollTopBtn.style.pointerEvents = 'auto';
-    } else {
-      scrollTopBtn.style.opacity = '0';
-      scrollTopBtn.style.pointerEvents = 'none';
-      setTimeout(() => { scrollTopBtn.style.display = 'none'; }, 300);
-    }
-  });
-
-  scrollTopBtn.addEventListener('mouseenter', () => {
-    scrollTopBtn.style.transform = 'scale(1.1)';
-    scrollTopBtn.style.boxShadow = '0 6px 20px rgba(249, 212, 35, 0.9)';
-  });
-
-  scrollTopBtn.addEventListener('mouseleave', () => {
-    scrollTopBtn.style.transform = 'scale(1)';
-    scrollTopBtn.style.boxShadow = '0 4px 15px rgba(249, 212, 35, 0.6)';
-  });
-
-  scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
-
-const tg = window.Telegram?.WebApp;
-if (!tg || !tg.initDataUnsafe?.user?.id) {
-  alert("Помилка: не вдалося отримати ID користувача з Telegram WebApp");
-  return;
-}
-
-// Просто показуємо додаток без перевірки підписки
-document.body.style.display = "block";
-await loadCategories();  // Завантажити категорії
-await loadDailyRecipe(); // Завантажити рецепт дня
-
-  // Після завантаження хінт
-  setTimeout(() => {
-    const hint = document.querySelector('.swipe-hint');
-    if (hint) {
-      hint.style.opacity = '0';
-      hint.style.pointerEvents = 'none';
-      setTimeout(() => hint.remove(), 400);
-    }
-  }, 30000); 
-});
 
 </script>
-
 
 </body>
 </html>
