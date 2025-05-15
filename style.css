@@ -239,11 +239,14 @@ h1 {
 .accordion-open {
   background-color: #e8f5e9; /* можна змінити на будь-який ніжний колір */
 }
+
 .app {
-  padding-bottom: 200px; /* або навіть 250-300 для тесту */
+  padding: 10px;
   max-width: 700px;
   margin: auto;
+  padding-bottom: 250px; /* Збільшено для безпечного простору */
 }
+
 .daily-image-wrapper {
   position: relative;
   overflow: hidden;
