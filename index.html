@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>РецептБот Web App</title>
- <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -372,91 +372,6 @@ h1, h2, h3 {
   </div>
 </div>
 
- <div class="accordion-block">
-  <div class="accordion-title" onclick="toggleCalculators()">
-    🧮 Калькулятори <span id="arrow-calculators">🔽</span>
-  </div>
-  <div id="calculators-wrapper" style="display:none; margin-left: 10px;">
-  <div class="accordion-block">
-    <div class="accordion-title" onclick="toggleAccordion(this)">📏 Калькулятор інгредієнтів</div>
-    <div class="accordion-content">
-      <p><div class="calculator-ingredients">
-  <label for="servings">Кількість порцій:</label>
-  <input type="number" id="servings" value="1" min="1" style="width:60px; margin-left:10px;">
-  
-  <ul id="ingredients-list" style="margin-top:10px;">
-    <li data-base-qty="100">Борошно: <span class="qty">100</span> г</li>
-    <li data-base-qty="200">Вода: <span class="qty">200</span> мл</li>
-    <li data-base-qty="50">Цукор: <span class="qty">50</span> г</li>
-  </ul>
-</div>
-</p>
-    </div>
-  </div>
-  <div class="accordion-block">
-    <div class="accordion-title" onclick="toggleAccordion(this)">🔥 Калькулятор калорійності</div>
-    <div class="accordion-content">
-      <p><div class="calculator-calories">
-  <h4>Введіть інгредієнти і калорії (ккал на 100 г)</h4>
-  <div id="calorie-rows">
-    <div>
-      <input type="text" placeholder="Інгредієнт" class="ingredient-name" style="width:120px;">
-      <input type="number" placeholder="грам" class="ingredient-qty" style="width:60px;">
-      <input type="number" placeholder="ккал/100г" class="ingredient-cal" style="width:60px;">
-    </div>
-  </div>
-  <button onclick="addCalorieRow()">+ Додати інгредієнт</button>
-  <p>Загальна калорійність: <span id="total-calories">0</span> ккал</p>
-</div>
-</p>
-    </div>
-  </div>
-
-<div class="accordion-block">
-  <div class="accordion-title" onclick="toggleAccordion(this)">🔄 Калькулятор грам ⇄ ст. ложки</div>
-  <div class="accordion-content">
-    <div style="margin-top:10px;">
-      <label for="product-select">Оберіть продукт:</label>
-      <select id="product-select" style="margin-left:10px; padding:4px;">
-        <option value="15">Борошно (15 г/ст.л.)</option>
-        <option value="12">Цукор (12 г/ст.л.)</option>
-        <option value="18">Сіль (18 г/ст.л.)</option>
-        <option value="14">Какао (14 г/ст.л.)</option>
-        <option value="9">Вівсяні пластівці (9 г/ст.л.)</option>
-        <option value="21">Мед (21 г/ст.л.)</option>
-        <option value="13.5">Олія (13.5 г/ст.л.)</option>
-        <option value="15">Вода (15 г/мл)</option>
-        <option value="15">Молоко (15 г/мл)</option>
-        <option value="14.5">Масло вершкове (14.5 г/ст.л.)</option>
-        <option value="16">Рис (16 г/ст.л.)</option>
-        <option value="14">Кукурудзяна мука (14 г/ст.л.)</option>
-        <option value="13.5">Манка (13.5 г/ст.л.)</option>
-        <option value="15">Гречка (15 г/ст.л.)</option>
-        <option value="14">Сода (14 г/ст.л.)</option>
-        <option value="12">Розпушувач тіста (12 г/ст.л.)</option>
-      </select>
-    </div>
-    <div style="margin-top:10px;">
-      <label for="grams-input">Грамів:</label>
-      <input type="number" id="grams-input" placeholder="Наприклад, 50" style="width:100px; margin-left:10px;">
-      <button onclick="convertGramsToTbsp()" style="margin-left:10px; padding:4px 10px;">Перевести в ст. ложки</button>
-    </div>
-    <div style="margin-top:10px;">
-      <label for="tbsp-input">Столових ложок:</label>
-      <input type="number" id="tbsp-input" placeholder="Наприклад, 3" style="width:100px; margin-left:10px;">
-      <button onclick="convertTbspToGrams()" style="margin-left:10px; padding:4px 10px;">Перевести в грами</button>
-    </div>
-    <div style="margin-top:15px; font-weight:bold;" id="conversion-result"></div>
-  </div>
-</div>
-
-</div>
-
-</div>
-
-
-  
-
 <div class="accordion-block" id="list-accordion">
   <div class="accordion-title" id="open-list">
     🛒 Що купити <span id="arrow-list">🔽</span>
@@ -469,11 +384,8 @@ h1, h2, h3 {
      <ul id="custom-list" style="padding-left: 20px;"></ul>
   </div> <!-- ✅ оце має бути тут -->
 </div>
-</div>
+  </div>
     <div class="section" id="section-askbot">
-
-
-      
  <h2>🤖 Запитай у Бота</h2>
 <p style="font-size: 15px; color: #5c3e59; background: #fff0f5; padding: 10px; border-radius: 12px;">
   Тут ти можеш ввести будь-яке питання, наприклад:
@@ -508,7 +420,6 @@ h1, h2, h3 {
     <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
   </div>
 </div>
-  
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <script>
@@ -760,48 +671,7 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadDailyRecipe();
     goHome();
   }
-  init();
-
-  const bottomNavWrapper = document.querySelector('.bottom-nav-wrapper');
-  const app = document.querySelector('.app');
-
-  if (!bottomNavWrapper || !app) return;
-
-  // Початковий паддінг контенту під меню
-  app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
-  bottomNavWrapper.style.bottom = '0px';
-
-  function adjustForKeyboard() {
-  if (window.visualViewport) {
-    const keyboardHeight = window.innerHeight - window.visualViewport.height;
-    if (keyboardHeight > 150) { // Якщо клавіатура відкрита (поріг 150px)
-      bottomNavWrapper.style.bottom = keyboardHeight + 'px';
-      app.style.paddingBottom = (keyboardHeight + bottomNavWrapper.offsetHeight + 20) + 'px';
-    } else {
-      bottomNavWrapper.style.bottom = '0px';
-      app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
-    }
-  } else {
-    // fallback, якщо visualViewport немає
-    bottomNavWrapper.style.bottom = '0px';
-    app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
-  }
-}
-
-// Першочергова корекція
-adjustForKeyboard();
-
-// Слухаємо зміну viewport
-if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', adjustForKeyboard);
-  // Важливо: запускаємо одразу, щоб підлаштувати меню при завантаженні
-  window.visualViewport.dispatchEvent(new Event('resize'));
-}
-
-// Для старих браузерів слухаємо resize вікна
-window.addEventListener('resize', adjustForKeyboard);
-
-
+init();
 
 // ✅ Перевірка PRO-доступу
 const tg = window.Telegram?.WebApp;
@@ -850,8 +720,8 @@ if (!tg || !tg.initDataUnsafe?.user?.id) {
 
 
 
-   // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
-['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
+    // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
+  ['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
   const section = document.getElementById(sectionId);
   if (!section) return;
   section.addEventListener('click', (e) => {
@@ -861,8 +731,6 @@ if (!tg || !tg.initDataUnsafe?.user?.id) {
     }
   });
 });
-
-
 
 
   const proBtn = document.createElement('button');
@@ -900,7 +768,10 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
     if (!isOpen) loadCustomList();
   });
 
+  
 
+
+});
 
   // 🔽 Динамічна кнопка "Отримати PRO"
 
@@ -1337,104 +1208,6 @@ async function submitPaymentCheck() {
   }
 }
 
-function toggleAccordion(el) {
-  const parent = el.parentElement;
-  parent.classList.toggle('accordion-open');
-}
-
-
-  // Калькулятор інгредієнтів
-const servingsInput = document.getElementById('servings');
-const ingredientsList = document.getElementById('ingredients-list');
-
-if (servingsInput && ingredientsList) {
-  servingsInput.addEventListener('input', () => {
-    const factor = parseFloat(servingsInput.value) || 1;
-    ingredientsList.querySelectorAll('li').forEach(li => {
-      const baseQty = parseFloat(li.dataset.baseQty);
-      const newQty = (baseQty * factor).toFixed(1);
-      li.querySelector('.qty').innerText = newQty;
-    });
-  });
-}
-
-// Калькулятор калорійності
-function addCalorieRow() {
-  const container = document.getElementById('calorie-rows');
-  const div = document.createElement('div');
-  div.innerHTML = `
-    <input type="text" placeholder="Інгредієнт" class="ingredient-name" style="width:120px;">
-    <input type="number" placeholder="грам" class="ingredient-qty" style="width:60px;">
-    <input type="number" placeholder="ккал/100г" class="ingredient-cal" style="width:60px;">
-  `;
-  container.appendChild(div);
-  updateCalories();
-}
-
-function updateCalories() {
-  const names = document.querySelectorAll('.ingredient-name');
-  const qtys = document.querySelectorAll('.ingredient-qty');
-  const cals = document.querySelectorAll('.ingredient-cal');
-  let total = 0;
-  for (let i = 0; i < names.length; i++) {
-    const qty = parseFloat(qtys[i].value) || 0;
-    const cal = parseFloat(cals[i].value) || 0;
-    total += qty * cal / 100;
-  }
-  document.getElementById('total-calories').innerText = total.toFixed(1);
-}
-
-document.getElementById('calorie-rows').addEventListener('input', updateCalories);
-
-
-function convertGramsToTbsp() {
-  const grams = parseFloat(document.getElementById('grams-input').value);
-  const gramsPerTbsp = parseFloat(document.getElementById('product-select').value);
-  const resultEl = document.getElementById('conversion-result');
-
-  if (isNaN(grams) || grams <= 0) {
-    resultEl.innerText = '❗ Введіть коректну вагу в грамах';
-    return;
-  }
-  const tbsp = grams / gramsPerTbsp;
-  resultEl.innerText = `${grams} г = ${tbsp.toFixed(2)} ст. ложок`;
-}
-
-function convertTbspToGrams() {
-  const tbsp = parseFloat(document.getElementById('tbsp-input').value);
-  const gramsPerTbsp = parseFloat(document.getElementById('product-select').value);
-  const resultEl = document.getElementById('conversion-result');
-
-  if (isNaN(tbsp) || tbsp <= 0) {
-    resultEl.innerText = '❗ Введіть коректну кількість столових ложок';
-    return;
-  }
-  const grams = tbsp * gramsPerTbsp;
-  resultEl.innerText = `${tbsp} ст. ложок = ${grams.toFixed(1)} г`;
-}
-
-  function toggleCalculators() {
-  const wrapper = document.getElementById('calculators-wrapper');
-  const arrow = document.getElementById('arrow-calculators');
-  if (!wrapper) return;
-  if (wrapper.style.display === 'none' || wrapper.style.display === '') {
-    wrapper.style.display = 'block';
-    if (arrow) arrow.innerText = '🔼'; // стрілка вгору
-  } else {
-    wrapper.style.display = 'none';
-    if (arrow) arrow.innerText = '🔽'; // стрілка вниз
-  }
-}
-
-  // Автоматичне прокручування поля введення в калькуляторах при фокусі
-document.querySelectorAll('#calculators-wrapper input').forEach(input => {
-  input.addEventListener('focus', () => {
-    setTimeout(() => {
-      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
-  });
-});
-});
 
 
 </script>
