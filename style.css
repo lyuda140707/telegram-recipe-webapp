@@ -166,35 +166,37 @@ h1 {
 .back-button {
   margin: 10px 0;
   padding: 8px 16px;
-  background: linear-gradient(135deg, #ffd6e0, #ff8ac6);
-  color: #5c3e59;
+  background: linear-gradient(135deg, #ff4e50, #f9d423);
+  color: #fff;
   border: none;
   border-radius: 25px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 3px 8px rgba(255, 105, 180, 0.6);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 1.5s ease-in-out;
-  animation: pulseBackButton 2.5s infinite alternate;
+  box-shadow: 0 4px 15px rgba(255, 150, 50, 0.9);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: colorPulse 3s infinite alternate;
 }
 
 .back-button:hover {
   transform: scale(1.15);
-  box-shadow: 0 8px 20px rgba(255, 20, 147, 0.9);
-  background: linear-gradient(135deg, #ff9ad1, #ff4e9f);
+  box-shadow: 0 8px 30px rgba(255, 200, 50, 1);
 }
 
-@keyframes pulseBackButton {
+@keyframes colorPulse {
   0% {
-    background-position: 0% 50%;
-    box-shadow: 0 3px 8px rgba(255, 105, 180, 0.6);
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 150, 50, 0.9);
   }
   50% {
-    background-position: 100% 50%;
-    box-shadow: 0 6px 18px rgba(255, 20, 147, 0.8);
+    background: linear-gradient(135deg, #ffd700, #ff4500);
+    color: #222;
+    box-shadow: 0 6px 25px rgba(255, 215, 0, 1);
   }
   100% {
-    background-position: 0% 50%;
-    box-shadow: 0 3px 8px rgba(255, 105, 180, 0.6);
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 150, 50, 0.9);
   }
 }
 
