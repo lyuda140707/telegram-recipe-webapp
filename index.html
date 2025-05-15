@@ -794,6 +794,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Слухаємо зміну viewport
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', adjustForKeyboard);
+    // Важливо: запускаємо одразу, щоб підлаштувати меню при завантаженні
+    window.visualViewport.dispatchEvent(new Event('resize'));
   }
 
   // Для старих браузерів слухаємо resize вікна
