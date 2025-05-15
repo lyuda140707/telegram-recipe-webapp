@@ -763,13 +763,25 @@ document.addEventListener("DOMContentLoaded", () => {
   init();
 
   // Підлаштування padding знизу під клавіатуру
-  const app = document.querySelector('.app');
-  if (window.visualViewport && app) {
-    window.visualViewport.addEventListener('resize', () => {
-      const keyboardHeight = window.innerHeight - window.visualViewport.height;
-      app.style.paddingBottom = (keyboardHeight > 0 ? keyboardHeight + 50 : 90) + 'px';
-    });
-  }
+ const app = document.querySelector('.app');
+
+if (window.visualViewport && app) {
+  window.visualViewport.addEventListener('resize', () => {
+    const keyboardHeight = window.innerHeight - window.visualViewport.height;
+    app.style.paddingBottom = (keyboardHeight > 0 ? keyboardHeight + 150 : 90) + 'px';
+  });
+} else if (app) {
+  window.addEventListener('resize', () => {
+    const vh = window.innerHeight;
+    if (vh < window.screen.height * 0.7) {
+      app.style.paddingBottom = (window.screen.height - vh + 150) + 'px';
+    } else {
+      app.style.paddingBottom = '90px';
+    }
+  });
+}
+
+
 
   // Приховування підказки swipe при фокусі на input/textarea
   document.querySelectorAll('input, textarea').forEach(el => {
