@@ -1240,14 +1240,20 @@ function renderVideoIfNeeded(content) {
     }
   }
 
-  // Google Drive відео
-  if (content.includes('drive.google.com')) {
+  // Google Drive відео (авто-відтворення, без контролів)
+if (content.includes('drive.google.com')) {
   const match = content.match(/\/d\/([^\/]+)(\/|$)/);
   if (match && match[1]) {
     const fileId = match[1];
-    return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="320" height="180" allow="autoplay" frameborder="0" allowfullscreen></iframe>`;
+    const videoUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    return `
+      <video width="320" height="180" autoplay loop muted playsinline style="border-radius:10px; margin-top:10px;">
+        <source src="${videoUrl}" type="video/mp4">
+        Ваш браузер не підтримує відео.
+      </video>`;
   }
 }
+
 
 
   // Якщо це не відео-посилання — повертаємо пусто (або можна виводити як текст)
