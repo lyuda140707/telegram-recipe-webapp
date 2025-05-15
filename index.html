@@ -1262,9 +1262,23 @@ if (content.includes('drive.google.com')) {
   window.addEventListener('scroll', () => {
     if (window.scrollY > 200) {
       scrollTopBtn.style.display = 'block';
+      scrollTopBtn.style.opacity = '1';
+      scrollTopBtn.style.pointerEvents = 'auto';
     } else {
-      scrollTopBtn.style.display = 'none';
+      scrollTopBtn.style.opacity = '0';
+      scrollTopBtn.style.pointerEvents = 'none';
+      setTimeout(() => { scrollTopBtn.style.display = 'none'; }, 300);
     }
+  });
+
+  scrollTopBtn.addEventListener('mouseenter', () => {
+    scrollTopBtn.style.transform = 'scale(1.1)';
+    scrollTopBtn.style.boxShadow = '0 6px 20px rgba(249, 212, 35, 0.9)';
+  });
+
+  scrollTopBtn.addEventListener('mouseleave', () => {
+    scrollTopBtn.style.transform = 'scale(1)';
+    scrollTopBtn.style.boxShadow = '0 4px 15px rgba(249, 212, 35, 0.6)';
   });
 
   scrollTopBtn.addEventListener('click', () => {
@@ -1283,16 +1297,20 @@ if (content.includes('drive.google.com')) {
   position: fixed;
   bottom: 80px;
   right: 20px;
-  padding: 10px 15px;
-  font-size: 16px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #ff4e50, #f9d423);
   border: none;
-  border-radius: 8px;
-  background: #d81159;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(249, 212, 35, 0.6);
   color: white;
+  font-size: 24px;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   z-index: 1000;
-">⬆ Вгору</button>
+">
+  ⬆
+</button>
 
 </body>
 </html>
