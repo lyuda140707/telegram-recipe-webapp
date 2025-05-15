@@ -234,7 +234,7 @@ h1, h2, h3 {
   </style>
 
 </head>
-<body>
+<body style="display:none;">
 
   <div class="app">
     <h1>🍽 Що приготувати?</h1>
@@ -1297,6 +1297,48 @@ setInterval(() => {
   window.location.reload();
 }, 300000);
 
+
+  document.addEventListener("DOMContentLoaded", async () => {
+  const tg = window.Telegram?.WebApp;
+  if (!tg || !tg.initDataUnsafe?.user?.id) {
+    alert("Помилка: не вдалося отримати ID користувача з Telegram WebApp");
+    return;
+  }
+
+  const userId = tg.initDataUnsafe.user.id;
+
+  try {
+    const resp = await fetch(`https://recipe-backend-0gz1.onrender.com/check-subscription?user_id=${userId}`);
+    const data = await resp.json();
+
+    if (data.is_subscribed) {
+      // Користувач підписаний — показати основний інтерфейс
+      document.body.style.display = "block";
+      // Тут додай ініціалізацію UI або виклик функції, що показує основний контент
+    } else {
+      // Користувач НЕ підписаний — показати повідомлення і кнопку підписки
+      document.body.innerHTML = `
+        <div style="padding: 20px; text-align: center;">
+          <h2>Для доступу до застосунку потрібно підписатися на канал</h2>
+          <a href="https://t.me/receptukTop" target="_blank" style="
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: #0088cc;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+          ">Підписатися на канал</a>
+          <p style="margin-top: 20px; color: #555;">Після підписки оновіть сторінку.</p>
+        </div>
+      `;
+    }
+  } catch (error) {
+    console.error("Помилка при перевірці підписки:", error);
+    alert("Сталася помилка при перевірці підписки. Спробуйте пізніше.");
+  }
+});
 
 </script>
 <button id="scrollTopBtn" style="
