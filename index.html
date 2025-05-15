@@ -520,6 +520,7 @@ container.innerHTML = `
 `;
   const block = document.getElementById(id);
   recipe.forEach(r => {
+
   if (r["тип блоку"] === "текст") {
     block.innerHTML += `<p>${r["контент"]}</p>`;
   } else if (r["тип блоку"] === "фото") {
@@ -570,8 +571,10 @@ card.innerHTML = `
 group.forEach(r => {
   if (r["тип блоку"] === "текст") {
     block.innerHTML += `<p>${r["контент"]}</p>`;
+    contentAdded = true;
   } else if (r["тип блоку"] === "фото") {
     block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+    contentAdded = true;
   } else if (r["тип блоку"] === "відео") {
     block.innerHTML += `
       <video controls style="width:100%; border-radius:10px; margin-top:10px;">
@@ -579,8 +582,11 @@ group.forEach(r => {
         Ваш браузер не підтримує відтворення відео.
       </video>
     `;
+    contentAdded = true;
   }
 });
+
+
 
 
 if (contentAdded) {
@@ -674,6 +680,7 @@ function goHome() {
   document.querySelector('.back-button').style.display = 'none';
 
   // Повторно завантажує рецепт дня
+  
   loadDailyRecipe();
 }
 
@@ -840,11 +847,16 @@ async function loadFavorites() {
     container.appendChild(card);
 
     const block = document.getElementById(id);
-    group.forEach(r => {
+let contentAdded = false;
+
+group.forEach(r => {
+
   if (r["тип блоку"] === "текст") {
     block.innerHTML += `<p>${r["контент"]}</p>`;
+    contentAdded = true;
   } else if (r["тип блоку"] === "фото") {
-    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+    contentAdded = true;
   } else if (r["тип блоку"] === "відео") {
     block.innerHTML += `
       <video controls style="width:100%; border-radius:10px; margin-top:10px;">
@@ -852,8 +864,21 @@ async function loadFavorites() {
         Ваш браузер не підтримує відтворення відео.
       </video>
     `;
+    contentAdded = true;
   }
 });
+
+if (contentAdded) {
+  block.innerHTML += `
+    <div style="text-align: center; margin-top: 20px;">
+      <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+    </div>
+  `;
+} else {
+  block.innerHTML = `<p>🤷 У цього рецепту немає детального опису.</p>`;
+}
+
+
 
   });
 }
