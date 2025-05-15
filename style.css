@@ -160,10 +160,10 @@ h1 {
   backdrop-filter: blur(6px);
   border-top: 1px solid #ddd;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  
-  transition: bottom 0.3s ease; /* Додаємо плавне підняття */
-  z-index: 1000; /* Щоб меню було над усім */
+  transition: bottom 0.3s ease;
+  z-index: 1000;
 }
+
 
 
 .bottom-nav {
