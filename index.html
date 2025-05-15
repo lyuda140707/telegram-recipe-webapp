@@ -372,6 +372,22 @@ h1, h2, h3 {
   </div>
 </div>
 
+  <h2>🧮 Калькулятори</h2>
+<div class="accordion-block">
+  <div class="accordion-title" onclick="toggleAccordion(this)">📏 Калькулятор інгредієнтів</div>
+  <div class="accordion-content">
+    <p>Тут буде калькулятор інгредієнтів...</p>
+  </div>
+</div>
+<div class="accordion-block">
+  <div class="accordion-title" onclick="toggleAccordion(this)">🔥 Калькулятор калорійності</div>
+  <div class="accordion-content">
+    <p>Тут буде калькулятор калорійності...</p>
+  </div>
+</div>
+
+  
+
 <div class="accordion-block" id="list-accordion">
   <div class="accordion-title" id="open-list">
     🛒 Що купити <span id="arrow-list">🔽</span>
@@ -386,6 +402,9 @@ h1, h2, h3 {
 </div>
   </div>
     <div class="section" id="section-askbot">
+
+
+      
  <h2>🤖 Запитай у Бота</h2>
 <p style="font-size: 15px; color: #5c3e59; background: #fff0f5; padding: 10px; border-radius: 12px;">
   Тут ти можеш ввести будь-яке питання, наприклад:
@@ -1208,6 +1227,10 @@ async function submitPaymentCheck() {
   }
 }
 
+function toggleAccordion(el) {
+  const parent = el.parentElement;
+  parent.classList.toggle('accordion-open');
+}
 
 
 </script>
