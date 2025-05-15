@@ -1345,15 +1345,6 @@ function toggleAccordion(el) {
   parent.classList.toggle('accordion-open');
 }
 
-function toggleCalculators() {
-  const wrapper = document.getElementById('calculators-wrapper');
-  if (!wrapper) return;
-  if (wrapper.style.display === 'none' || wrapper.style.display === '') {
-    wrapper.style.display = 'block';
-  } else {
-    wrapper.style.display = 'none';
-  }
-}
 
   // Калькулятор інгредієнтів
 const servingsInput = document.getElementById('servings');
