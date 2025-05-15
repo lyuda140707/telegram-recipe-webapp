@@ -420,6 +420,25 @@ h1, h2, h3 {
     <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
   </div>
 </div>
+    <button id="scrollTopBtn" style="
+  display:none;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #ff4e50, #f9d423);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(249, 212, 35, 0.6);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1000;
+">
+  ⬆
+</button>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <script>
@@ -677,17 +696,13 @@ function goHome() {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  async function init() {
-    await loadCategories();
-    await loadDailyRecipe();
-    goHome();
-  }
+
 init();
 
 // ✅ Перевірка PRO-доступу
 const tg = window.Telegram?.WebApp;
 
+  
 if (!tg || !tg.initDataUnsafe?.user?.id) {
   document.getElementById('pro-status').innerText = '❌ Telegram WebApp не доступний';
 } else {
@@ -1242,6 +1257,8 @@ function renderVideoIfNeeded(content) {
   }
 
  // Google Drive відео
+
+
 if (content.includes('drive.google.com')) {
   const match = content.match(/\/d\/([^\/]+)(\/|$)/);
   if (match && match[1]) {
@@ -1299,26 +1316,30 @@ setInterval(() => {
 
 
   document.addEventListener("DOMContentLoaded", async () => {
+  // Перевірка Telegram WebApp і отримання userId
   const tg = window.Telegram?.WebApp;
   if (!tg || !tg.initDataUnsafe?.user?.id) {
     alert("Помилка: не вдалося отримати ID користувача з Telegram WebApp");
     return;
   }
-
   const userId = tg.initDataUnsafe.user.id;
 
   try {
+    // Перевірка підписки
     const resp = await fetch(`https://recipe-backend-0gz1.onrender.com/check-subscription?user_id=${userId}`);
     const data = await resp.json();
 
     if (data.is_subscribed) {
-  document.body.style.display = "block";
-  await init(); // Ініціалізація UI: завантаження категорій, рецептів і т.д.
-}
+      document.body.style.display = "block";  // Показуємо контент
 
-      // Тут додай ініціалізацію UI або виклик функції, що показує основний контент
+      await init();  // Твоя основна функція ініціалізації UI (завантаження категорій, рецептів, кнопок)
+
+      setupEventListeners();  // Функція, яка налаштовує всі кнопки, слухачі подій (якщо є)
+
+      checkProAccess(userId); // Функція, яка робить перевірку PRO доступу
+
     } else {
-      // Користувач НЕ підписаний — показати повідомлення і кнопку підписки
+      // Якщо не підписаний - показуємо кнопку підписки
       document.body.innerHTML = `
         <div style="padding: 20px; text-align: center;">
           <h2>Для доступу до застосунку потрібно підписатися на канал</h2>
@@ -1342,26 +1363,9 @@ setInterval(() => {
   }
 });
 
+
 </script>
-<button id="scrollTopBtn" style="
-  display:none;
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, #ff4e50, #f9d423);
-  border: none;
-  border-radius: 50%;
-  box-shadow: 0 4px 15px rgba(249, 212, 35, 0.6);
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  z-index: 1000;
-">
-  ⬆
-</button>
+
 
 </body>
 </html>
