@@ -563,12 +563,18 @@ card.innerHTML = `
 group.forEach(r => {
   if (r["тип блоку"] === "текст") {
     block.innerHTML += `<p>${r["контент"]}</p>`;
-    contentAdded = true;
   } else if (r["тип блоку"] === "фото") {
     block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-    contentAdded = true;
+  } else if (r["тип блоку"] === "відео") {
+    block.innerHTML += `
+      <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+        <source src="${r["контент"]}" type="video/mp4">
+        Ваш браузер не підтримує відтворення відео.
+      </video>
+    `;
   }
 });
+
 
 if (contentAdded) {
   block.innerHTML += `
