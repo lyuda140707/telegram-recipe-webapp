@@ -421,6 +421,7 @@ h1, h2, h3 {
   </div>
 </div>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<button id="scrollTopBtn" onclick="scrollToTop()" style="display: none;">⬆️</button>
 
 <script>
   
@@ -795,7 +796,7 @@ if (!tg || !tg.initDataUnsafe?.user?.id) {
 
   const proBtn = document.createElement('button');
 proBtn.innerText = "🌟 Отримати PRO";
-proBtn.className = "main-button";
+proBtn.className = "pro-button";
 proBtn.onclick = () => {
   window.open("https://send.monobank.ua/jar/6agGfuJmcv", "_blank");
 };
@@ -1308,6 +1309,21 @@ async function submitPaymentCheck() {
     document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при відправці. Спробуйте пізніше';
     console.error("❌ Помилка надсилання запиту:", err);
   }
+}
+
+// Показувати кнопку після прокрутки
+window.onscroll = function() {
+  const btn = document.getElementById("scrollTopBtn");
+  if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+    btn.style.display = "block";
+  } else {
+    btn.style.display = "none";
+  }
+};
+
+// Плавне повернення вгору
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 
