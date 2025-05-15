@@ -794,9 +794,17 @@ if (window.visualViewport && app) {
       if (hint) hint.style.display = '';
     });
   });
+
+  // Центрування інпутів при фокусі — тут всередині DOMContentLoaded!
+  document.querySelectorAll('input, textarea').forEach(input => {
+    input.addEventListener('focus', () => {
+      setTimeout(() => {
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    });
+  });
+
 });
-
-
 
 // ✅ Перевірка PRO-доступу
 const tg = window.Telegram?.WebApp;
