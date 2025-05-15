@@ -229,24 +229,7 @@ h1, h2, h3 {
   max-height: 500px;
   transform: translateY(0);
   opacity: 1;
-}
-    .video-wrapper {
-  width: 320px; /* ширина, яку хочеш бачити */
-  height: 180px; /* висота */
-  overflow: hidden;
-  position: relative;
-  margin: 0 auto; /* центр по горизонталі */
-}
 
-.video-wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: -80px; /* посунь вліво, щоб сховати чорну частину */
-  width: 480px; /* ширина більше за контейнер */
-  height: 180px;
-  /* або спробуй transform */
-  /* transform: translateX(-80px); */
-}
 
   </style>
 
@@ -1262,7 +1245,7 @@ if (content.includes('drive.google.com')) {
   const match = content.match(/\/d\/([^\/]+)(\/|$)/);
   if (match && match[1]) {
     const fileId = match[1];
-    return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="640" height="360" allow="autoplay" frameborder="0" allowfullscreen></iframe>`;
+    return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="320" height="180" allow="autoplay" frameborder="0" allowfullscreen></iframe>`;
   }
 }
 
