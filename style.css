@@ -164,15 +164,40 @@ h1 {
 }
 
 .back-button {
-  background: linear-gradient(145deg, #ffe0f0, #fbc2eb);
+  margin: 10px 0;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #ffe0f0, #fbc2eb);
   color: #5c3e59;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 1.5s ease-in-out;
+  animation: pulseBackButton 3s infinite alternate;
 }
 
 .back-button:hover {
-  background: linear-gradient(145deg, #fbc2eb, #ffd6e0);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(216, 130, 195, 0.7);
+  background: linear-gradient(135deg, #fbc2eb, #ffd6e0);
 }
+
+@keyframes pulseBackButton {
+  0% {
+    background-position: 0% 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  50% {
+    background-position: 100% 50%;
+    box-shadow: 0 4px 12px rgba(216, 130, 195, 0.4);
+  }
+  100% {
+    background-position: 0% 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+}
+
 
 /* swipe hint */
 .swipe-hint {
