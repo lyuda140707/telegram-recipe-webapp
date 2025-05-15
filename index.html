@@ -10,6 +10,226 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
+body {
+  font-family: 'Nunito', sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Lobster', cursive;
+  color: #4b2c5e;
+}
+
+
+    .app {
+  padding: 10px;
+  max-width: 700px;
+  margin: auto;
+  padding-bottom: 100px; /* ✅ Додає відступ, щоб меню не перекривало вміст */
+}
+
+    h1, h2, h3 {
+      color: #4b2c5e;
+    }
+
+    .section {
+      display: none;
+      animation: fade 0.4s ease;
+    }
+
+    .active {
+      display: block !important;
+    }
+
+    .scroll-menu {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 10px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .scroll-menu button {
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .scroll-menu button:hover {
+      transform: scale(1.05);
+    }
+
+    .recipe-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 15px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .bottom-nav-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 240, 250, 0.85);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid #ddd;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      overflow-x: auto;
+    }
+
+   .bottom-nav button {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #7a2c5c;
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.3s;
+}
+.bottom-nav button:hover {
+  color: #d81159;
+}
+
+
+    .back-button {
+      margin: 10px 0;
+      padding: 8px 16px;
+      background: #f3e5f5;
+      border: none;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .recipe-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.recipe-content.open {
+  max-height: 1000px; /* достатньо для будь-якого рецепта */
+  opacity: 1;
+}
+
+
+    .detail-button, .main-button, .recipe-toggle, .favorite-button {
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .detail-button {
+      background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+      color: #4b2c5e;
+    }
+
+    .main-button.generate {
+      background: linear-gradient(to right, #d0caff, #e4b3ff);
+      color: #42246b;
+    }
+
+    .main-button.clear {
+      background: linear-gradient(to right, #ffcfd2, #fcb1b1);
+      color: #742727;
+    }
+
+    .recipe-toggle {
+      background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      color: #5d2c3e;
+    }
+
+    .favorite-button {
+      background: linear-gradient(to right, #ffe0f0, #fbc2eb);
+      color: #5c3e59;
+    }
+
+    .recipe-toggle:hover,
+    .detail-button:hover,
+    .main-button:hover,
+    .favorite-button:hover {
+      opacity: 0.9;
+    }
+
+    .swipe-hint {
+      text-align: center;
+      font-size: 14px;
+      color: #a09e9e;
+      animation: pulse 1.5s infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    strong {
+      background-color: #fff2aa;
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+
+    .weekly-item {
+      background: #fff9f9;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    select {
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      background: #fffefe;
+      outline: none;
+    }
+    .bottom-nav button.active {
+  color: #d81159;
+  border-bottom: 2px solid #d81159;
+}
+    .accordion-content {
+  max-height: 0;
+  transform: translateY(-10px);
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.accordion-open .accordion-content {
+  max-height: 500px;
+  transform: translateY(0);
+  opacity: 1;
+}
 
   </style>
 
@@ -151,34 +371,6 @@
     <div id="favorites-container"></div>
   </div>
 </div>
-  <div class="accordion-block" id="calculator-accordion">
-  <div class="accordion-title" onclick="showCalculators()">
-    🧮 Калькулятори
-  </div>
-  <div class="accordion-content" id="calculators-wrapper">
-    <div style="margin-top:10px;">
-      <button onclick="openIngredientCalculator()" class="main-button">📏 Інгредієнти за порціями</button><br><br>
-      <button onclick="openCaloriesCalculator()" class="main-button">🔥 Калорійність страви</button><br><br>
-      <button onclick="openWeightCalculator()" class="main-button">⚖️ Грамовки інгредієнтів</button>
-    </div>
-  </div>
-</div>
-  <div class="section" id="section-calculator-calories" style="display:none;">
-  <h2>🔥 Калькулятор калорійності</h2>
-  <p>Введіть інгредієнти та їхню калорійність (на 100 г), кількість у грамах:</p>
-  <input type="text" id="calorie-input" placeholder="напр. борошно 364ккал 200г, молоко 60ккал 300г" style="padding:8px; width:90%; margin-top:10px;">
-  
-  <div style="margin-top:20px;">
-    <button class="main-button" onclick="calculateCalories()">🔄 Порахувати калорії</button>
-  </div>
-
-  <h3 style="margin-top:20px;">🧮 Результат:</h3>
-  <div id="calorie-result" style="margin-top:10px;"></div>
-
-  <button class="back-button" style="margin-top:20px;" onclick="goBackToProfile()">⬅ Повернутись</button>
-</div>
-
-
 
 <div class="accordion-block" id="list-accordion">
   <div class="accordion-title" id="open-list">
@@ -216,28 +408,6 @@
   <div id="smart-search-results" style="margin-top:15px;"></div>
 </div>
 
-    <div class="section" id="section-calculator-ingredients" style="display:none;">
-  <h2>📏 Калькулятор інгредієнтів</h2>
-  <p>Введіть базові інгредієнти через кому:</p>
-  <input type="text" id="base-ingredients" placeholder="Наприклад: борошно 200г, молоко 300мл, яйця 2шт" style="padding:8px; width:90%;">
-  
-  <p style="margin-top:10px;">Базова кількість порцій:</p>
-  <input type="number" id="base-servings" value="4" style="padding:8px; width:60px;">
-  
-  <p style="margin-top:10px;">Нова кількість порцій:</p>
-  <input type="number" id="new-servings" value="6" style="padding:8px; width:60px;">
-  
-  <div style="margin-top:20px;">
-    <button class="main-button" onclick="calculateIngredients()">🔄 Перерахувати</button>
-  </div>
-
-  <h3 style="margin-top:20px;">🧮 Результат:</h3>
-  <div id="calc-result" style="margin-top:10px;"></div>
-
-  <button class="back-button" style="margin-top:20px;" onclick="goBackToProfile()">⬅ Повернутись</button>
-</div>
-
-
   <!-- Нижнє меню -->
 
 <div class="bottom-nav-wrapper">
@@ -252,13 +422,6 @@
 </div>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    function showCalculators() {
-  const block = document.getElementById('calculator-accordion');
-  const wrapper = document.getElementById('calculators-wrapper');
-  block.classList.toggle('accordion-open');
-}
-
-    
 <script>
   
 const categories = [
@@ -1044,76 +1207,7 @@ async function submitPaymentCheck() {
     console.error("❌ Помилка надсилання запиту:", err);
   }
 }
-function openIngredientCalculator() {
-  hideAllSections();
-  document.getElementById('section-calculator-ingredients').style.display = 'block';
-}
 
-function goBackToProfile() {
-  showSection('section-profile');
-}
-
-function hideAllSections() {
-  document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
-}
-
-
-
-function calculateIngredients() {
-  const ingredientsInput = document.getElementById('base-ingredients').value;
-  const baseServings = parseFloat(document.getElementById('base-servings').value);
-  const newServings = parseFloat(document.getElementById('new-servings').value);
-
-  if (!ingredientsInput || isNaN(baseServings) || isNaN(newServings) || baseServings <= 0 || newServings <= 0) {
-    document.getElementById('calc-result').innerHTML = '❗ Будь ласка, заповніть всі поля правильно.';
-    return;
-  }
-
-  const ingredientsList = ingredientsInput.split(',').map(item => item.trim());
-  const result = ingredientsList.map(item => {
-    const parts = item.match(/([\d\.]+)([^\d]*)/);
-    if (!parts) return item;
-
-    const quantity = parseFloat(parts[1]);
-    const unit = parts[2] || '';
-    const newQuantity = (quantity * newServings / baseServings).toFixed(1);
-
-    return `${newQuantity}${unit}`;
-  });
-
-  document.getElementById('calc-result').innerHTML = result.join('<br>');
-}
-function openCaloriesCalculator() {
-  hideAllSections();
-  document.getElementById('section-calculator-calories').style.display = 'block';
-}
-
-function calculateCalories() {
-  const input = document.getElementById('calorie-input').value.trim();
-  if (!input) {
-    document.getElementById('calorie-result').innerHTML = '❗ Введіть дані!';
-    return;
-  }
-
-  const items = input.split(',').map(i => i.trim());
-  let totalCalories = 0;
-  let breakdown = '';
-
-  items.forEach(item => {
-    const match = item.match(/(.+?)\s(\d+)ккал\s(\d+)г/i);
-    if (match) {
-      const name = match[1];
-      const kcalPer100g = parseFloat(match[2]);
-      const grams = parseFloat(match[3]);
-      const calories = (kcalPer100g / 100) * grams;
-      totalCalories += calories;
-      breakdown += `• ${name}: ${calories.toFixed(1)} ккал<br>`;
-    }
-  });
-
-  document.getElementById('calorie-result').innerHTML = breakdown 
-    + `<br><strong>🔥 Загалом: ${totalCalories.toFixed(1)} ккал</strong>`;
-}
 
 
 </script>
