@@ -230,6 +230,23 @@ h1, h2, h3 {
   transform: translateY(0);
   opacity: 1;
 }
+    .video-wrapper {
+  width: 320px; /* ширина, яку хочеш бачити */
+  height: 180px; /* висота */
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto; /* центр по горизонталі */
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: -80px; /* посунь вліво, щоб сховати чорну частину */
+  width: 480px; /* ширина більше за контейнер */
+  height: 180px;
+  /* або спробуй transform */
+  /* transform: translateX(-80px); */
+}
 
   </style>
 
