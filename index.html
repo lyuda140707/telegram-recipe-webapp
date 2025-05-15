@@ -386,6 +386,22 @@ h1, h2, h3 {
 </div>
   </div>
     <div class="section" id="section-askbot">
+      <h2>🧮 Калькулятори</h2>
+
+  <div class="accordion-block">
+    <div class="accordion-title" onclick="toggleAccordion(this)">📏 Калькулятор інгредієнтів</div>
+    <div class="accordion-content">
+      <p>Тут буде калькулятор інгредієнтів...</p>
+    </div>
+  </div>
+
+  <div class="accordion-block">
+    <div class="accordion-title" onclick="toggleAccordion(this)">🔥 Калькулятор калорійності</div>
+    <div class="accordion-content">
+      <p>Тут буде калькулятор калорійності...</p>
+    </div>
+  </div>
+</div>
  <h2>🤖 Запитай у Бота</h2>
 <p style="font-size: 15px; color: #5c3e59; background: #fff0f5; padding: 10px; border-radius: 12px;">
   Тут ти можеш ввести будь-яке питання, наприклад:
@@ -1205,6 +1221,23 @@ async function submitPaymentCheck() {
   } catch (err) {
     document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при відправці. Спробуйте пізніше';
     console.error("❌ Помилка надсилання запиту:", err);
+  }
+}
+function toggleAccordion(el) {
+  const content = el.nextElementSibling;
+  if (!content) return;
+
+  // Закриваємо всі акордеони у профілі
+  const allContents = el.parentElement.parentElement.querySelectorAll('.accordion-content');
+  allContents.forEach(c => {
+    if (c !== content) c.style.maxHeight = "0";
+  });
+
+  // Відкриваємо/закриваємо поточний
+  if (content.style.maxHeight && content.style.maxHeight !== "0px") {
+    content.style.maxHeight = "0";
+  } else {
+    content.style.maxHeight = content.scrollHeight + "px";
   }
 }
 
