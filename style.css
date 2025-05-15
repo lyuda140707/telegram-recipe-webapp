@@ -240,10 +240,9 @@ h1 {
   background-color: #e8f5e9; /* можна змінити на будь-який ніжний колір */
 }
 .app {
-  padding: 10px;
+  padding-bottom: 200px; /* або навіть 250-300 для тесту */
   max-width: 700px;
   margin: auto;
-  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
 }
 .daily-image-wrapper {
   position: relative;
