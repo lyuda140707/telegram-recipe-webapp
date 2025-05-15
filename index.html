@@ -533,12 +533,15 @@ container.innerHTML = `
     videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
   }
   block.innerHTML += `
-    <iframe 
-      src="${videoLink}" 
-      style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" 
-      allowfullscreen>
-    </iframe>
-  `;
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
+  <iframe 
+    src="${videoLink}" 
+    style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
+    allowfullscreen>
+  </iframe>
+</div>
+`;
+
 } else {
   block.innerHTML += `
     <video controls style="width:100%; border-radius:10px; margin-top:10px;">
@@ -600,11 +603,15 @@ group.forEach(r => {
     videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
   }
   block.innerHTML += `
-    <iframe 
-      src="${videoLink}" 
-      style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" 
-      allowfullscreen>
-    </iframe>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
+  <iframe 
+    src="${videoLink}" 
+    style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
+    allowfullscreen>
+  </iframe>
+</div>
+`;
+
   `;
 } else {
   block.innerHTML += `
