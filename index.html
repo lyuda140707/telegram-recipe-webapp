@@ -1245,7 +1245,7 @@ if (content.includes('drive.google.com')) {
   const match = content.match(/\/d\/([^\/]+)(\/|$)/);
   if (match && match[1]) {
     const fileId = match[1];
-    return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="320" height="180" allow="autoplay" frameborder="0" allowfullscreen></iframe>`;
+    return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="640" height="360" allow="autoplay" frameborder="0" allowfullscreen></iframe>`;
   }
 }
 
