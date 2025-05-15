@@ -1315,8 +1315,7 @@ setInterval(() => {
 }, 300000);
 
 
-  document.addEventListener("DOMContentLoaded", async () => {
-  // Перевірка Telegram WebApp і отримання userId
+document.addEventListener("DOMContentLoaded", async () => {
   const tg = window.Telegram?.WebApp;
   if (!tg || !tg.initDataUnsafe?.user?.id) {
     alert("Помилка: не вдалося отримати ID користувача з Telegram WebApp");
@@ -1325,21 +1324,16 @@ setInterval(() => {
   const userId = tg.initDataUnsafe.user.id;
 
   try {
-    // Перевірка підписки
     const resp = await fetch(`https://recipe-backend-0gz1.onrender.com/check-subscription?user_id=${userId}`);
     const data = await resp.json();
 
     if (data.is_subscribed) {
-      document.body.style.display = "block";  // Показуємо контент
+      document.body.style.display = "block";
 
-      await init();  // Твоя основна функція ініціалізації UI (завантаження категорій, рецептів, кнопок)
-
-      setupEventListeners();  // Функція, яка налаштовує всі кнопки, слухачі подій (якщо є)
-
-      checkProAccess(userId); // Функція, яка робить перевірку PRO доступу
+      await loadCategories();  // ✅ Завантаження категорій
+      await loadDailyRecipe(); // ✅ Завантаження рецепту дня
 
     } else {
-      // Якщо не підписаний - показуємо кнопку підписки
       document.body.innerHTML = `
         <div style="padding: 20px; text-align: center;">
           <h2>Для доступу до застосунку потрібно підписатися на канал</h2>
@@ -1362,6 +1356,7 @@ setInterval(() => {
     alert("Сталася помилка при перевірці підписки. Спробуйте пізніше.");
   }
 });
+
 
 
 </script>
