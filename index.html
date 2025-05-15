@@ -782,27 +782,24 @@ document.addEventListener("DOMContentLoaded", () => {
       app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
     }
   } else {
+    // fallback, якщо visualViewport немає
     bottomNavWrapper.style.bottom = '0px';
     app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
   }
 }
 
-let debounceTimeout;
-
-function debouncedAdjust() {
-  clearTimeout(debounceTimeout);
-  debounceTimeout = setTimeout(adjustForKeyboard, 100);
-}
-
 // Першочергова корекція
 adjustForKeyboard();
 
+// Слухаємо зміну viewport
 if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', debouncedAdjust);
+  window.visualViewport.addEventListener('resize', adjustForKeyboard);
+  // Важливо: запускаємо одразу, щоб підлаштувати меню при завантаженні
   window.visualViewport.dispatchEvent(new Event('resize'));
 }
 
-window.addEventListener('resize', debouncedAdjust);
+// Для старих браузерів слухаємо resize вікна
+window.addEventListener('resize', adjustForKeyboard);
 
 
 
@@ -853,18 +850,18 @@ if (!tg || !tg.initDataUnsafe?.user?.id) {
 
 
 
-    // Автоматичне приховування клавіатури при кліку поза інпутами на всьому тілі сторінки
-document.body.addEventListener('click', function(e) {
-  const target = e.target;
-  const active = document.activeElement;
-  
-  const inputs = ['INPUT', 'TEXTAREA', 'SELECT'];
-  
-  // Якщо клік не по інпуту і є активний інпут/textarea/select — забираємо фокус, ховаємо клавіатуру
-  if (!inputs.includes(target.tagName) && active && inputs.includes(active.tagName)) {
-    active.blur();
-  }
+   // ✅ Автоматичне приховування клавіатури при натиску поза полем — тільки в обраних секціях
+['section-askbot', 'section-buy', 'section-fridge', 'section-search'].forEach(sectionId => {
+  const section = document.getElementById(sectionId);
+  if (!section) return;
+  section.addEventListener('click', (e) => {
+    const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+    if (!isInput) {
+      document.activeElement.blur();
+    }
+  });
 });
+
 
 
 
