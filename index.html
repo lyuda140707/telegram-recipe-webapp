@@ -372,19 +372,22 @@ h1, h2, h3 {
   </div>
 </div>
 
-  <h2>🧮 Калькулятори</h2>
-<div class="accordion-block">
-  <div class="accordion-title" onclick="toggleAccordion(this)">📏 Калькулятор інгредієнтів</div>
-  <div class="accordion-content">
-    <p>Тут буде калькулятор інгредієнтів...</p>
+ <h2 style="cursor:pointer;" onclick="toggleCalculators()">🧮 Калькулятори</h2>
+<div id="calculators-wrapper" style="display:none; margin-left: 10px;">
+  <div class="accordion-block">
+    <div class="accordion-title" onclick="toggleAccordion(this)">📏 Калькулятор інгредієнтів</div>
+    <div class="accordion-content">
+      <p>Тут буде калькулятор інгредієнтів...</p>
+    </div>
+  </div>
+  <div class="accordion-block">
+    <div class="accordion-title" onclick="toggleAccordion(this)">🔥 Калькулятор калорійності</div>
+    <div class="accordion-content">
+      <p>Тут буде калькулятор калорійності...</p>
+    </div>
   </div>
 </div>
-<div class="accordion-block">
-  <div class="accordion-title" onclick="toggleAccordion(this)">🔥 Калькулятор калорійності</div>
-  <div class="accordion-content">
-    <p>Тут буде калькулятор калорійності...</p>
-  </div>
-</div>
+
 
   
 
@@ -1232,7 +1235,17 @@ function toggleAccordion(el) {
   parent.classList.toggle('accordion-open');
 }
 
+function toggleCalculators() {
+  const wrapper = document.getElementById('calculators-wrapper');
+  if (!wrapper) return;
+  if (wrapper.style.display === 'none' || wrapper.style.display === '') {
+    wrapper.style.display = 'block';
+  } else {
+    wrapper.style.display = 'none';
+  }
+}
 
+  
 </script>
 
 </body>
