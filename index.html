@@ -747,11 +747,12 @@ if (!tg || !tg.initDataUnsafe?.user?.id) {
 
   const proBtn = document.createElement('button');
 proBtn.innerText = "🌟 Отримати PRO";
-proBtn.className = "main-button";
+proBtn.className = "pro-button";
 proBtn.onclick = () => {
   window.open("https://send.monobank.ua/jar/6agGfuJmcv", "_blank");
 };
 document.getElementById("pro-button-container")?.appendChild(proBtn);
+
 
 
   document.getElementById('open-favorites')?.addEventListener('click', () => {
