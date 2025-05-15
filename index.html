@@ -520,13 +520,20 @@ container.innerHTML = `
 `;
   const block = document.getElementById(id);
   recipe.forEach(r => {
-    if (r["тип блоку"] === "текст") {
-      block.innerHTML += `<p>${r["контент"]}</p>`;
-    } else if (r["тип блоку"] === "фото") {
-      // додаткові фото під текстом, якщо є
-      block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-    }
-  });
+  if (r["тип блоку"] === "текст") {
+    block.innerHTML += `<p>${r["контент"]}</p>`;
+  } else if (r["тип блоку"] === "фото") {
+    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+  } else if (r["тип блоку"] === "відео") {
+    block.innerHTML += `
+      <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+        <source src="${r["контент"]}" type="video/mp4">
+        Ваш браузер не підтримує відтворення відео.
+      </video>
+    `;
+  }
+});
+
   block.innerHTML += `
   <div style="text-align: center; margin-top: 20px;">
   <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
@@ -834,12 +841,20 @@ async function loadFavorites() {
 
     const block = document.getElementById(id);
     group.forEach(r => {
-      if (r["тип блоку"] === "текст") {
-        block.innerHTML += `<p>${r["контент"]}</p>`;
-      } else if (r["тип блоку"] === "фото") {
-        block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-      }
-    });
+  if (r["тип блоку"] === "текст") {
+    block.innerHTML += `<p>${r["контент"]}</p>`;
+  } else if (r["тип блоку"] === "фото") {
+    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+  } else if (r["тип блоку"] === "відео") {
+    block.innerHTML += `
+      <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+        <source src="${r["контент"]}" type="video/mp4">
+        Ваш браузер не підтримує відтворення відео.
+      </video>
+    `;
+  }
+});
+
   });
 }
 
