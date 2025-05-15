@@ -409,6 +409,45 @@ h1, h2, h3 {
 </p>
     </div>
   </div>
+
+<div class="accordion-block">
+  <div class="accordion-title" onclick="toggleAccordion(this)">🔄 Калькулятор грам ⇄ ст. ложки</div>
+  <div class="accordion-content">
+    <div style="margin-top:10px;">
+      <label for="product-select">Оберіть продукт:</label>
+      <select id="product-select" style="margin-left:10px; padding:4px;">
+        <option value="15">Борошно (15 г/ст.л.)</option>
+        <option value="12">Цукор (12 г/ст.л.)</option>
+        <option value="18">Сіль (18 г/ст.л.)</option>
+        <option value="14">Какао (14 г/ст.л.)</option>
+        <option value="9">Вівсяні пластівці (9 г/ст.л.)</option>
+        <option value="21">Мед (21 г/ст.л.)</option>
+        <option value="13.5">Олія (13.5 г/ст.л.)</option>
+        <option value="15">Вода (15 г/мл)</option>
+        <option value="15">Молоко (15 г/мл)</option>
+        <option value="14.5">Масло вершкове (14.5 г/ст.л.)</option>
+        <option value="16">Рис (16 г/ст.л.)</option>
+        <option value="14">Кукурудзяна мука (14 г/ст.л.)</option>
+        <option value="13.5">Манка (13.5 г/ст.л.)</option>
+        <option value="15">Гречка (15 г/ст.л.)</option>
+        <option value="14">Сода (14 г/ст.л.)</option>
+        <option value="12">Розпушувач тіста (12 г/ст.л.)</option>
+      </select>
+    </div>
+    <div style="margin-top:10px;">
+      <label for="grams-input">Грамів:</label>
+      <input type="number" id="grams-input" placeholder="Наприклад, 50" style="width:100px; margin-left:10px;">
+      <button onclick="convertGramsToTbsp()" style="margin-left:10px; padding:4px 10px;">Перевести в ст. ложки</button>
+    </div>
+    <div style="margin-top:10px;">
+      <label for="tbsp-input">Столових ложок:</label>
+      <input type="number" id="tbsp-input" placeholder="Наприклад, 3" style="width:100px; margin-left:10px;">
+      <button onclick="convertTbspToGrams()" style="margin-left:10px; padding:4px 10px;">Перевести в грами</button>
+    </div>
+    <div style="margin-top:15px; font-weight:bold;" id="conversion-result"></div>
+  </div>
+</div>
+
 </div>
 
 </div>
@@ -1313,6 +1352,32 @@ function updateCalories() {
 
 document.getElementById('calorie-rows').addEventListener('input', updateCalories);
 
+
+function convertGramsToTbsp() {
+  const grams = parseFloat(document.getElementById('grams-input').value);
+  const gramsPerTbsp = parseFloat(document.getElementById('product-select').value);
+  const resultEl = document.getElementById('conversion-result');
+
+  if (isNaN(grams) || grams <= 0) {
+    resultEl.innerText = '❗ Введіть коректну вагу в грамах';
+    return;
+  }
+  const tbsp = grams / gramsPerTbsp;
+  resultEl.innerText = `${grams} г = ${tbsp.toFixed(2)} ст. ложок`;
+}
+
+function convertTbspToGrams() {
+  const tbsp = parseFloat(document.getElementById('tbsp-input').value);
+  const gramsPerTbsp = parseFloat(document.getElementById('product-select').value);
+  const resultEl = document.getElementById('conversion-result');
+
+  if (isNaN(tbsp) || tbsp <= 0) {
+    resultEl.innerText = '❗ Введіть коректну кількість столових ложок';
+    return;
+  }
+  const grams = tbsp * gramsPerTbsp;
+  resultEl.innerText = `${tbsp} ст. ложок = ${grams.toFixed(1)} г`;
+}
   
 </script>
 
