@@ -373,7 +373,9 @@ h1, h2, h3 {
 </div>
 
  <div class="accordion-block">
-  <div class="accordion-title" onclick="toggleCalculators()">🧮 Калькулятори</div>
+  <div class="accordion-title" onclick="toggleCalculators()">
+    🧮 Калькулятори <span id="arrow-calculators">🔽</span>
+  </div>
   <div id="calculators-wrapper" style="display:none; margin-left: 10px;">
   <div class="accordion-block">
     <div class="accordion-title" onclick="toggleAccordion(this)">📏 Калькулятор інгредієнтів</div>
@@ -1378,7 +1380,20 @@ function convertTbspToGrams() {
   const grams = tbsp * gramsPerTbsp;
   resultEl.innerText = `${tbsp} ст. ложок = ${grams.toFixed(1)} г`;
 }
-  
+
+  function toggleCalculators() {
+  const wrapper = document.getElementById('calculators-wrapper');
+  const arrow = document.getElementById('arrow-calculators');
+  if (!wrapper) return;
+  if (wrapper.style.display === 'none' || wrapper.style.display === '') {
+    wrapper.style.display = 'block';
+    if (arrow) arrow.innerText = '🔼'; // стрілка вгору
+  } else {
+    wrapper.style.display = 'none';
+    if (arrow) arrow.innerText = '🔽'; // стрілка вниз
+  }
+}
+
 </script>
 
 </body>
