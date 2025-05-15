@@ -1394,6 +1394,16 @@ function convertTbspToGrams() {
   }
 }
 
+  // Автоматичне прокручування поля введення в калькуляторах при фокусі
+document.querySelectorAll('#calculators-wrapper input').forEach(input => {
+  input.addEventListener('focus', () => {
+    setTimeout(() => {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  });
+});
+
+
 </script>
 
 </body>
