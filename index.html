@@ -1263,16 +1263,11 @@ if (content.includes('drive.google.com')) {
     const fileId = match[1];
     return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="320" height="180" allow="autoplay" frameborder="0" allowfullscreen></iframe>`;
   }
+ }
 }
 
-
-
-
-  // Якщо це не відео-посилання — повертаємо пусто (або можна виводити як текст)
-  return '';
-}
-
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Скрол батон
   const scrollTopBtn = document.getElementById('scrollTopBtn');
 
   window.addEventListener('scroll', () => {
@@ -1303,17 +1298,8 @@ if (content.includes('drive.google.com')) {
       behavior: 'smooth'
     });
   });
-});
 
-// ...весь існуючий код...
-
-// Автоматичне оновлення сторінки кожні 5 хвилин
-setInterval(() => {
-  window.location.reload();
-}, 300000);
-
-
-document.addEventListener("DOMContentLoaded", async () => {
+  // ПІСЛЯ скролу, запускаємо WebApp
   const tg = window.Telegram?.WebApp;
   if (!tg || !tg.initDataUnsafe?.user?.id) {
     alert("Помилка: не вдалося отримати ID користувача з Telegram WebApp");
@@ -1330,7 +1316,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       await loadCategories();  // ✅ Завантаження категорій
       await loadDailyRecipe(); // ✅ Завантаження рецепту дня
-
     } else {
       document.body.innerHTML = `
         <div style="padding: 20px; text-align: center;">
@@ -1353,9 +1338,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Помилка при перевірці підписки:", error);
     alert("Сталася помилка при перевірці підписки. Спробуйте пізніше.");
   }
+
+  // Після завантаження хінт
+  setTimeout(() => {
+    const hint = document.querySelector('.swipe-hint');
+    if (hint) {
+      hint.style.opacity = '0';
+      hint.style.pointerEvents = 'none';
+      setTimeout(() => hint.remove(), 400);
+    }
+  }, 30000); 
 });
-
-
 
 </script>
 
