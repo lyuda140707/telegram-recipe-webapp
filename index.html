@@ -762,31 +762,44 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   init();
 
- // Піднімати меню при появі клавіатури
-document.addEventListener("DOMContentLoaded", () => {
   const bottomNavWrapper = document.querySelector('.bottom-nav-wrapper');
   const app = document.querySelector('.app');
 
-  if (window.visualViewport && bottomNavWrapper && app) {
-    window.visualViewport.addEventListener('resize', () => {
+  if (!bottomNavWrapper || !app) return;
+
+  // Початковий паддінг контенту під меню
+  app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
+  bottomNavWrapper.style.bottom = '0px';
+
+  function adjustForKeyboard() {
+    if (window.visualViewport) {
       const keyboardHeight = window.innerHeight - window.visualViewport.height;
-
-      if (keyboardHeight > 0) {
-        // Підняти меню над клавіатурою
+      if (keyboardHeight > 150) { // Якщо клавіатура відкрита (поріг 150px)
         bottomNavWrapper.style.bottom = keyboardHeight + 'px';
-
-        // Додати паддінг до контенту, щоб не перекривало
         app.style.paddingBottom = (keyboardHeight + bottomNavWrapper.offsetHeight + 20) + 'px';
       } else {
-        // Повернути меню внизу
         bottomNavWrapper.style.bottom = '0px';
-
-        // Стандартний паддінг
         app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
       }
-    });
+    } else {
+      // fallback, якщо visualViewport немає
+      bottomNavWrapper.style.bottom = '0px';
+      app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
+    }
   }
+
+  // Першочергова корекція
+  adjustForKeyboard();
+
+  // Слухаємо зміну viewport
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', adjustForKeyboard);
+  }
+
+  // Для старих браузерів слухаємо resize вікна
+  window.addEventListener('resize', adjustForKeyboard);
 });
+
 
 });
 
