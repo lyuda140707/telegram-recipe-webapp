@@ -762,35 +762,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   init();
 
-  // Паддінг під клавіатуру (для мобільних)
-const app = document.querySelector('.app');
+ // Піднімати меню при появі клавіатури
+document.addEventListener("DOMContentLoaded", () => {
+  const bottomNavWrapper = document.querySelector('.bottom-nav-wrapper');
+  const app = document.querySelector('.app');
 
-if (window.visualViewport && app) {
-  window.visualViewport.addEventListener('resize', () => {
-    const keyboardHeight = window.innerHeight - window.visualViewport.height;
-    const padding = keyboardHeight > 0 ? keyboardHeight + 250 : 90; // збільшено до 250
-    app.style.paddingBottom = padding + 'px';
-  });
-} else if (app) {
-  window.addEventListener('resize', () => {
-    const vh = window.innerHeight;
-    if (vh < window.screen.height * 0.7) {
-      app.style.paddingBottom = (window.screen.height - vh + 250) + 'px'; // збільшено
-    } else {
-      app.style.paddingBottom = '90px';
-    }
-  });
-}
+  if (window.visualViewport && bottomNavWrapper && app) {
+    window.visualViewport.addEventListener('resize', () => {
+      const keyboardHeight = window.innerHeight - window.visualViewport.height;
 
-// Коректна прокрутка інпутів при фокусі
-document.querySelectorAll('input, textarea').forEach(input => {
-  input.addEventListener('focus', () => {
-    setTimeout(() => {
-      // Прокручуємо так, щоб елемент був видимим і не перекритий меню/клавіатурою
-      input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 600); // таймаут збільшено до 600мс
-  });
+      if (keyboardHeight > 0) {
+        // Підняти меню над клавіатурою
+        bottomNavWrapper.style.bottom = keyboardHeight + 'px';
+
+        // Додати паддінг до контенту, щоб не перекривало
+        app.style.paddingBottom = (keyboardHeight + bottomNavWrapper.offsetHeight + 20) + 'px';
+      } else {
+        // Повернути меню внизу
+        bottomNavWrapper.style.bottom = '0px';
+
+        // Стандартний паддінг
+        app.style.paddingBottom = (bottomNavWrapper.offsetHeight + 20) + 'px';
+      }
+    });
+  }
 });
+
 });
 
 // ✅ Перевірка PRO-доступу
