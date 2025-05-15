@@ -371,6 +371,19 @@ h1, h2, h3 {
     <div id="favorites-container"></div>
   </div>
 </div>
+  <div class="accordion-block" id="calculator-accordion">
+  <div class="accordion-title" onclick="showCalculators()">
+    🧮 Калькулятори
+  </div>
+  <div class="accordion-content" id="calculators-wrapper">
+    <div style="margin-top:10px;">
+      <button onclick="openIngredientCalculator()" class="main-button">📏 Інгредієнти за порціями</button><br><br>
+      <button onclick="openCaloriesCalculator()" class="main-button">🔥 Калорійність страви</button><br><br>
+      <button onclick="openWeightCalculator()" class="main-button">⚖️ Грамовки інгредієнтів</button>
+    </div>
+  </div>
+</div>
+
 
 <div class="accordion-block" id="list-accordion">
   <div class="accordion-title" id="open-list">
@@ -408,6 +421,28 @@ h1, h2, h3 {
   <div id="smart-search-results" style="margin-top:15px;"></div>
 </div>
 
+    <div class="section" id="section-calculator-ingredients" style="display:none;">
+  <h2>📏 Калькулятор інгредієнтів</h2>
+  <p>Введіть базові інгредієнти через кому:</p>
+  <input type="text" id="base-ingredients" placeholder="Наприклад: борошно 200г, молоко 300мл, яйця 2шт" style="padding:8px; width:90%;">
+  
+  <p style="margin-top:10px;">Базова кількість порцій:</p>
+  <input type="number" id="base-servings" value="4" style="padding:8px; width:60px;">
+  
+  <p style="margin-top:10px;">Нова кількість порцій:</p>
+  <input type="number" id="new-servings" value="6" style="padding:8px; width:60px;">
+  
+  <div style="margin-top:20px;">
+    <button class="main-button" onclick="calculateIngredients()">🔄 Перерахувати</button>
+  </div>
+
+  <h3 style="margin-top:20px;">🧮 Результат:</h3>
+  <div id="calc-result" style="margin-top:10px;"></div>
+
+  <button class="back-button" style="margin-top:20px;" onclick="goBackToProfile()">⬅ Повернутись</button>
+</div>
+
+
   <!-- Нижнє меню -->
 
 <div class="bottom-nav-wrapper">
@@ -422,6 +457,13 @@ h1, h2, h3 {
 </div>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+    function showCalculators() {
+  const block = document.getElementById('calculator-accordion');
+  const wrapper = document.getElementById('calculators-wrapper');
+  block.classList.toggle('accordion-open');
+}
+
+    
 <script>
   
 const categories = [
@@ -1206,6 +1248,43 @@ async function submitPaymentCheck() {
     document.getElementById('pro-confirmation').innerHTML = '❌ Помилка при відправці. Спробуйте пізніше';
     console.error("❌ Помилка надсилання запиту:", err);
   }
+}
+function openIngredientCalculator() {
+  hideAllSections();
+  document.getElementById('section-calculator-ingredients').style.display = 'block';
+}
+
+function goBackToProfile() {
+  showSection('section-profile');
+}
+
+function hideAllSections() {
+  document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
+}
+
+function calculateIngredients() {
+  const ingredientsInput = document.getElementById('base-ingredients').value;
+  const baseServings = parseFloat(document.getElementById('base-servings').value);
+  const newServings = parseFloat(document.getElementById('new-servings').value);
+
+  if (!ingredientsInput || isNaN(baseServings) || isNaN(newServings) || baseServings <= 0 || newServings <= 0) {
+    document.getElementById('calc-result').innerHTML = '❗ Будь ласка, заповніть всі поля правильно.';
+    return;
+  }
+
+  const ingredientsList = ingredientsInput.split(',').map(item => item.trim());
+  const result = ingredientsList.map(item => {
+    const parts = item.match(/([\d\.]+)([^\d]*)/);
+    if (!parts) return item;
+
+    const quantity = parseFloat(parts[1]);
+    const unit = parts[2] || '';
+    const newQuantity = (quantity * newServings / baseServings).toFixed(1);
+
+    return `${newQuantity}${unit}`;
+  });
+
+  document.getElementById('calc-result').innerHTML = result.join('<br>');
 }
 
 
