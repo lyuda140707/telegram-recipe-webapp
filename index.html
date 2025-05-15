@@ -520,13 +520,19 @@ container.innerHTML = `
 `;
   const block = document.getElementById(id);
   recipe.forEach(r => {
-    if (r["тип блоку"] === "текст") {
-      block.innerHTML += `<p>${r["контент"]}</p>`;
-    } else if (r["тип блоку"] === "фото") {
-      // додаткові фото під текстом, якщо є
-      block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-    }
-  });
+  if (r["тип блоку"] === "текст") {
+    block.innerHTML += `<p>${r["контент"]}</p>`;
+  } else if (r["тип блоку"] === "фото") {
+    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+  }
+  
+  // Вивід відео з окремої колонки
+  if (r["відео"]) {
+    block.innerHTML += renderVideoIfNeeded(r["відео"]);
+  }
+});
+
+
   block.innerHTML += `
   <div style="text-align: center; margin-top: 20px;">
   <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
@@ -568,7 +574,13 @@ group.forEach(r => {
     block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
     contentAdded = true;
   }
+
+  if (r["відео"]) {
+    block.innerHTML += renderVideoIfNeeded(r["відео"]);
+    contentAdded = true;
+  }
 });
+
 
 if (contentAdded) {
   block.innerHTML += `
@@ -1208,6 +1220,38 @@ async function submitPaymentCheck() {
   }
 }
 
+function renderVideoIfNeeded(content) {
+  // Перевіряємо, чи content є посиланням на відео
+  if (!content) return '';
+
+  // YouTube (підтримуємо youtu.be та youtube.com)
+  if (content.includes('youtube.com') || content.includes('youtu.be')) {
+    // Витягуємо ID відео
+    let videoId = null;
+    if (content.includes('youtube.com')) {
+      const urlParams = new URLSearchParams(new URL(content).search);
+      videoId = urlParams.get('v');
+    }
+    if (!videoId && content.includes('youtu.be')) {
+      videoId = content.split('youtu.be/')[1].split('?')[0];
+    }
+    if (videoId) {
+      return `<iframe width="320" height="180" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+    }
+  }
+
+  // Google Drive відео
+  if (content.includes('drive.google.com')) {
+    const match = content.match(/\/d\/([^\/]+)\//);
+    if (match && match[1]) {
+      const fileId = match[1];
+      return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="320" height="180" allow="autoplay" frameborder="0" allowfullscreen></iframe>`;
+    }
+  }
+
+  // Якщо це не відео-посилання — повертаємо пусто (або можна виводити як текст)
+  return '';
+}
 
 
 </script>
