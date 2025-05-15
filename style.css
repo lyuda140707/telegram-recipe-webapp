@@ -289,23 +289,38 @@ h1 {
 #pro-info {
   transition: all 0.4s ease;
 }
-.buy-pro-button {
-  margin-top: 14px;
+.pro-button {
   padding: 12px 24px;
-  background: linear-gradient(145deg, #fbc2eb, #a6c1ee);
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
   border: none;
-  border-radius: 25px;
-  font-weight: 600;
-  color: #4b2c5e;
-  font-size: 15px;
+  border-radius: 30px;
   cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(101, 67, 255, 0.7);
+  transition: transform 0.3s ease;
+  animation: pulseColor 3s infinite alternate;
 }
 
-.buy-pro-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+.pro-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(101, 67, 255, 1);
+}
+
+@keyframes pulseColor {
+  0% {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    box-shadow: 0 0 15px rgba(101, 67, 255, 0.7);
+  }
+  50% {
+    background: linear-gradient(135deg, #8e3ffc, #4a84ff);
+    box-shadow: 0 0 30px rgba(101, 67, 255, 1);
+  }
+  100% {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    box-shadow: 0 0 15px rgba(101, 67, 255, 0.7);
+  }
 }
 
 
