@@ -375,19 +375,42 @@ h1, h2, h3 {
  <div class="accordion-block">
   <div class="accordion-title" onclick="toggleCalculators()">🧮 Калькулятори</div>
   <div id="calculators-wrapper" style="display:none; margin-left: 10px;">
-    <div class="accordion-block">
-      <div class="accordion-title" onclick="toggleAccordion(this)">📏 Калькулятор інгредієнтів</div>
-      <div class="accordion-content">
-        <p>Тут буде калькулятор інгредієнтів...</p>
-      </div>
-    </div>
-    <div class="accordion-block">
-      <div class="accordion-title" onclick="toggleAccordion(this)">🔥 Калькулятор калорійності</div>
-      <div class="accordion-content">
-        <p>Тут буде калькулятор калорійності...</p>
-      </div>
+  <div class="accordion-block">
+    <div class="accordion-title" onclick="toggleAccordion(this)">📏 Калькулятор інгредієнтів</div>
+    <div class="accordion-content">
+      <p><div class="calculator-ingredients">
+  <label for="servings">Кількість порцій:</label>
+  <input type="number" id="servings" value="1" min="1" style="width:60px; margin-left:10px;">
+  
+  <ul id="ingredients-list" style="margin-top:10px;">
+    <li data-base-qty="100">Борошно: <span class="qty">100</span> г</li>
+    <li data-base-qty="200">Вода: <span class="qty">200</span> мл</li>
+    <li data-base-qty="50">Цукор: <span class="qty">50</span> г</li>
+  </ul>
+</div>
+</p>
     </div>
   </div>
+  <div class="accordion-block">
+    <div class="accordion-title" onclick="toggleAccordion(this)">🔥 Калькулятор калорійності</div>
+    <div class="accordion-content">
+      <p><div class="calculator-calories">
+  <h4>Введіть інгредієнти і калорії (ккал на 100 г)</h4>
+  <div id="calorie-rows">
+    <div>
+      <input type="text" placeholder="Інгредієнт" class="ingredient-name" style="width:120px;">
+      <input type="number" placeholder="грам" class="ingredient-qty" style="width:60px;">
+      <input type="number" placeholder="ккал/100г" class="ingredient-cal" style="width:60px;">
+    </div>
+  </div>
+  <button onclick="addCalorieRow()">+ Додати інгредієнт</button>
+  <p>Загальна калорійність: <span id="total-calories">0</span> ккал</p>
+</div>
+</p>
+    </div>
+  </div>
+</div>
+
 </div>
 
 
@@ -1246,6 +1269,49 @@ function toggleCalculators() {
     wrapper.style.display = 'none';
   }
 }
+
+  // Калькулятор інгредієнтів
+const servingsInput = document.getElementById('servings');
+const ingredientsList = document.getElementById('ingredients-list');
+
+if (servingsInput && ingredientsList) {
+  servingsInput.addEventListener('input', () => {
+    const factor = parseFloat(servingsInput.value) || 1;
+    ingredientsList.querySelectorAll('li').forEach(li => {
+      const baseQty = parseFloat(li.dataset.baseQty);
+      const newQty = (baseQty * factor).toFixed(1);
+      li.querySelector('.qty').innerText = newQty;
+    });
+  });
+}
+
+// Калькулятор калорійності
+function addCalorieRow() {
+  const container = document.getElementById('calorie-rows');
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <input type="text" placeholder="Інгредієнт" class="ingredient-name" style="width:120px;">
+    <input type="number" placeholder="грам" class="ingredient-qty" style="width:60px;">
+    <input type="number" placeholder="ккал/100г" class="ingredient-cal" style="width:60px;">
+  `;
+  container.appendChild(div);
+  updateCalories();
+}
+
+function updateCalories() {
+  const names = document.querySelectorAll('.ingredient-name');
+  const qtys = document.querySelectorAll('.ingredient-qty');
+  const cals = document.querySelectorAll('.ingredient-cal');
+  let total = 0;
+  for (let i = 0; i < names.length; i++) {
+    const qty = parseFloat(qtys[i].value) || 0;
+    const cal = parseFloat(cals[i].value) || 0;
+    total += qty * cal / 100;
+  }
+  document.getElementById('total-calories').innerText = total.toFixed(1);
+}
+
+document.getElementById('calorie-rows').addEventListener('input', updateCalories);
 
   
 </script>
