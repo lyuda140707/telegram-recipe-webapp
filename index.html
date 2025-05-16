@@ -506,7 +506,10 @@ async function loadDailyRecipe() {
   const grouped = groupByRecipeNumber(recipes); // <-- Спочатку це
   if (grouped.length === 0) return;
 
-  const dayIndex = new Date().getDate() % grouped.length;
+  const now = new Date();
+const hoursSinceEpoch = Math.floor(now.getTime() / (1000 * 60 * 60));
+const intervalIndex = Math.floor(hoursSinceEpoch / 6) % grouped.length;
+
   const recipe = grouped[dayIndex]; // <-- І тепер можна взяти рецепт
 
     const id = `daily-details`;
@@ -517,9 +520,14 @@ async function loadDailyRecipe() {
     <div class="recipe-card" style="padding: 0; overflow: hidden;">
       <div class="daily-image-wrapper" style="position: relative;">
         <img src="${
-  images[0]?.контент
-    || (recipe.find(r => r["тип блоку"] === "відео") ? 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg' : 'https://via.placeholder.com/600x200?text=Рецепт+дня')
-}" 
+  <img src="${
+  images.length > 0
+    ? images[0].контент
+    : recipe.find(r => r["тип блоку"] === "відео")
+      ? 'https://i.pinimg.com/736x/42/d0/47/42d0471e0094e28d71eaec86d78beec5.jpg'
+      : 'https://via.placeholder.com/600x200?text=Рецепт+дня'
+}"
+
 
              alt="Рецепт дня"
              style="width:100%; height:200px; object-fit:cover; object-position: center 30%; border-radius: 16px 16px 0 0;">
