@@ -463,11 +463,13 @@ async function loadCategories() {
     const btn = document.createElement('button');
     btn.innerText = cat;
     btn.onclick = async () => {
-      const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
-      const raw = await fetchRecipes(cleanCategory.toLowerCase());
-      grouped.sort(() => Math.random() - 0.5); // 🎲 Перемішує рецепти випадково
-      renderGroupedRecipes(grouped, cat);
-    };
+  const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
+  const raw = await fetchRecipes(cleanCategory.toLowerCase());
+  const grouped = groupByRecipeNumber(raw); // ✅ ДОДАЙ ЦЕ!
+  grouped.sort(() => Math.random() - 0.5);
+  renderGroupedRecipes(grouped, cat);
+};
+
     container.appendChild(btn);
   });
 }
