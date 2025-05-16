@@ -465,7 +465,7 @@ async function loadCategories() {
     btn.onclick = async () => {
       const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
       const raw = await fetchRecipes(cleanCategory.toLowerCase());
-      const grouped = groupByRecipeNumber(raw);
+      grouped.sort(() => Math.random() - 0.5); // 🎲 Перемішує рецепти випадково
       renderGroupedRecipes(grouped, cat);
     };
     container.appendChild(btn);
