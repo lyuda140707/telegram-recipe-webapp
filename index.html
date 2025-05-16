@@ -601,7 +601,9 @@ recipe.forEach(r => {
 
 // Додай слайдер для решти зображень
 if (images.length > 1) {
-  block.innerHTML += `<div class="slider-container">` +
+block.innerHTML += `
+  <div class="swipe-hint">📸 Гортай фото ➡️</div>
+  <div class="slider-container">` +
     images.slice(1).map(img => `
       <img src="${img["контент"]}" alt="Фото" />
     `).join('') +
@@ -683,7 +685,9 @@ function renderGroupedRecipes(groups, category) {
     });
 
     if (images.length > 1) {
-      block.innerHTML += `<div class="slider-container">` +
+block.innerHTML += `
+  <div class="swipe-hint">📸 Гортай фото ➡️</div>
+  <div class="slider-container">` +
         images.slice(1).map(img => `
           <img src="${img["контент"]}" alt="Фото" />
         `).join('') +
