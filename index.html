@@ -464,35 +464,20 @@ async function fetchRecipes(category = null) {
 }
 
 function groupByRecipeNumber(data) {
-  const byId = {};
+  const byKey = {};
 
   data.forEach(row => {
     const id = row["номер рецепту"];
-    if (!byId[id]) byId[id] = [];
-    byId[id].push(row);
+    const category = (row["категорія"] || "").trim().toLowerCase();
+    const key = `${id}-${category}`; // ← враховуємо категорію в ключі
+
+    if (!byKey[key]) byKey[key] = [];
+    byKey[key].push(row);
   });
 
-  // Фільтруємо однакові групи (повні дублікати)
-  const unique = [];
-  const hashes = new Set();
-
-  for (const rows of Object.values(byId)) {
-    const hash = rows.map(r => 
-  JSON.stringify(
-    Object.fromEntries(
-      Object.entries(r).map(([k, v]) => [k, String(v).trim().toLowerCase()])
-    )
-  )
-).join("-");
-
-    if (!hashes.has(hash)) {
-      hashes.add(hash);
-      unique.push(rows);
-    }
-  }
-
-  return unique;
+  return Object.values(byKey);
 }
+
 
 
 async function loadCategories() {
