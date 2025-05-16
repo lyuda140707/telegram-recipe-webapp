@@ -121,17 +121,11 @@ h1, h2, h3 {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .recipe-content {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.5s ease;
-}
-
-.recipe-content.open {
-  max-height: 1000px; /* достатньо для будь-якого рецепта */
+    .recipe-content.open {
+  max-height: 5000px;
   opacity: 1;
 }
+
 
 
     .detail-button, .main-button, .recipe-toggle, .favorite-button {
