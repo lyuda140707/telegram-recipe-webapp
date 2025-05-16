@@ -509,44 +509,43 @@ async function loadDailyRecipe() {
   const dayIndex = new Date().getDate() % grouped.length;
   const recipe = grouped[dayIndex]; // <-- І тепер можна взяти рецепт
 
-  const id = `daily-details`;
+    const id = `daily-details`;
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  const image = {
-    контент: "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?w=800&q=80"
-  };
+  const images = recipe.filter(r => r["тип блоку"] === "фото"); // 🟢 це головне
 
-container.innerHTML = `
-  <div class="recipe-card" style="padding: 0; overflow: hidden;">
-    <div class="daily-image-wrapper" style="position: relative;">
-      <img src="${images[0]?.контент || 'https://via.placeholder.com/600x200?text=Рецепт+дня'}"
-     alt="Рецепт дня"
-     style="width:100%; height:200px; object-fit:cover; object-position: center 30%; border-radius: 16px 16px 0 0;">
-
-      <div class="daily-label" style="
-        position: absolute;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: white;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-weight: bold;
-        color: #91326b;
-        font-size: 14px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        animation: fadeInOut 4.5s ease forwards;
-      ">Рецепт дня 🍓</div>
+  container.innerHTML = `
+    <div class="recipe-card" style="padding: 0; overflow: hidden;">
+      <div class="daily-image-wrapper" style="position: relative;">
+        <img src="${images[0]?.контент || 'https://via.placeholder.com/600x200?text=Рецепт+дня'}"
+             alt="Рецепт дня"
+             style="width:100%; height:200px; object-fit:cover; object-position: center 30%; border-radius: 16px 16px 0 0;">
+        <div class="daily-label" style="
+          position: absolute;
+          top: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: white;
+          padding: 6px 14px;
+          border-radius: 20px;
+          font-weight: bold;
+          color: #91326b;
+          font-size: 14px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+          animation: fadeInOut 4.5s ease forwards;
+        ">Рецепт дня 🍓</div>
+      </div>
+      <div style="padding: 15px;">
+        <h2 style="margin-top: 0;">${info["назва рецепту"]}</h2>
+        <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+        <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        <div id="${id}" class="recipe-content"></div>
+      </div>
     </div>
-    <div style="padding: 15px;">
-      <h2 style="margin-top: 0;">${info["назва рецепту"]}</h2>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-      <div id="${id}" class="recipe-content"></div>
+  `;
 
-    </div>
-  </div>
-`;
+
+     
   const block = document.getElementById(id);
  // Спочатку зберемо окремо усі блоки
 const images = recipe.filter(r => r["тип блоку"] === "фото");
