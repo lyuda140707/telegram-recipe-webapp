@@ -464,14 +464,29 @@ async function fetchRecipes(category = null) {
 }
 
 function groupByRecipeNumber(data) {
-  const grouped = {};
+  const byId = {};
+
   data.forEach(row => {
     const id = row["номер рецепту"];
-    if (!grouped[id]) grouped[id] = [];
-    grouped[id].push(row);
+    if (!byId[id]) byId[id] = [];
+    byId[id].push(row);
   });
-  return Object.values(grouped);
+
+  // Фільтруємо однакові групи (повні дублікати)
+  const unique = [];
+  const hashes = new Set();
+
+  for (const rows of Object.values(byId)) {
+    const hash = rows.map(r => JSON.stringify(r)).join("-");
+    if (!hashes.has(hash)) {
+      hashes.add(hash);
+      unique.push(rows);
+    }
+  }
+
+  return unique;
 }
+
 
 async function loadCategories() {
   const container = document.getElementById('section-categories');
