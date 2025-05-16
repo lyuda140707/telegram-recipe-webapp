@@ -510,7 +510,8 @@ async function loadDailyRecipe() {
 const hoursSinceEpoch = Math.floor(now.getTime() / (1000 * 60 * 60));
 const intervalIndex = Math.floor(hoursSinceEpoch / 6) % grouped.length;
 
-  const recipe = grouped[dayIndex]; // <-- І тепер можна взяти рецепт
+  const recipe = grouped[intervalIndex];
+
 
     const id = `daily-details`;
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
