@@ -126,11 +126,11 @@ h1 {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: white;
+  background: #fff;
+  padding: 12px 10px;
   z-index: 999;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-  border-radius: 16px 16px 0 0;
-  padding: 8px 0; /* 🆕 додали внутрішній відступ */
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 20px 20px 0 0;
 }
 
 
@@ -138,28 +138,33 @@ h1 {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  overflow-x: auto;
+  gap: 8px;
 }
 
 .bottom-nav button {
-  background: linear-gradient(to right, #fbc2eb, #a6c1ee); /* красивий фон */
+  background: linear-gradient(to right, #fbc2eb, #a6c1ee);
   border: none;
-  border-radius: 30px;           /* округлі */
-  font-size: 15px;
-  font-weight: bold;
+  border-radius: 30px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
   color: #4b2c5e;
-  padding: 10px 14px;
-  margin: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  white-space: nowrap;
   transition: all 0.3s ease;
 }
 
 .bottom-nav button:hover {
   transform: scale(1.05);
-  background: linear-gradient(to right, #fda085, #f6d365);
-  color: #4b2c5e;
 }
 .bottom-nav button.active {
-  border: 2px solid #d81159;
+  background: linear-gradient(to right, #fda085, #f6d365);
+  color: #4b2c5e;
 }
 
 .back-button {
