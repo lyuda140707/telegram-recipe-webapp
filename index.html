@@ -1277,10 +1277,13 @@ function askBot() {
     const fullText = `${title} ${ingredients} ${content}`;
     const normalized = new Set(
   fullText
+    .toLowerCase()
+    .replace(/[ʼ’'’.,;!?()\[\]]/g, '') // очищення розділових
     .split(/\s+/)
-    .map(w => normalizeWord(w))
+    .map(normalizeWord)
     .filter(Boolean)
 );
+
 
 
     const matches = words.filter(w => normalized.has(w)).length;
