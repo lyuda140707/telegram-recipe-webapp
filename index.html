@@ -1240,7 +1240,10 @@ function updateMenuCategory(index, newValue) {
     const fullText = `${title} ${ingredients} ${content}`;
     const normalized = fullText.split(/\s+/).map(normalizeWord);
 
-    const matches = words.filter(w => normalized.includes(w)).length;
+    const matches = words.filter(w =>
+  normalized.some(n => n.includes(w) || w.includes(n))
+).length;
+
 
     if (matches > 0) {
       let highlightedTitle = r["назва рецепту"];
