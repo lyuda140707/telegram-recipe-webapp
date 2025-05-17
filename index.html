@@ -925,19 +925,22 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
 
 
   document.getElementById('open-favorites')?.addEventListener('click', () => {
-    const block = document.getElementById('fav-accordion');
-    const wrapper = document.getElementById('favorites-wrapper');
-    const arrow = document.getElementById('arrow-fav');
-    const isOpen = block.classList.contains('accordion-open');
-    block.classList.toggle('accordion-open');
-    arrow.innerText = isOpen ? '🔽' : '🔼';
-    if (!isOpen) {
-      loadFavorites();
-      setTimeout(() => {
-        block.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    }
-  });
+  const block = document.getElementById('fav-accordion');
+  const arrow = document.getElementById('arrow-fav');
+  const isOpen = block.classList.contains('accordion-open');
+  block.classList.toggle('accordion-open');
+  arrow.innerText = isOpen ? '🔽' : '🔼';
+
+  // 🟢 Завжди оновлюємо улюблені рецепти
+  loadFavorites();
+
+  if (!isOpen) {
+    setTimeout(() => {
+      block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }
+});
+
 
   document.getElementById('open-list')?.addEventListener('click', () => {
   showSection('section-profile');
