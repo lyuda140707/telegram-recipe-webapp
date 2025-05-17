@@ -883,6 +883,15 @@ document.addEventListener("DOMContentLoaded", () => {
     goHome();
   }
 init();
+  // Піднімати поле вводу при фокусі (особливо для мобільних)
+document.querySelectorAll('input').forEach(input => {
+  input.addEventListener('focus', () => {
+    setTimeout(() => {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  });
+});
+
   const tg = window.Telegram?.WebApp;
 
 if (tg && tg.initDataUnsafe?.user?.id) {
