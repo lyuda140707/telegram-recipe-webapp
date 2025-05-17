@@ -493,6 +493,18 @@ async function fetchRecipes(category = null) {
   });
   return Object.values(grouped);
 }
+  function groupByTitleAndNumber(data) {
+  const grouped = {};
+  data.forEach(row => {
+    const title = (row["назва рецепту"] || "").trim().toLowerCase();
+    const number = row["номер рецепту"];
+    const key = `${number}__${title}`;
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(row);
+  });
+  return Object.values(grouped);
+}
+
 
 function groupByRecipeNumber(data) {
   const grouped = {};
@@ -513,7 +525,8 @@ async function loadCategories() {
     btn.onclick = async () => {
       const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
       const raw = await fetchRecipes(cleanCategory.toLowerCase());
-const grouped = groupByRecipeTitle(raw);
+const grouped = groupByTitleAndNumber(raw);
+
 renderGroupedRecipes(grouped, cat);
 
     };
@@ -526,7 +539,8 @@ async function loadDailyRecipe() {
   localStorage.setItem('all_recipes', JSON.stringify(recipes));
   const container = document.getElementById('daily-recipe');
 
-  const grouped = groupByRecipeTitle(recipes);
+  const grouped = groupByTitleAndNumber(recipes);
+
 
   if (grouped.length === 0) return;
 
