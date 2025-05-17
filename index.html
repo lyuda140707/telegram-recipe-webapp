@@ -1325,6 +1325,15 @@ function updateMenuCategory(index, newValue) {
   return word;
 }
 
+function highlightWords(text = '', words = []) {
+  let highlighted = text;
+  words.forEach(word => {
+    const reg = new RegExp(`(${word}\\w*)`, 'gi');
+    highlighted = highlighted.replace(reg, '<strong>$1</strong>');
+  });
+  return highlighted;
+}
+
 
 
 
@@ -1334,14 +1343,15 @@ function askBot() {
   const input = document.getElementById('bot-query');
   const query = input.value.trim().toLowerCase();
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
-  
+
   const words = query
     .split(/\s+/)
     .map(normalizeWord)
     .filter(w => w.length > 2 && !stopWords.includes(w));
 
-  const results = [];
+  const matchedGroups = {};
 
+  // 🔁 групуємо за номером рецепту
   all.forEach(r => {
     const title = (r["назва рецепту"] || "").toLowerCase();
     const ingredients = (r["інгредієнти"] || "").toLowerCase();
@@ -1349,35 +1359,22 @@ function askBot() {
 
     const fullText = `${title} ${ingredients} ${content}`;
     const normalized = new Set(
-  fullText
-    .toLowerCase()
-    .replace(/[ʼ’'’.,;!?()\[\]]/g, '') // очищення пунктуації
-    .split(/\s+/)
-    .map(normalizeWord)
-    .filter(Boolean)
-);
-
-
-
+      fullText
+        .replace(/[ʼ’'’.,;!?()\[\]]/g, '')
+        .split(/\s+/)
+        .map(normalizeWord)
+        .filter(Boolean)
+    );
 
     const matches = words.filter(w => normalized.has(w)).length;
-
-    if (words.length === 0 || matches === 0) return;
-
-    let highlightedTitle = r["назва рецепту"];
-    words.forEach(word => {
-      const reg = new RegExp(`(${word}\\w*)`, 'gi');
-      highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
-    });
-
-    results.push(`
-      <div class="recipe-card">
-        <h3>${highlightedTitle}</h3>
-        <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-        <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
-      </div>
-    `);
+    if (matches > 0) {
+      const id = r["номер рецепту"];
+      if (!matchedGroups[id]) matchedGroups[id] = [];
+      matchedGroups[id].push({ ...r, matches });
+    }
   });
+
+  const results = Object.values(matchedGroups);
 
   const container = document.getElementById('bot-response');
   if (!query) {
@@ -1385,8 +1382,66 @@ function askBot() {
     return;
   }
 
-  container.innerHTML = results.length ? results.join('') : '<p>Нічого не знайдено 😞</p>';
+  if (results.length === 0) {
+    container.innerHTML = '<p>Нічого не знайдено 😞</p>';
+    return;
+  }
+
+  // 🔽 Виводимо згруповані результати
+  container.innerHTML = results.map((group, index) => {
+    const id = `bot-details-${index}`;
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+
+    let content = `
+      <div class="recipe-card">
+        <h3>${highlightWords(info["назва рецепту"], words)}</h3>
+        <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+        <p><strong>Інгредієнти:</strong> ${highlightWords(info["інгредієнти"], words)}</p>
+        <div class="recipe-buttons">
+          <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        </div>
+        <div id="${id}" class="recipe-content">`;
+
+    group.forEach(r => {
+      if (r["тип блоку"] === "текст") {
+        content += `<p>${highlightWords(r["контент"], words)}</p>`;
+      } else if (r["тип блоку"] === "фото") {
+        content += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+      } else if (r["тип блоку"] === "відео") {
+        let videoLink = r["контент"];
+        if (videoLink.includes('drive.google.com')) {
+          const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+          if (match && match[1]) {
+            videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+          }
+          content += `
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
+              <iframe 
+                src="${videoLink}" 
+                style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
+                allowfullscreen>
+              </iframe>
+            </div>`;
+        } else {
+          content += `
+            <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+              <source src="${videoLink}" type="video/mp4">
+              Ваш браузер не підтримує відтворення відео.
+            </video>`;
+        }
+      }
+    });
+
+    content += `
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+        </div>
+        </div></div>`;
+
+    return content;
+  }).join('');
 }
+
 
   
 function toggleProInfo() {
