@@ -1278,11 +1278,12 @@ function askBot() {
     const normalized = new Set(
   fullText
     .toLowerCase()
-    .replace(/[ʼ’'’.,;!?()\[\]]/g, '') // очищення розділових
+    .replace(/[ʼ’'’.,;!?()\[\]]/g, '') // очищення пунктуації
     .split(/\s+/)
     .map(normalizeWord)
     .filter(Boolean)
 );
+
 
 
 
