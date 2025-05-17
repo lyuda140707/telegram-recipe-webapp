@@ -1167,9 +1167,10 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
 const ingredientWords = new Set(
   rawIngredients
     .split(/[,\n]+/)
-    .flatMap(ing => normalizeWord(ing.trim()).split(' '))
+    .map(ing => normalizeWord(ing.trim()))
     .filter(Boolean)
 );
+
 
     const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
     const threshold = parseInt(document.getElementById('match-threshold').value, 10);
