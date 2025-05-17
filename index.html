@@ -231,6 +231,20 @@ h1, h2, h3 {
   opacity: 1;
 }
 
+    .slider-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-top: 10px;
+  padding-bottom: 5px;
+}
+.slider-container img {
+  display: inline-block;
+  height: 160px;
+  margin-right: 10px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
   </style>
 
 </head>
@@ -526,7 +540,13 @@ container.innerHTML = `
   if (r["тип блоку"] === "текст") {
     block.innerHTML += `<p>${r["контент"]}</p>`;
   } else if (r["тип блоку"] === "фото") {
+  if (!firstImageAdded) {
     block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+    firstImageAdded = true;
+  }
+  sliderImages.push(r["контент"]);
+}
+
   } else if (r["тип блоку"] === "відео") {
   let videoLink = r["контент"];
   if (videoLink.includes('drive.google.com')) {
@@ -567,6 +587,7 @@ container.innerHTML = `
 function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
+
   groups.forEach((group, index) => {
     const id = `recipe-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
@@ -574,59 +595,70 @@ function renderGroupedRecipes(groups, category) {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
-  
-card.innerHTML = `
-  <h3>${info["назва рецепту"]}</h3>
-  <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-  <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-  <div class="recipe-buttons">
-    <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-    <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
-  </div>
-  <div id="${id}" class="recipe-content"></div>
-`;
+
+    let contentAdded = false;
+    let firstImageAdded = false;
+    let sliderImages = [];
+
+    card.innerHTML = `
+      <h3>${info["назва рецепту"]}</h3>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+      <div class="recipe-buttons">
+        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
+      </div>
+      <div id="${id}" class="recipe-content"></div>
+    `;
 
     container.appendChild(card);
 
     const block = document.getElementById(id);
- let contentAdded = false;
 
-group.forEach(r => {
-  if (r["тип блоку"] === "текст") {
-    block.innerHTML += `<p>${r["контент"]}</p>`;
-    contentAdded = true;
-  } else if (r["тип блоку"] === "фото") {
-    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
-    contentAdded = true;
-  } else if (r["тип блоку"] === "відео") {
-  let videoLink = r["контент"];
-  if (videoLink.includes('drive.google.com')) {
-  const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (match && match[1]) {
-    videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-  }
-  block.innerHTML += `
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
-  <iframe 
-    src="${videoLink}" 
-    style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
-    allowfullscreen>
-  </iframe>
-</div>
-`;
-
-} else {
-  block.innerHTML += `
-    <video controls style="width:100%; border-radius:10px; margin-top:10px;">
-      <source src="${r["контент"]}" type="video/mp4">
-      Ваш браузер не підтримує відтворення відео.
-    </video>
-  `;
-}
-
-}
-
+    group.forEach(r => {
+      if (r["тип блоку"] === "текст") {
+        block.innerHTML += `<p>${r["контент"]}</p>`;
+        contentAdded = true;
+      } else if (r["тип блоку"] === "фото") {
+        if (!firstImageAdded) {
+          block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+          firstImageAdded = true;
+        }
+        sliderImages.push(r["контент"]);
+        contentAdded = true;
+      } else if (r["тип блоку"] === "відео") {
+        let videoLink = r["контент"];
+        if (videoLink.includes('drive.google.com')) {
+          const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+          if (match && match[1]) {
+            videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+          }
+          block.innerHTML += `
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
+              <iframe 
+                src="${videoLink}" 
+                style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
+                allowfullscreen>
+              </iframe>
+            </div>`;
+        } else {
+          block.innerHTML += `
+            <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+              <source src="${videoLink}" type="video/mp4">
+              Ваш браузер не підтримує відтворення відео.
+            </video>`;
+        }
+        contentAdded = true;
+      }
+  
 });
+if (sliderImages.length > 1) {
+  block.innerHTML += `
+    <div class="slider-container">
+      <div class="swipe-hint">📸 Гортай фото ➡️</div>
+      ${sliderImages.slice(1).map(src => `<img src="${src}" alt="Фото" />`).join('')}
+    </div>`;
+}
 
 
 
@@ -910,7 +942,8 @@ async function loadFavorites() {
       <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
       <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
       <div class="recipe-buttons">
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        <button class="detail-button" 
+        onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
         <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
       </div>
       <div id="${id}" class="recipe-content"></div>
