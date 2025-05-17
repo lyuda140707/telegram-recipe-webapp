@@ -258,6 +258,29 @@ h1, h2, h3 {
   transform: translateY(0);
   opacity: 1;
 }
+    #smart-search-input {
+  font-size: 18px;        /* Більший текст */
+  padding: 14px 12px;     /* Вищий інпут */
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+#section-search button {
+  font-size: 18px;        /* Більший шрифт */
+  padding: 16px 24px;     /* Вища і ширша кнопка */
+  border-radius: 12px;
+  font-weight: 600;
+  background: linear-gradient(to right, #ffdde1, #ee9ca7);
+  color: #5d2c3e;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+#section-search button:hover {
+  opacity: 0.9;
+}
 
   </style>
 
@@ -1383,21 +1406,29 @@ function runSmartSearch() {
   const results = [];
 
   all.forEach(r => {
-    const name = (r["назва рецепту"] || "").toLowerCase();
-    const normName = name.split(/\s+/).map(normalizeWord);
-    const matches = words.filter(w => normName.includes(w)).length;
+    const title = (r["назва рецепту"] || "").toLowerCase();
+    const ingredients = (r["інгредієнти"] || "").toLowerCase();
+    const content = (r["контент"] || "").toLowerCase();
+
+    const fullText = `${title} ${ingredients} ${content}`;
+    const normText = fullText.split(/\s+/).map(normalizeWord);
+
+    const matches = words.filter(w => normText.includes(w)).length;
     if (matches > 0) {
-      let title = r["назва рецепту"];
+      let highlightedTitle = r["назва рецепту"];
+      let highlightedIngredients = r["інгредієнти"] || "";
+
       words.forEach(word => {
         const reg = new RegExp(`(${word}\\w*)`, 'gi');
-        title = title.replace(reg, '<strong>$1</strong>');
+        highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
+        highlightedIngredients = highlightedIngredients.replace(reg, '<strong>$1</strong>');
       });
 
       results.push(`
         <div class="recipe-card">
-          <h3>${title}</h3>
+          <h3>${highlightedTitle}</h3>
           <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+          <p><strong>Інгредієнти:</strong> ${highlightedIngredients || "Не вказано"}</p>
         </div>
       `);
     }
