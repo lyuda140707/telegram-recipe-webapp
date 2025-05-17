@@ -125,40 +125,43 @@ h1 {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(255, 240, 250, 0.85);
-  backdrop-filter: blur(6px);
-  border-top: 1px solid #ddd;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to right, #ffe4f0, #fef6ff);
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
+  padding: 12px 0;
   z-index: 999;
+  border-radius: 16px 16px 0 0;
 }
 
 .bottom-nav {
   display: flex;
+  gap: 12px;
   justify-content: space-around;
-  padding: 10px 0;
-  overflow-x: auto;
+  padding: 0 16px;
 }
 
 .bottom-nav button {
-  background: transparent;
+  flex: 0 0 auto;
+  padding: 8px 12px;
   border: none;
-  font-size: 16px;
-  font-weight: bold;
-  color: #7a2c5c;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffd6e0, #ffb3c6);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
   cursor: pointer;
-  padding: 10px;
-  transition: color 0.3s;
+  color: #333;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-weight: bold;
 }
 
+.bottom-nav button.active,
 .bottom-nav button:hover {
-  color: #d81159;
+  background: linear-gradient(145deg, #ffb3c6, #ff9ab3);
+  color: #000;
+  font-weight: bold;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
-
-.bottom-nav button.active {
-  color: #d81159;
-  border-bottom: 2px solid #d81159;
-}
-
 
 .back-button {
   margin: 10px 0;
@@ -212,7 +215,7 @@ h1 {
   border-radius: 16px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   animation: hintSwipe 2s ease-in-out infinite;
-   z-index: 998;
+  z-index: 1000;
 }
 .accordion-content {
   max-height: 0;
@@ -234,7 +237,10 @@ h1 {
   background-color: #e8f5e9; /* можна змінити на будь-який ніжний колір */
 }
 .app {
-  padding-bottom: 120px; /* щоб меню не перекривало контент */
+  padding: 10px;
+  max-width: 700px;
+  margin: auto;
+  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
 }
 .daily-image-wrapper {
   position: relative;
@@ -341,13 +347,3 @@ h1 {
   box-shadow: 0 6px 20px rgba(171, 100, 255, 0.9);
   transform: scale(1.15);
 }
-
-html, body {
-  scroll-behavior: smooth;
-}
-
-.bottom-nav-wrapper {
-  z-index: 1001;
-}
-
-
