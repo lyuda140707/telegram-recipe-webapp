@@ -569,22 +569,18 @@ async function loadDailyRecipe() {
 function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
-  // Залишаємо лише унікальні рецепти за номером
-const seen = new Set();
-const uniqueGroups = groups.filter(group => {
-  const recipeId = group[0]["номер рецепту"];
-  if (seen.has(recipeId)) return false;
-  seen.add(recipeId);
-  return true;
-});
 
+    // 🔁 Зберігаємо лише унікальні рецепти за назвою
+  const seenNames = new Set();
+  const uniqueGroups = groups.filter(group => {
+    const name = (group.find(r => r["тип блоку"] === "текст") || group[0])["назва рецепту"];
+    if (seenNames.has(name)) return false;
+    seenNames.add(name);
+    return true;
+  });
 
-  
 
   uniqueGroups.forEach((group, index) => {
-  const hasText = group.some(r => r["тип блоку"] === "текст");
-  if (!hasText) return; // 🔒 Пропускаємо групу без тексту
-
 
     const id = `recipe-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
@@ -1334,34 +1330,34 @@ function askBot() {
   const input = document.getElementById('bot-query');
   const query = input.value.trim().toLowerCase();
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
-
+  
   const words = query
     .split(/\s+/)
     .map(normalizeWord)
     .filter(w => w.length > 2 && !stopWords.includes(w));
 
   const results = [];
-  const seen = new Set();
 
   all.forEach(r => {
-    const recipeId = r["номер рецепту"];
-    if (seen.has(recipeId)) return;
-    seen.add(recipeId);
-
     const title = (r["назва рецепту"] || "").toLowerCase();
     const ingredients = (r["інгредієнти"] || "").toLowerCase();
     const content = (r["контент"] || "").toLowerCase();
 
     const fullText = `${title} ${ingredients} ${content}`;
     const normalized = new Set(
-      fullText
-        .replace(/[ʼ’'’.,;!?()\[\]]/g, '')
-        .split(/\s+/)
-        .map(normalizeWord)
-        .filter(Boolean)
-    );
+  fullText
+    .toLowerCase()
+    .replace(/[ʼ’'’.,;!?()\[\]]/g, '') // очищення пунктуації
+    .split(/\s+/)
+    .map(normalizeWord)
+    .filter(Boolean)
+);
+
+
+
 
     const matches = words.filter(w => normalized.has(w)).length;
+
     if (words.length === 0 || matches === 0) return;
 
     let highlightedTitle = r["назва рецепту"];
