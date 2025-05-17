@@ -287,10 +287,14 @@ h1, h2, h3 {
 </div>
 <div class="section" id="section-fridge">
   <h2>❄️ Що є в холодильнику?</h2>
-  <div style="margin-top:10px;">
-    <input id="fridge-input" placeholder="Що є в холодильнику..." style="padding:8px; width:80%;">
-    <button onclick="searchFridge()" style="padding:8px;">🔍 Знайти рецепти</button>
-  </div>
+  <div style="margin-top:10px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+  <input id="fridge-input" 
+         placeholder="Що є в холодильнику..." 
+         style="padding:14px 16px; font-size:16px; border-radius:16px; width:85%; max-width:400px;">
+  <button onclick="searchFridge()" 
+          style="padding:14px 20px; font-size:16px; border-radius:16px; background:linear-gradient(to right,#fbc2eb,#a6c1ee); color:#4b2c5e; font-weight:bold; border:none;">🔍 Знайти рецепт</button>
+</div>
+
 <div style="margin-top:10px; display: flex; align-items: center; gap: 10px;">
   <span style="font-size: 14px;">Мінімум збігів:</span>
   <button id="threshold-btn" onclick="cycleThreshold()" style="
