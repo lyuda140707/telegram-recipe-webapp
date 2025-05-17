@@ -305,10 +305,36 @@ h1, h2, h3 {
 </div>
 <div class="section" id="section-fridge">
   <h2>❄️ Що є в холодильнику?</h2>
-  <div style="margin-top:10px;">
-    <input id="fridge-input" placeholder="Що є в холодильнику..." style="padding:8px; width:80%;">
-    <button onclick="searchFridge()" style="padding:8px;">🔍 Знайти рецепти</button>
-  </div>
+  <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+  <input
+    id="fridge-input"
+    placeholder="Що є в холодильнику..."
+    style="
+      font-size: 18px;
+      padding: 14px 12px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 70%;
+    ">
+  <button
+    onclick="searchFridge()"
+    style="
+      font-size: 18px;
+      padding: 16px 24px;
+      font-weight: 600;
+      border-radius: 12px;
+      background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      color: #5d2c3e;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      flex-grow: 1;
+      max-width: 26%;
+    ">
+    🔍 Знайти
+  </button>
+</div>
+
 <div style="margin-top:10px;">
   <label for="match-threshold">Мінімум збігів:</label>
   <select id="match-threshold" style="padding:12px 16px; margin-left:10px; border-radius:12px; font-size:16px; background:#fffafc; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
