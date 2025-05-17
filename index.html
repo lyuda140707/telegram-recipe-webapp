@@ -493,28 +493,7 @@ async function fetchRecipes(category = null) {
   });
   return Object.values(grouped);
 }
-  function groupByTitleAndNumber(data) {
-  const grouped = {};
-  data.forEach(row => {
-    const title = (row["назва рецепту"] || "").trim().toLowerCase();
-    const number = row["номер рецепту"];
-    const key = `${number}__${title}`;
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(row);
-  });
-  return Object.values(grouped);
-}
-
-
-function groupByRecipeNumber(data) {
-  const grouped = {};
-  data.forEach(row => {
-    const id = row["номер рецепту"];
-    if (!grouped[id]) grouped[id] = [];
-    grouped[id].push(row);
-  });
-  return Object.values(grouped);
-}
+  
 
 async function loadCategories() {
   const container = document.getElementById('section-categories');
@@ -525,7 +504,7 @@ async function loadCategories() {
     btn.onclick = async () => {
       const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
       const raw = await fetchRecipes(cleanCategory.toLowerCase());
-const grouped = groupByTitleAndNumber(raw);
+const grouped = groupByRecipeTitle(raw);
 
 renderGroupedRecipes(grouped, cat);
 
@@ -539,7 +518,8 @@ async function loadDailyRecipe() {
   localStorage.setItem('all_recipes', JSON.stringify(recipes));
   const container = document.getElementById('daily-recipe');
 
-  const grouped = groupByTitleAndNumber(recipes);
+ const grouped = groupByRecipeTitle(recipes);
+
 
 
   if (grouped.length === 0) return;
@@ -1383,9 +1363,10 @@ function askBot() {
 
     const matches = words.filter(w => normalized.has(w)).length;
     if (matches > 0) {
-      const id = r["номер рецепту"];
-      if (!matchedGroups[id]) matchedGroups[id] = [];
-      matchedGroups[id].push({ ...r, matches });
+      const title = (r["назва рецепту"] || "").trim().toLowerCase();
+if (!matchedGroups[title]) matchedGroups[title] = [];
+matchedGroups[title].push({ ...r, matches });
+
     }
   });
 
