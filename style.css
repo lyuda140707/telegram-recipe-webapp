@@ -4,7 +4,7 @@ body {
   font-family: 'Nunito', sans-serif;
   background: linear-gradient(to bottom, #fff7fb, #ffeef5);
   color: #333;
-  padding-bottom: 120px; /* ✅ Щоб контент не заходив під меню */
+  padding-bottom: calc(120px + env(safe-area-inset-bottom, 16px)); /* ✅ Гнучке рішення */
 }
 
 h1 {
@@ -242,7 +242,7 @@ h1 {
   padding: 10px;
   max-width: 700px;
   margin: auto;
-  padding-bottom: 80px; /* ✅ збільшили */
+  padding-bottom: 120px; /* ✅ збільшили */
 }
 
 
