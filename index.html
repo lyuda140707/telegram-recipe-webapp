@@ -513,7 +513,7 @@ async function loadCategories() {
     btn.onclick = async () => {
       const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
       const raw = await fetchRecipes(cleanCategory.toLowerCase());
-      const grouped = groupByRecipeTitle(raw);
+      const grouped = groupByRecipeNumber(raw);
       renderGroupedRecipes(grouped, cat);
     };
     container.appendChild(btn);
