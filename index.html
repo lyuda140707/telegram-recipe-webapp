@@ -1213,23 +1213,31 @@ function updateMenuCategory(index, newValue) {
   }
 }
   function normalizeWord(word) {
-  return word
-    .toLowerCase()
-    .replace(/[ʼ’'’.,;!?]/g, '')  // прибирає розділові знаки
+  word = word.toLowerCase()
+    .replace(/[ʼ’'’.,;!?]/g, '') // прибрати розділові
     .replace(/[іїєґ]/g, ch => ({ і: 'и', ї: 'и', є: 'е', ґ: 'г' }[ch] || ch)); // спрощення
+
+  // Зрізаємо типові відмінкові закінчення
+  const endings = ['а', 'у', 'ою', 'і', 'ею', 'ю', 'ем', 'ом', 'ах', 'ях', 'ам', 'ям', 'ами', 'ями', 'о'];
+  for (const end of endings) {
+    if (word.endsWith(end) && word.length - end.length > 2) {
+      return word.slice(0, -end.length);
+    }
+  }
+  return word;
 }
-  const stopWords = ["з", "на", "що", "як", "і", "та", "або", "у", "в", "до", "по", "чи", "із", "із-за", "чи"];
 
+const stopWords = ["з", "на", "що", "як", "і", "та", "або", "у", "в", "до", "по", "чи", "із", "із-за"];
 
-  function askBot() {
+function askBot() {
   const input = document.getElementById('bot-query');
   const query = input.value.trim().toLowerCase();
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
+  
   const words = query
-  .split(/\s+/)
-  .map(normalizeWord)
-  .filter(w => w.length > 2 && !stopWords.includes(w));
-
+    .split(/\s+/)
+    .map(normalizeWord)
+    .filter(w => w.length > 2 && !stopWords.includes(w));
 
   const results = [];
 
@@ -1241,28 +1249,23 @@ function updateMenuCategory(index, newValue) {
     const fullText = `${title} ${ingredients} ${content}`;
     const normalized = fullText.split(/\s+/).map(normalizeWord);
 
-    const matches = words.filter(w =>
-  normalized.includes(w)
-).length;
+    const matches = words.filter(w => normalized.includes(w)).length;
 
+    if (words.length === 0 || matches === 0) return;
 
-if (words.length === 0 || matches === 0) return;
+    let highlightedTitle = r["назва рецепту"];
+    words.forEach(word => {
+      const reg = new RegExp(`(${word}\\w*)`, 'gi');
+      highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
+    });
 
-    if (matches > 0) {
-      let highlightedTitle = r["назва рецепту"];
-      words.forEach(word => {
-        const reg = new RegExp(`(${word}\\w*)`, 'gi');
-        highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
-      });
-
-      results.push(`
-        <div class="recipe-card">
-          <h3>${highlightedTitle}</h3>
-          <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
-        </div>
-      `);
-    }
+    results.push(`
+      <div class="recipe-card">
+        <h3>${highlightedTitle}</h3>
+        <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
+        <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+      </div>
+    `);
   });
 
   const container = document.getElementById('bot-response');
@@ -1274,8 +1277,7 @@ if (words.length === 0 || matches === 0) return;
   container.innerHTML = results.length ? results.join('') : '<p>Нічого не знайдено 😞</p>';
 }
 
-
-
+  
 function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
