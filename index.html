@@ -1057,13 +1057,14 @@ group.forEach(r => {
 if (contentAdded) {
   block.innerHTML += `
     <div style="text-align: center; margin-top: 20px;">
-    <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
+      <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
       <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
     </div>
   `;
 } else {
   block.innerHTML = `<p>🤷 У цього рецепту немає детального опису.</p>`;
 }
+
 
 
 
