@@ -348,3 +348,9 @@ h1 {
 html, body {
   scroll-behavior: smooth;
 }
+
+.bottom-nav-wrapper {
+  background: red !important; /* тимчасово */
+  border: 2px solid black;
+}
+
