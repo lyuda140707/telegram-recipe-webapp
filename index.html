@@ -114,35 +114,42 @@ h1, h2, h3 {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(255, 240, 250, 0.85);
-  backdrop-filter: blur(6px);
-  border-top: 1px solid #ddd;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  padding-bottom: 8px; /* 🆕 додай цей рядок */
+  background: linear-gradient(to right, #ffe4f0, #fef6ff);
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
+  padding: 12px 0;
+  z-index: 999;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  justify-content: center; /* додає вирівнювання */
 }
 
 
 
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      overflow-x: auto;
-    }
+
+   .bottom-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 12px;
+  justify-content: center;
+}
+
 
    .bottom-nav button {
-  background: transparent;
+  flex: 0 0 auto;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 25px;
   border: none;
-  font-size: 16px;
-  font-weight: bold;
+  background: white;
   color: #7a2c5c;
-  cursor: pointer;
-  padding: 10px;
-  transition: color 0.3s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  white-space: nowrap;
 }
-.bottom-nav button:hover {
-  color: #d81159;
-}
+
 
 
     .back-button {
@@ -319,22 +326,22 @@ h1, h2, h3 {
       max-width: 70%;
     ">
   <button
-    onclick="searchFridge()"
-    style="
-      font-size: 18px;
-      padding: 16px 24px;
-      font-weight: 600;
-      border-radius: 12px;
-      background: linear-gradient(to right, #ffdde1, #ee9ca7);
-      color: #5d2c3e;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      flex-grow: 1;
-      max-width: 26%;
-    ">
-    🔍 Знайти
-  </button>
+  onclick="searchFridge()"
+  style="
+    font-size: 16px;
+    padding: 10px 18px;
+    font-weight: 600;
+    border-radius: 12px;
+    background: linear-gradient(to right, #ffdde1, #ee9ca7);
+    color: #5d2c3e;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  ">
+  🔍 Знайти
+</button>
+
 </div>
 
 <div style="margin-top:10px;">
@@ -478,21 +485,21 @@ h1, h2, h3 {
   <input id="bot-query"
          placeholder="напр. щось з куркою..."
          style="font-size:18px; padding:14px 12px; border-radius:12px; width:100%; max-width:70%;">
-  <button onclick="askBot()" style="
-    font-size:18px;
-    padding:16px 24px;
-    font-weight:600;
-    border-radius:12px;
-    background: linear-gradient(to right, #ffdde1, #ee9ca7);
-    color: #5d2c3e;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    flex-grow:1;
-    max-width:26%;
-  ">🔍 Знайти</button>
-</div>
+  <button onclick="searchFridge()" style="
+  font-size:18px;
+  padding:16px 24px;
+  font-weight:600;
+  border-radius:12px;
+  background: linear-gradient(to right, #ffdde1, #ee9ca7);
+  color: #5d2c3e;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  flex-grow:1;
+  max-width:26%;
+">🔍 Знайти</button>
+
 
 
   <div id="bot-response" style="margin-top:15px;"></div>
@@ -886,13 +893,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 init();
   // Піднімати поле вводу при фокусі (особливо для мобільних)
-document.querySelectorAll('input').forEach(input => {
+document.querySelectorAll('input, textarea').forEach(input => {
   input.addEventListener('focus', () => {
     setTimeout(() => {
-      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Примусово прокручуємо вікно до інпуту трохи вище
+      const yOffset = input.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: yOffset, behavior: 'smooth' });
     }, 300);
   });
 });
+
 
   const tg = window.Telegram?.WebApp;
 
