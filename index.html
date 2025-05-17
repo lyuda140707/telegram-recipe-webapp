@@ -485,17 +485,15 @@ async function fetchRecipes(category = null) {
   }
 }
 
-function groupByRecipeName(data) {
+function groupByRecipeNumber(data) {
   const grouped = {};
   data.forEach(row => {
-    const name = row["назва рецепту"]?.trim().toLowerCase();
-    if (!name) return;
-    if (!grouped[name]) grouped[name] = [];
-    grouped[name].push(row);
+    const id = row["номер рецепту"];
+    if (!grouped[id]) grouped[id] = [];
+    grouped[id].push(row);
   });
   return Object.values(grouped);
 }
-
 
 async function loadCategories() {
   const container = document.getElementById('section-categories');
@@ -511,17 +509,6 @@ async function loadCategories() {
     };
     container.appendChild(btn);
   });
-}
-  
-function groupByRecipeNumber(data) {
-  const grouped = {};
-  data.forEach(row => {
-    const num = row["номер рецепту"]?.toString().trim();
-    if (!num) return;
-    if (!grouped[num]) grouped[num] = [];
-    grouped[num].push(row);
-  });
-  return Object.values(grouped);
 }
 
 async function loadDailyRecipe() {
@@ -583,14 +570,15 @@ function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
 
-    // 🔁 Зберігаємо лише унікальні рецепти за назвою
-  const seenNames = new Set();
-  const uniqueGroups = groups.filter(group => {
-    const name = (group.find(r => r["тип блоку"] === "текст") || group[0])["назва рецепту"];
-    if (seenNames.has(name)) return false;
-    seenNames.add(name);
-    return true;
-  });
+  // 🔁 Зберігаємо лише унікальні рецепти за номером
+// ✅ Фільтруємо унікальні назви рецептів (не лише номери)
+const seenTitles = new Set();
+const uniqueGroups = groups.filter(group => {
+  const title = (group[0]["назва рецепту"] || "").trim().toLowerCase();
+  if (seenTitles.has(title)) return false;
+  seenTitles.add(title);
+  return true;
+});
 
 
   uniqueGroups.forEach((group, index) => {
