@@ -1226,9 +1226,10 @@ function updateMenuCategory(index, newValue) {
   const query = input.value.trim().toLowerCase();
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
   const words = query
-    .split(/\s+/)
-    .map(normalizeWord)
-    .filter(w => w && !stopWords.includes(w));
+  .split(/\s+/)
+  .map(normalizeWord)
+  .filter(w => w.length > 2 && !stopWords.includes(w));
+
 
   const results = [];
 
@@ -1244,6 +1245,7 @@ function updateMenuCategory(index, newValue) {
   normalized.some(n => n.includes(w) || w.includes(n))
 ).length;
 
+if (words.length === 0 || matches === 0) return;
 
     if (matches > 0) {
       let highlightedTitle = r["назва рецепту"];
