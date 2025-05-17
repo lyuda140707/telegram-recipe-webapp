@@ -1373,7 +1373,8 @@ results.push(`
     <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
     <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
     <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-    <div id="${id}" class="recipe-content open">
+    <div id="${id}" class="recipe-content">
+
       ${group.map(x => {
         if (x["тип блоку"] === "текст") return `<p>${x["контент"]}</p>`;
         if (x["тип блоку"] === "фото") return `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
@@ -1556,7 +1557,7 @@ results.push(`
     <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
     <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
     <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-    <div id="${id}" class="recipe-content open">
+    <div id="${id}" class="recipe-content">
       ${group.map(x => {
         if (x["тип блоку"] === "текст") return `<p>${x["контент"]}</p>`;
         if (x["тип блоку"] === "фото") return `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
