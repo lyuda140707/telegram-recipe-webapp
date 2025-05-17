@@ -535,43 +535,7 @@ container.innerHTML = `
   </div>
 `;
   const block = document.getElementById(id);
-  recipe.forEach(r => {
 
-  if (r["тип блоку"] === "текст") {
-    block.innerHTML += `<p>${r["контент"]}</p>`;
-  } else if (r["тип блоку"] === "фото") {
-  if (!firstImageAdded) {
-    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-    firstImageAdded = true;
-  }
-  sliderImages.push(r["контент"]);
-}
-
-  } else if (r["тип блоку"] === "відео") {
-  let videoLink = r["контент"];
-  if (videoLink.includes('drive.google.com')) {
-  const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (match && match[1]) {
-    videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-  }
-  block.innerHTML += `
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
-  <iframe 
-    src="${videoLink}" 
-    style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
-    allowfullscreen>
-  </iframe>
-</div>
-`;
-
-} else {
-  block.innerHTML += `
-    <video controls style="width:100%; border-radius:10px; margin-top:10px;">
-      <source src="${r["контент"]}" type="video/mp4">
-      Ваш браузер не підтримує відтворення відео.
-    </video>
-  `;
-}
 
 }
 
@@ -773,7 +737,10 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadCategories();
     await loadDailyRecipe();
     goHome();
+
   }
+
+  autoScrollSliders(); // ✅ запускаємо автопрокрутку
 init();
   const tg = window.Telegram?.WebApp;
 
@@ -1389,6 +1356,26 @@ window.onscroll = function() {
 // Плавне повернення вгору
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function autoScrollSliders() {
+  const sliders = document.querySelectorAll('.slider-container');
+
+  sliders.forEach(slider => {
+    let scrollAmount = 0;
+    let maxScroll = slider.scrollWidth - slider.clientWidth;
+
+    function scrollStep() {
+      if (scrollAmount >= maxScroll) {
+        scrollAmount = 0;
+        slider.scrollLeft = 0;
+      } else {
+        scrollAmount += 1; // можеш змінити швидкість (наприклад, 2 або 3)
+        slider.scrollLeft += 1;
+      }
+    }
+
+    setInterval(scrollStep, 30); // 30 мс = плавно. Зменшити → швидше
+  });
 }
 
 
