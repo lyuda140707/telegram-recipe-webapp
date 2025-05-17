@@ -580,9 +580,7 @@ const uniqueGroups = groups.filter(group => {
   return true;
 });
 
-  // 🔁 Перемішуємо рецепти перед показом
-uniqueGroups.sort(() => Math.random() - 0.5);
-
+  uniqueGroups.forEach((group, index) => {
 
     const id = `recipe-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
