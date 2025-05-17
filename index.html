@@ -677,12 +677,15 @@ function toggleFavorite(recipeId, button) {
   const index = favorites.indexOf(recipeId);
 
   if (index === -1) {
-    favorites.push(recipeId);
-    button.innerText = '💛 У списку';
-  } else {
-    favorites.splice(index, 1);
-    button.innerText = '❤️ Улюблене';
-  }
+  favorites.push(recipeId);
+  button.innerText = '❤️ Улюблене';
+  showToast("✅ Додано до улюбленого!");
+} else {
+  favorites.splice(index, 1);
+  button.innerText = '💛 У список';
+  showToast("❌ Видалено з улюбленого");
+}
+
 
   button.disabled = false;
   localStorage.setItem('favorites', JSON.stringify(favorites));
@@ -691,6 +694,20 @@ function toggleFavorite(recipeId, button) {
     loadFavorites(); // оновлюємо профіль після видалення
   }
 }
+
+  function showToast(message = "✅ Додано до улюбленого!") {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  toast.innerText = message;
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 2000);
+}
+
+  
 function toggleRecipe(id, btn) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -1373,6 +1390,8 @@ results.push(`
     <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
     <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
     <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+    <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
+
     <div id="${id}" class="recipe-content">
 
       ${group.map(x => {
@@ -1557,6 +1576,8 @@ results.push(`
     <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
     <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
     <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+    <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
+
     <div id="${id}" class="recipe-content">
       ${group.map(x => {
         if (x["тип блоку"] === "текст") return `<p>${x["контент"]}</p>`;
@@ -1598,6 +1619,26 @@ function cycleThreshold() {
     <button id="subscribe-btn" style="margin-top:20px; padding:10px 20px; border:none; border-radius:20px; background:linear-gradient(to right,#fbc2eb,#a6c1ee); color:#4b2c5e; font-weight:bold; cursor:pointer;">🔔 Перейти до каналу</button>
   </div>
 </div>
+    <div id="toast" style="
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 9999;
+  font-size: 15px;
+  text-align: center;
+  animation: fadeInOut 3s ease-in-out;
+">
+  ✅ Додано до улюбленого!
+</div>
+
 
 </body>
 </html>
