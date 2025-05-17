@@ -8,32 +8,8 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-  
+
   <style>
-   .slider-container {
-  overflow-x: auto;
-  white-space: nowrap;
-  margin-top: 10px;
-  padding-bottom: 5px;
-}
-.slider-container img {
-  display: inline-block;
-  height: 160px;
-  margin-right: 10px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.swipe-hint {
-  text-align: center;
-  font-size: 14px;
-  color: #a09e9e;
-  animation: pulse 1.5s infinite;
-  margin-bottom: 10px;
-}
-
-
-
 body {
   font-family: 'Nunito', sans-serif;
 }
@@ -96,6 +72,55 @@ h1, h2, h3 {
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
+    .bottom-nav-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 240, 250, 0.85);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid #ddd;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      overflow-x: auto;
+    }
+
+   .bottom-nav button {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #7a2c5c;
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.3s;
+}
+.bottom-nav button:hover {
+  color: #d81159;
+}
+
+
+    .back-button {
+      margin: 10px 0;
+      padding: 8px 16px;
+      background: #f3e5f5;
+      border: none;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .recipe-content {
   max-height: 0;
   opacity: 0;
@@ -104,18 +129,9 @@ h1, h2, h3 {
 }
 
 .recipe-content.open {
-  max-height: 5000px;
+  max-height: 1000px; /* достатньо для будь-якого рецепта */
   opacity: 1;
 }
-
-
-
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-   
-
 
 
     .detail-button, .main-button, .recipe-toggle, .favorite-button {
@@ -214,29 +230,6 @@ h1, h2, h3 {
   transform: translateY(0);
   opacity: 1;
 }
-    #smart-search-input {
-  font-size: 18px;        /* Більший текст */
-  padding: 14px 12px;     /* Вищий інпут */
-  border-radius: 12px;
-  margin-bottom: 10px;
-}
-
-#section-search button {
-  font-size: 18px;        /* Більший шрифт */
-  padding: 16px 24px;     /* Вища і ширша кнопка */
-  border-radius: 12px;
-  font-weight: 600;
-  background: linear-gradient(to right, #ffdde1, #ee9ca7);
-  color: #5d2c3e;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-
-#section-search button:hover {
-  opacity: 0.9;
-}
 
   </style>
 
@@ -261,39 +254,13 @@ h1, h2, h3 {
 </div>
 <div class="section" id="section-fridge">
   <h2>❄️ Що є в холодильнику?</h2>
-  <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-  <input
-    id="fridge-input"
-    placeholder="Що є в холодильнику..."
-    style="
-      font-size: 18px;
-      padding: 14px 12px;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 70%;
-    ">
-  <button
-  onclick="searchFridge()"
-  style="
-    font-size: 16px;
-    padding: 10px 18px;
-    font-weight: 600;
-    border-radius: 12px;
-    background: linear-gradient(to right, #ffdde1, #ee9ca7);
-    color: #5d2c3e;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-  ">
-  🔍 Знайти
-</button>
-
-</div>
-
+  <div style="margin-top:10px;">
+    <input id="fridge-input" placeholder="Що є в холодильнику..." style="padding:8px; width:80%;">
+    <button onclick="searchFridge()" style="padding:8px;">🔍 Знайти рецепти</button>
+  </div>
 <div style="margin-top:10px;">
   <label for="match-threshold">Мінімум збігів:</label>
-  <select id="match-threshold" style="padding:12px 16px; margin-left:10px; border-radius:12px; font-size:16px; background:#fffafc; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+  <select id="match-threshold" style="padding:4px 8px; margin-left:5px;">
     <option value="1">1</option>
     <option value="2" selected>2</option>
     <option value="3">3</option>
@@ -428,27 +395,10 @@ h1, h2, h3 {
   <br>Асистент знайде рецепти, які відповідають твоєму запиту ✨
 </p>
 
-  <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-  <input id="bot-query"
-         placeholder="напр. щось з куркою..."
-         style="font-size:18px; padding:14px 12px; border-radius:12px; width:100%; max-width:70%;">
-  <button onclick="searchFridge()" style="
-  font-size:18px;
-  padding:16px 24px;
-  font-weight:600;
-  border-radius:12px;
-  background: linear-gradient(to right, #ffdde1, #ee9ca7);
-  color: #5d2c3e;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  flex-grow:1;
-  max-width:26%;
-">🔍 Знайти</button>
-
-
-
+  <div style="margin-top:10px;">
+    <input id="bot-query" placeholder="напр. щось з куркою..." style="padding:8px; width:80%;">
+    <button onclick="askBot()" style="padding:8px;">🔍 Знайти</button>
+  </div>
   <div id="bot-response" style="margin-top:15px;"></div>
 </div>
 <div class="section" id="section-search">
@@ -460,7 +410,16 @@ h1, h2, h3 {
 
   <!-- Нижнє меню -->
 
-
+<div class="bottom-nav-wrapper">
+  <div class="bottom-nav" id="bottomNav">
+    <button onclick="showSection('section-profile')">👤 Профіль</button>
+    <button onclick="showSection('section-buy')">🛒 Що купити</button>
+    <button onclick="showSection('section-askbot')">🤖 Асистент</button>
+    <button onclick="showSection('section-search')">🔍 Пошук</button>
+    <button onclick="showSection('section-planner')">📅 Меню на тиждень</button>
+    <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
+  </div>
+</div>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <button id="scrollTopBtn" onclick="scrollToTop()">⬆️</button>
 
@@ -488,21 +447,14 @@ async function fetchRecipes(category = null) {
 }
 
 function groupByRecipeNumber(data) {
-  const byKey = {};
-
+  const grouped = {};
   data.forEach(row => {
     const id = row["номер рецепту"];
-    const category = (row["категорія"] || "").trim().toLowerCase();
-    const key = `${id}-${category}`; // ← враховуємо категорію в ключі
-
-    if (!byKey[key]) byKey[key] = [];
-    byKey[key].push(row);
+    if (!grouped[id]) grouped[id] = [];
+    grouped[id].push(row);
   });
-
-  return Object.values(byKey);
+  return Object.values(grouped);
 }
-
-
 
 async function loadCategories() {
   const container = document.getElementById('section-categories');
@@ -511,13 +463,11 @@ async function loadCategories() {
     const btn = document.createElement('button');
     btn.innerText = cat;
     btn.onclick = async () => {
-  const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
-  const raw = await fetchRecipes(cleanCategory.toLowerCase());
-  const grouped = groupByRecipeNumber(raw); // ✅ ДОДАЙ ЦЕ!
-  grouped.sort(() => Math.random() - 0.5);
-  renderGroupedRecipes(grouped, cat);
-};
-
+      const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
+      const raw = await fetchRecipes(cleanCategory.toLowerCase());
+      const grouped = groupByRecipeNumber(raw);
+      renderGroupedRecipes(grouped, cat);
+    };
     container.appendChild(btn);
   });
 }
@@ -530,111 +480,82 @@ async function loadDailyRecipe() {
   const grouped = groupByRecipeNumber(recipes); // <-- Спочатку це
   if (grouped.length === 0) return;
 
-  const now = new Date();
-const hoursSinceEpoch = Math.floor(now.getTime() / (1000 * 60 * 60));
-const intervalIndex = Math.floor(hoursSinceEpoch / 6) % grouped.length;
+  const dayIndex = new Date().getDate() % grouped.length;
+  const recipe = grouped[dayIndex]; // <-- І тепер можна взяти рецепт
 
-  const recipe = grouped[intervalIndex];
-
-
-    const id = `daily-details`;
+  const id = `daily-details`;
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  const images = recipe.filter(r => r["тип блоку"] === "фото"); // 🟢 це головне
+  const image = {
+    контент: "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?w=800&q=80"
+  };
 
-  container.innerHTML = `
-    <div class="recipe-card" style="padding: 0; overflow: hidden;">
-      <div class="daily-image-wrapper" style="position: relative;">
-      
-  <img src="${
-  images.length > 0
-    ? images[0].контент
-    : recipe.find(r => r["тип блоку"] === "відео")
-      ? 'https://i.pinimg.com/736x/42/d0/47/42d0471e0094e28d71eaec86d78beec5.jpg'
-      : 'https://via.placeholder.com/600x200?text=Рецепт+дня'
-}"
-
-
-             alt="Рецепт дня"
-             style="width:100%; height:200px; object-fit:cover; object-position: center 30%; border-radius: 16px 16px 0 0;">
-        <div class="daily-label" style="
-          position: absolute;
-          top: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: white;
-          padding: 6px 14px;
-          border-radius: 20px;
-          font-weight: bold;
-          color: #91326b;
-          font-size: 14px;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-          animation: fadeInOut 4.5s ease forwards;
-        ">Рецепт дня 🍓</div>
-      </div>
-      <div style="padding: 15px;">
-        <h2 style="margin-top: 0;">${info["назва рецепту"]}</h2>
-        <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-        <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <div id="${id}" class="recipe-content"></div>
-      </div>
+container.innerHTML = `
+  <div class="recipe-card" style="padding: 0; overflow: hidden;">
+    <div class="daily-image-wrapper" style="position: relative;">
+      <img src="https://i.pinimg.com/736x/42/d0/47/42d0471e0094e28d71eaec86d78beec5.jpg"
+           alt="Рецепт дня"
+           style="width:100%; height:200px; object-fit:cover; object-position: center 30%; border-radius: 16px 16px 0 0;">
+      <div class="daily-label" style="
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: bold;
+        color: #91326b;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        animation: fadeInOut 4.5s ease forwards;
+      ">Рецепт дня 🍓</div>
     </div>
-  `;
+    <div style="padding: 15px;">
+      <h2 style="margin-top: 0;">${info["назва рецепту"]}</h2>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+      <div id="${id}" class="recipe-content"></div>
 
-
-     
+    </div>
+  </div>
+`;
   const block = document.getElementById(id);
- // Спочатку зберемо окремо усі блоки
+  recipe.forEach(r => {
 
-let firstImageAdded = false;
-
-recipe.forEach(r => {
   if (r["тип блоку"] === "текст") {
     block.innerHTML += `<p>${r["контент"]}</p>`;
   } else if (r["тип блоку"] === "фото") {
-    if (!firstImageAdded) {
-      // Перше фото — окремо
-      block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-      firstImageAdded = true;
-    }
-    // Інші — накопичимо в слайдер пізніше
+    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
   } else if (r["тип блоку"] === "відео") {
-    let videoLink = r["контент"];
-    if (videoLink.includes('drive.google.com')) {
-      const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-      }
-      block.innerHTML += `
-        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
-          <iframe 
-            src="${videoLink}" 
-            style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
-            allowfullscreen>
-          </iframe>
-        </div>`;
-    } else {
-      block.innerHTML += `
-        <video controls style="width:100%; border-radius:10px; margin-top:10px;">
-          <source src="${videoLink}" type="video/mp4">
-          Ваш браузер не підтримує відтворення відео.
-        </video>`;
-    }
+  let videoLink = r["контент"];
+  if (videoLink.includes('drive.google.com')) {
+  const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
   }
-});
-
-// Додай слайдер для решти зображень
-if (images.length > 1) {
   block.innerHTML += `
-    <div class="slider-container">
-      <div class="swipe-hint">📸 Гортай фото ➡️</div>
-      ${images.slice(1).map(img => `
-        <img src="${img["контент"]}" alt="Фото" />
-      `).join('')}
-    </div>`;
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
+  <iframe 
+    src="${videoLink}" 
+    style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
+    allowfullscreen>
+  </iframe>
+</div>
+`;
+
+} else {
+  block.innerHTML += `
+    <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+      <source src="${r["контент"]}" type="video/mp4">
+      Ваш браузер не підтримує відтворення відео.
+    </video>
+  `;
 }
 
+}
 
+});
 
   block.innerHTML += `
   <div style="text-align: center; margin-top: 20px;">
@@ -646,7 +567,6 @@ if (images.length > 1) {
 function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
-
   groups.forEach((group, index) => {
     const id = `recipe-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
@@ -654,85 +574,78 @@ function renderGroupedRecipes(groups, category) {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
-
-    card.innerHTML = `
-      <h3>${info["назва рецепту"]}</h3>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-      <div class="recipe-buttons">
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
-      </div>
-      <div id="${id}" class="recipe-content"></div>
-    `;
+  
+card.innerHTML = `
+  <h3>${info["назва рецепту"]}</h3>
+  <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+  <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+  <div class="recipe-buttons">
+    <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+    <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
+  </div>
+  <div id="${id}" class="recipe-content"></div>
+`;
 
     container.appendChild(card);
 
     const block = document.getElementById(id);
-    let contentAdded = false;
-    const images = group.filter(r => r["тип блоку"] === "фото");
-    let firstImageAdded = false;
+ let contentAdded = false;
 
-    group.forEach(r => {
-      if (r["тип блоку"] === "текст") {
-        block.innerHTML += `<p>${r["контент"]}</p>`;
-        contentAdded = true;
-      } else if (r["тип блоку"] === "фото") {
-        if (!firstImageAdded) {
-          block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-          firstImageAdded = true;
-        }
-        contentAdded = true;
-      } else if (r["тип блоку"] === "відео") {
-        let videoLink = r["контент"];
-        if (videoLink.includes('drive.google.com')) {
-          const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-          if (match && match[1]) {
-            videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-          }
-          block.innerHTML += `
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
-              <iframe 
-                src="${videoLink}" 
-                style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
-                allowfullscreen>
-              </iframe>
-            </div>`;
-        } else {
-          block.innerHTML += `
-            <video controls style="width:100%; border-radius:10px; margin-top:10px;">
-              <source src="${videoLink}" type="video/mp4">
-              Ваш браузер не підтримує відтворення відео.
-            </video>`;
-        }
-        contentAdded = true;
-      }
-    });
-
-    if (images.length > 1) {
+group.forEach(r => {
+  if (r["тип блоку"] === "текст") {
+    block.innerHTML += `<p>${r["контент"]}</p>`;
+    contentAdded = true;
+  } else if (r["тип блоку"] === "фото") {
+    block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%;border-radius:10px;">`;
+    contentAdded = true;
+  } else if (r["тип блоку"] === "відео") {
+  let videoLink = r["контент"];
+  if (videoLink.includes('drive.google.com')) {
+  const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+  }
   block.innerHTML += `
-    <div class="slider-container">
-      <div class="swipe-hint">📸 Гортай фото ➡️</div>
-      ${images.slice(1).map(img => `
-        <img src="${img["контент"]}" alt="Фото" />
-      `).join('')}
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
+  <iframe 
+    src="${videoLink}" 
+    style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
+    allowfullscreen>
+  </iframe>
+</div>
+`;
+
+} else {
+  block.innerHTML += `
+    <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+      <source src="${r["контент"]}" type="video/mp4">
+      Ваш браузер не підтримує відтворення відео.
+    </video>
+  `;
+}
+
+}
+
+});
+
+
+
+
+if (contentAdded) {
+  block.innerHTML += `
+    <div style="text-align: center; margin-top: 20px;">
+    <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
+      <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
     </div>`;
+} else {
+  block.innerHTML = `<p>🤷 У цього рецепту немає детального опису.</p>`;
 }
 
 
-    if (contentAdded) {
-      block.innerHTML += `
-        <div style="text-align: center; margin-top: 20px;">
-          <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
-          <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
-        </div>`;
-    } else {
-      block.innerHTML = `<p>🤷 У цього рецепту немає детального опису.</p>`;
-    }
   });
-
   showSection('section-recipes');
 }
+
 
 
 function toggleFavorite(recipeId, button) {
@@ -762,27 +675,22 @@ function toggleRecipe(id, btn) {
 
 
 function showSection(id) {
-  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-  document.getElementById('section-categories').classList.remove('active');
-  document.getElementById('daily-recipe').classList.remove('active');
+  // Приховуємо всі секції
+  document.querySelectorAll('.section').forEach(el => {
+  el.classList.remove('active');
+});
+document.getElementById('section-categories').classList.remove('active'); // явно сховати
+document.getElementById('daily-recipe').classList.remove('active');
 
+
+  // Активуємо поточну
+  
   document.getElementById(id).classList.add('active');
+
+  // ✅ Показуємо кнопку "⬅ На головну"
   document.querySelector('.back-button').style.display = 'block';
 
-  // 🟡 Ось це додаємо:
-  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-  const map = {
-    'section-categories': 0,
-    'section-fridge': 1,
-    'section-planner': 2,
-    'section-buy': 3,
-    'section-profile': 4
-  };
-  const index = map[id];
-  if (typeof index !== 'undefined') {
-    document.querySelectorAll('.bottom-nav button')[index].classList.add('active');
-  }
-
+  // Якщо це "Меню на тиждень" — завантажити
   if (id === 'section-planner') {
     const saved = JSON.parse(localStorage.getItem('weekly_menu'));
     if (saved && Array.isArray(saved)) {
@@ -790,13 +698,13 @@ function showSection(id) {
     }
   }
 
+  // Якщо це профіль або список покупок — завантажити все
   if (id === 'section-profile' || id === 'section-buy') {
     loadFavorites();
     loadCustomList();
     loadWeeklyInProfile();
   }
 }
-
 
 
 function clearWeeklyMenu() {
@@ -835,18 +743,6 @@ document.addEventListener("DOMContentLoaded", () => {
     goHome();
   }
 init();
-  // Піднімати поле вводу при фокусі (особливо для мобільних)
-document.querySelectorAll('input, textarea').forEach(input => {
-  input.addEventListener('focus', () => {
-    setTimeout(() => {
-      // Примусово прокручуємо вікно до інпуту трохи вище
-      const yOffset = input.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({ top: yOffset, behavior: 'smooth' });
-    }, 300);
-  });
-});
-
-
   const tg = window.Telegram?.WebApp;
 
 if (tg && tg.initDataUnsafe?.user?.id) {
@@ -1172,65 +1068,16 @@ async function loadRecipesForDay(day, category, container) {
     return;
   }
 
-  container.innerHTML = ''; // очищення
-
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  const images = recipe.filter(r => r["тип блоку"] === "фото");
-  let firstImageAdded = false;
-
-  recipe.forEach(r => {
-    if (r["тип блоку"] === "текст") {
-      container.innerHTML += `<p>${r["контент"]}</p>`;
-    } else if (r["тип блоку"] === "фото") {
-      if (!firstImageAdded) {
-        container.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-        firstImageAdded = true;
-      }
-    } else if (r["тип блоку"] === "відео") {
-      let videoLink = r["контент"];
-      if (videoLink.includes('drive.google.com')) {
-        const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        if (match && match[1]) {
-          videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-        }
-        container.innerHTML += `
-          <iframe 
-            src="${videoLink}" 
-            style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" 
-            allowfullscreen>
-          </iframe>
-        `;
-      } else {
-        container.innerHTML += `
-          <video controls style="width:100%; border-radius:10px; margin-top:10px;">
-            <source src="${videoLink}" type="video/mp4">
-            Ваш браузер не підтримує відтворення відео.
-          </video>
-        `;
-      }
-    }
-  });
-
-  // Додаємо слайдер для фото (крім першого)
-  // Додай слайдер для решти зображень (із підказкою всередині)
-if (images.length > 1) {
-  block.innerHTML += `
-    <div class="slider-container">
-      <div class="swipe-hint">📸 Гортай фото ➡️</div>
-      ${images.slice(1).map(img => `
-        <img src="${img["контент"]}" alt="Фото" />
-      `).join('')}
-    </div>`;
-}
-
-
-  container.innerHTML += `
-    <div style="text-align:center; margin-top: 10px;">
-      <p style="font-size: 12px; color: #999;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
+  container.innerHTML = `
+    <div class="recipe-card">
+      <h3>${info["назва рецепту"]}</h3>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
     </div>
   `;
-}
 
+}
 
 function generateWeeklyMenu() {
   const categories = [
@@ -1258,10 +1105,14 @@ function renderWeeklyMenu(menu) {
   ];
 
   menu.forEach((item, index) => {
-    const li = document.createElement('li');
+   const li = document.createElement('li');
     li.className = 'weekly-item';
-
     const select = document.createElement('select');
+    const recipeContainer = document.createElement('div'); // 🟢 перенесли сюди!
+
+    recipeContainer.className = 'recipe-card hidden';
+    recipeContainer.id = `${item.day}-${index}`;
+
     allCategories.forEach(cat => {
       const option = document.createElement('option');
       option.value = cat;
@@ -1272,25 +1123,21 @@ function renderWeeklyMenu(menu) {
 
     select.onchange = () => {
       updateMenuCategory(index, select.value);
-      loadRecipesForDay(item.day, select.value, recipeContainer);
+      loadRecipesForDay(item.day, select.value, recipeContainer); // ✅ тепер працює
     };
 
     const dayIcons = {
-      'Пн': '🌞', 'Вт': '🌿', 'Ср': '🥕', 'Чт': '🍅',
-      'Пт': '🍝', 'Сб': '🍰', 'Нд': '☕'
-    };
+  'Пн': '🌞', 'Вт': '🌿', 'Ср': '🥕', 'Чт': '🍅',
+  'Пт': '🍝', 'Сб': '🍰', 'Нд': '☕'
+};
+li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
 
-    li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
     li.appendChild(select);
 
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'recipe-toggle';
-    toggleBtn.innerHTML = '🔽 Згорнути';
-    const recipeContainer = document.createElement('div');
-    recipeContainer.className = 'recipe-content';
-    recipeContainer.id = `${item.day}-${index}`;
-
-    toggleBtn.onclick = () => toggleRecipe(recipeContainer.id, toggleBtn);
+    toggleBtn.innerHTML = '<span class="rotate-toggle">🔽</span> Згорнути';
+    toggleBtn.onclick = () => toggleRecipe(`${item.day}-${index}`, toggleBtn);
 
     li.appendChild(toggleBtn);
     li.appendChild(recipeContainer);
@@ -1299,7 +1146,6 @@ function renderWeeklyMenu(menu) {
     loadRecipesForDay(item.day, item.category, recipeContainer);
   });
 }
-
 
   
 
@@ -1375,49 +1221,27 @@ function updateMenuCategory(index, newValue) {
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
   const results = [];
 
-  if (!query) {
-    document.getElementById('bot-response').innerHTML = '<p>Будь ласка, введіть запит 🙃</p>';
-    return;
-  }
-
-  const words = query.split(/\s+/).map(normalizeWord).filter(Boolean);
-
   all.forEach(r => {
-    const title = (r["назва рецепту"] || "").toLowerCase();
-    const ingredients = (r["інгредієнти"] || "").toLowerCase();
-    const content = (r["контент"] || "").toLowerCase();
-    const category = (r["категорія"] || "").toLowerCase();
-
-    const combinedText = `${title} ${ingredients} ${content} ${category}`;
-    const normText = combinedText.split(/\s+/).map(normalizeWord);
-
-    const matches = words.filter(w => normText.includes(w)).length;
-    if (matches > 0) {
-      let highlightedTitle = r["назва рецепту"];
-      let highlightedIngredients = r["інгредієнти"] || "";
-
-      words.forEach(word => {
-        const reg = new RegExp(`(${word}\\w*)`, 'gi');
-        highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
-        highlightedIngredients = highlightedIngredients.replace(reg, '<strong>$1</strong>');
-      });
-
-      results.push(`
-        <div class="recipe-card">
-          <h3>${highlightedTitle}</h3>
-          <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-          <p><strong>Інгредієнти:</strong> ${highlightedIngredients || "Не вказано"}</p>
-        </div>
-      `);
-    }
+    const text = `${r["назва рецепту"]} ${r["інгредієнти"]} ${r["контент"]}`.toLowerCase();
+    if (text.includes(query)) results.push(r);
   });
 
   const container = document.getElementById('bot-response');
+  if (!query) {
+    container.innerHTML = '<p>Будь ласка, введіть запит 🙃</p>';
+    return;
+  }
+
   container.innerHTML = results.length
-    ? results.join('')
+    ? results.map(r => `
+        <div class="recipe-card">
+          <h3>${r["назва рецепту"]}</h3>
+          <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
+          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+        </div>
+      `).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
-
   function normalizeWord(word) {
   const endings = ['и', 'і', 'я', 'а', 'у', 'ю', 'е', 'о', 'ь', 'ей', 'ів', 'ем', 'ам', 'ям'];
   for (const end of endings) {
@@ -1435,29 +1259,21 @@ function runSmartSearch() {
   const results = [];
 
   all.forEach(r => {
-    const title = (r["назва рецепту"] || "").toLowerCase();
-    const ingredients = (r["інгредієнти"] || "").toLowerCase();
-    const content = (r["контент"] || "").toLowerCase();
-
-    const fullText = `${title} ${ingredients} ${content}`;
-    const normText = fullText.split(/\s+/).map(normalizeWord);
-
-    const matches = words.filter(w => normText.includes(w)).length;
+    const name = (r["назва рецепту"] || "").toLowerCase();
+    const normName = name.split(/\s+/).map(normalizeWord);
+    const matches = words.filter(w => normName.includes(w)).length;
     if (matches > 0) {
-      let highlightedTitle = r["назва рецепту"];
-      let highlightedIngredients = r["інгредієнти"] || "";
-
+      let title = r["назва рецепту"];
       words.forEach(word => {
         const reg = new RegExp(`(${word}\\w*)`, 'gi');
-        highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
-        highlightedIngredients = highlightedIngredients.replace(reg, '<strong>$1</strong>');
+        title = title.replace(reg, '<strong>$1</strong>');
       });
 
       results.push(`
         <div class="recipe-card">
-          <h3>${highlightedTitle}</h3>
+          <h3>${title}</h3>
           <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-          <p><strong>Інгредієнти:</strong> ${highlightedIngredients || "Не вказано"}</p>
+          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
         </div>
       `);
     }
@@ -1550,18 +1366,6 @@ function scrollToTop() {
     <h2 style="color:#91326b;">🔒 Підписка обовʼязкова</h2>
     <p style="margin-top:10px; font-size:16px;">Щоб користуватись ботом, потрібно підписатись на канал!</p>
     <button id="subscribe-btn" style="margin-top:20px; padding:10px 20px; border:none; border-radius:20px; background:linear-gradient(to right,#fbc2eb,#a6c1ee); color:#4b2c5e; font-weight:bold; cursor:pointer;">🔔 Перейти до каналу</button>
-  </div>
-</div>
-
-
-<!-- ✅ Нижнє меню -->
-<div class="bottom-nav-wrapper">
-  <div class="bottom-nav" id="bottomNav">
-    <button onclick="goHome()">🏠 Головна</button>
-    <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
-    <button onclick="showSection('section-planner')">📅 Меню</button>
-    <button onclick="showSection('section-buy')">🛒 Купити</button>
-    <button onclick="showSection('section-profile')">👤 Профіль</button>
   </div>
 </div>
 
