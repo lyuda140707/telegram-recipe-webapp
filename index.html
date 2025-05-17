@@ -548,7 +548,17 @@ function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
 
-  groups.forEach((group, index) => {
+  // 🔁 Зберігаємо лише унікальні рецепти за номером
+const seen = new Set();
+const uniqueGroups = groups.filter(group => {
+  const recipeId = group[0]["номер рецепту"];
+  if (seen.has(recipeId)) return false;
+  seen.add(recipeId);
+  return true;
+});
+
+  uniqueGroups.forEach((group, index) => {
+
     const id = `recipe-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
     const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
@@ -1264,9 +1274,15 @@ function askBot() {
     const content = (r["контент"] || "").toLowerCase();
 
     const fullText = `${title} ${ingredients} ${content}`;
-    const normalized = fullText.split(/\s+/).map(normalizeWord);
+    const normalized = new Set(
+  fullText
+    .split(/\s+/)
+    .map(w => normalizeWord(w))
+    .filter(Boolean)
+);
 
-    const matches = words.filter(w => normalized.includes(w)).length;
+
+    const matches = words.filter(w => normalized.has(w)).length;
 
     if (words.length === 0 || matches === 0) return;
 
