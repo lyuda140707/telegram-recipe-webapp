@@ -1365,13 +1365,19 @@ function askBot() {
       highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
     });
 
-    results.push(`
-      <div class="recipe-card">
-        <h3>${highlightedTitle}</h3>
-        <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-        <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
-      </div>
-    `);
+    const id = `bot-details-${results.length}`;
+const id = `smart-details-${results.length}`;
+results.push(`
+  <div class="recipe-card">
+    <h3>${highlightedTitle}</h3>
+    <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
+    <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+    <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+    <div id="${id}" class="recipe-content"><p>${r["контент"] || 'Опис відсутній'}</p></div>
+  </div>
+`);
+
+
   });
 
   const container = document.getElementById('bot-response');
