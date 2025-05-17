@@ -1616,7 +1616,8 @@ results.push(`
     <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
     <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
 
-    <div id="${id}" class="recipe-content open">
+    <div id="${id}" class="recipe-content">
+
       ${(() => {
         let firstImage = null;
         let sliderImages = [];
