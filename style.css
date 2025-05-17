@@ -141,22 +141,25 @@ h1 {
 }
 
 .bottom-nav button {
-  background: transparent;
+  background: linear-gradient(to right, #fbc2eb, #a6c1ee); /* красивий фон */
   border: none;
-  font-size: 18px;            /* 🆙 Збільшили шрифт */
+  border-radius: 30px;           /* округлі */
+  font-size: 15px;
   font-weight: bold;
-  color: #7a2c5c;
-  cursor: pointer;
-  padding: 12px 10px;         /* 🆙 Збільшили відступи */
-  transition: color 0.3s;
+  color: #4b2c5e;
+  padding: 10px 14px;
+  margin: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }
 
 .bottom-nav button:hover {
-  color: #d81159;
+  transform: scale(1.05);
+  background: linear-gradient(to right, #fda085, #f6d365);
+  color: #4b2c5e;
 }
 .bottom-nav button.active {
-  color: #d81159;
-  border-bottom: 2px solid #d81159;
+  border: 2px solid #d81159;
 }
 
 .back-button {
