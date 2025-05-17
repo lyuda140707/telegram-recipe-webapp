@@ -762,22 +762,27 @@ function toggleRecipe(id, btn) {
 
 
 function showSection(id) {
-  // Приховуємо всі секції
-  document.querySelectorAll('.section').forEach(el => {
-  el.classList.remove('active');
-});
-document.getElementById('section-categories').classList.remove('active'); // явно сховати
-document.getElementById('daily-recipe').classList.remove('active');
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.getElementById('section-categories').classList.remove('active');
+  document.getElementById('daily-recipe').classList.remove('active');
 
-
-  // Активуємо поточну
-  
   document.getElementById(id).classList.add('active');
-
-  // ✅ Показуємо кнопку "⬅ На головну"
   document.querySelector('.back-button').style.display = 'block';
 
-  // Якщо це "Меню на тиждень" — завантажити
+  // 🟡 Ось це додаємо:
+  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+  const map = {
+    'section-categories': 0,
+    'section-fridge': 1,
+    'section-planner': 2,
+    'section-buy': 3,
+    'section-profile': 4
+  };
+  const index = map[id];
+  if (typeof index !== 'undefined') {
+    document.querySelectorAll('.bottom-nav button')[index].classList.add('active');
+  }
+
   if (id === 'section-planner') {
     const saved = JSON.parse(localStorage.getItem('weekly_menu'));
     if (saved && Array.isArray(saved)) {
@@ -785,13 +790,13 @@ document.getElementById('daily-recipe').classList.remove('active');
     }
   }
 
-  // Якщо це профіль або список покупок — завантажити все
   if (id === 'section-profile' || id === 'section-buy') {
     loadFavorites();
     loadCustomList();
     loadWeeklyInProfile();
   }
 }
+
 
 
 function clearWeeklyMenu() {
