@@ -447,9 +447,22 @@ h1, h2, h3 {
 </p>
 
   <div style="margin-top:10px;">
-    <input id="bot-query" placeholder="напр. щось з куркою..." style="padding:8px; width:80%;">
-    <button onclick="askBot()" style="padding:8px;">🔍 Знайти</button>
-  </div>
+  <input id="bot-query" placeholder="напр. щось з куркою..." style="padding:14px; font-size:18px; width:80%; border-radius:12px;">
+  <button onclick="askBot()" style="
+    padding:16px 24px;
+    font-size:18px;
+    font-weight:600;
+    border-radius:12px;
+    margin-left:10px;
+    background: linear-gradient(to right, #ffdde1, #ee9ca7);
+    color: #5d2c3e;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  ">🔍 Знайти</button>
+</div>
+
   <div id="bot-response" style="margin-top:15px;"></div>
 </div>
 <div class="section" id="section-search">
@@ -1368,27 +1381,49 @@ function updateMenuCategory(index, newValue) {
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
   const results = [];
 
-  all.forEach(r => {
-    const text = `${r["назва рецепту"]} ${r["інгредієнти"]} ${r["контент"]}`.toLowerCase();
-    if (text.includes(query)) results.push(r);
-  });
-
-  const container = document.getElementById('bot-response');
   if (!query) {
-    container.innerHTML = '<p>Будь ласка, введіть запит 🙃</p>';
+    document.getElementById('bot-response').innerHTML = '<p>Будь ласка, введіть запит 🙃</p>';
     return;
   }
 
-  container.innerHTML = results.length
-    ? results.map(r => `
+  const words = query.split(/\s+/).map(normalizeWord).filter(Boolean);
+
+  all.forEach(r => {
+    const title = (r["назва рецепту"] || "").toLowerCase();
+    const ingredients = (r["інгредієнти"] || "").toLowerCase();
+    const content = (r["контент"] || "").toLowerCase();
+    const category = (r["категорія"] || "").toLowerCase();
+
+    const combinedText = `${title} ${ingredients} ${content} ${category}`;
+    const normText = combinedText.split(/\s+/).map(normalizeWord);
+
+    const matches = words.filter(w => normText.includes(w)).length;
+    if (matches > 0) {
+      let highlightedTitle = r["назва рецепту"];
+      let highlightedIngredients = r["інгредієнти"] || "";
+
+      words.forEach(word => {
+        const reg = new RegExp(`(${word}\\w*)`, 'gi');
+        highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
+        highlightedIngredients = highlightedIngredients.replace(reg, '<strong>$1</strong>');
+      });
+
+      results.push(`
         <div class="recipe-card">
-          <h3>${r["назва рецепту"]}</h3>
+          <h3>${highlightedTitle}</h3>
           <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-          <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+          <p><strong>Інгредієнти:</strong> ${highlightedIngredients || "Не вказано"}</p>
         </div>
-      `).join('')
+      `);
+    }
+  });
+
+  const container = document.getElementById('bot-response');
+  container.innerHTML = results.length
+    ? results.join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
+
   function normalizeWord(word) {
   const endings = ['и', 'і', 'я', 'а', 'у', 'ю', 'е', 'о', 'ь', 'ей', 'ів', 'ем', 'ам', 'ям'];
   for (const end of endings) {
