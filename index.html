@@ -1398,7 +1398,8 @@ results.push(`
     let sliderImages = [];
     let blocks = "";
 
-    onst recipeGroup = all.filter(item => item["номер рецепту"] === r["номер рецепту"]);
+    const recipeGroup = all.filter(item => item["номер рецепту"] === r["номер рецепту"]);
+
 
 recipeGroup.forEach(x => {
       if (x["тип блоку"] === "текст") {
