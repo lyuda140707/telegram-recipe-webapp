@@ -449,10 +449,16 @@ h1, h2, h3 {
 </div>
 <div class="section" id="section-search">
   <h2>🔍 Розумний пошук рецептів</h2>
-  <input id="smart-search-input" placeholder="Наприклад: картопля з грибами..." style="padding:8px; width:80%;">
-  <button onclick="runSmartSearch()" style="padding:8px;">🔎 Знайти</button>
+  <div style="margin-top:10px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+    <input id="smart-search-input" 
+           placeholder="Наприклад: картопля з грибами..." 
+           style="padding:14px 16px; font-size:16px; border-radius:16px; width:85%; max-width:400px;">
+    <button onclick="runSmartSearch()" 
+            style="padding:14px 20px; font-size:16px; border-radius:16px; background:linear-gradient(to right,#fbc2eb,#a6c1ee); color:#4b2c5e; font-weight:bold; border:none;">🔎 Знайти</button>
+  </div>
   <div id="smart-search-results" style="margin-top:15px;"></div>
 </div>
+
 
   <!-- Нижнє меню -->
 
