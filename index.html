@@ -273,15 +273,16 @@ h1, h2, h3 {
     <input id="fridge-input" placeholder="Що є в холодильнику..." style="padding:8px; width:80%;">
     <button onclick="searchFridge()" style="padding:8px;">🔍 Знайти рецепти</button>
   </div>
-<div style="margin-top:10px;">
-  <label for="match-threshold">Мінімум збігів:</label>
-  <select id="match-threshold" style="padding:4px 8px; margin-left:5px;">
+<div style="margin-top:10px; display: flex; align-items: center; gap: 10px;">
+  <span style="font-size: 14px;">Мінімум збігів:</span>
+  <select id="match-threshold" style="padding: 8px 12px; border-radius: 12px; border: 1px solid #ccc; background: white; font-size: 14px;">
     <option value="1">1</option>
     <option value="2" selected>2</option>
     <option value="3">3</option>
     <option value="4">4</option>
   </select>
 </div>
+
 
   <div id="fridge-results" style="margin-top:15px;"></div>
 </div>
