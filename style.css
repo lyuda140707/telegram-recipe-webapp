@@ -126,11 +126,10 @@ h1 {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to right, #ffe4f0, #fef6ff);
-  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
-  padding: 12px 0 env(safe-area-inset-bottom, 16px); /* ✅ Підтримка iOS нижнього вирізу */
+  background: white; /* або інший фон */
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
   z-index: 999;
-  border-radius: 16px 16px 0 0;
 }
 
 
@@ -243,7 +242,7 @@ h1 {
   padding: 10px;
   max-width: 700px;
   margin: auto;
-  padding-bottom: 280px; /* ✅ збільшили */
+  padding-bottom: 80px; /* ✅ збільшили */
 }
 
 
