@@ -20,12 +20,7 @@ h1, h2, h3 {
 }
 
 
-    .app {
-  padding: 10px;
-  max-width: 700px;
-  margin: auto;
-  padding-bottom: 160px; /* ⬅️ Збільшили простір внизу */
-}
+  
 
 
     h1, h2, h3 {
@@ -784,6 +779,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   autoScrollSliders(); // ✅ запускаємо автопрокрутку
 init();
+    // 📱 Автопрокрутка до інпута при відкритті клавіатури
+  document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('focus', () => {
+      setTimeout(() => {
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    });
+  });
+
   const tg = window.Telegram?.WebApp;
 
 if (tg && tg.initDataUnsafe?.user?.id) {
