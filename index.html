@@ -484,6 +484,15 @@ async function fetchRecipes(category = null) {
     return [];
   }
 }
+  function groupByRecipeTitle(data) {
+  const grouped = {};
+  data.forEach(row => {
+    const title = (row["назва рецепту"] || "").trim().toLowerCase();
+    if (!grouped[title]) grouped[title] = [];
+    grouped[title].push(row);
+  });
+  return Object.values(grouped);
+}
 
 function groupByRecipeNumber(data) {
   const grouped = {};
@@ -504,7 +513,7 @@ async function loadCategories() {
     btn.onclick = async () => {
       const cleanCategory = cat.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
       const raw = await fetchRecipes(cleanCategory.toLowerCase());
-      const grouped = groupByRecipeNumber(raw);
+      const grouped = groupByRecipeTitle(raw);
       renderGroupedRecipes(grouped, cat);
     };
     container.appendChild(btn);
@@ -516,7 +525,8 @@ async function loadDailyRecipe() {
   localStorage.setItem('all_recipes', JSON.stringify(recipes));
   const container = document.getElementById('daily-recipe');
 
-  const grouped = groupByRecipeNumber(recipes);
+  const grouped = groupByRecipeTitle(recipes);
+
   if (grouped.length === 0) return;
 
   const dayIndex = new Date().getDate() % grouped.length;
@@ -571,17 +581,10 @@ function renderGroupedRecipes(groups, category) {
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
 
   // 🔁 Зберігаємо лише унікальні рецепти за номером
-// ✅ Фільтруємо унікальні назви рецептів (не лише номери)
-const seenTitles = new Set();
-const uniqueGroups = groups.filter(group => {
-  const title = (group[0]["назва рецепту"] || "").trim().toLowerCase();
-  if (seenTitles.has(title)) return false;
-  seenTitles.add(title);
-  return true;
-});
 
 
-  uniqueGroups.forEach((group, index) => {
+
+  groups.forEach((group, index) => {
 
     const id = `recipe-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
@@ -961,7 +964,7 @@ async function loadFavorites() {
   }
 
   const allRecipes = await fetchRecipes();
-  const grouped = groupByRecipeNumber(allRecipes);
+  const grouped = groupByRecipeTitle(allRecipes);
   const filteredGroups = grouped.filter(group => {
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
     return favorites.includes(String(info["номер рецепту"]));
