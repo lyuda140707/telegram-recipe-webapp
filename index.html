@@ -1226,28 +1226,32 @@ function updateMenuCategory(index, newValue) {
   const query = input.value.trim().toLowerCase();
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
   const words = query
-  .split(/\s+/)
-  .map(normalizeWord)
-  .filter(w => w && !stopWords.includes(w));
+    .split(/\s+/)
+    .map(normalizeWord)
+    .filter(w => w && !stopWords.includes(w));
 
   const results = [];
 
   all.forEach(r => {
-    const text = `${r["назва рецепту"] || ""} ${r["інгредієнти"] || ""} ${r["контент"] || ""}`.toLowerCase();
-    const normalized = text.split(/\s+/).map(normalizeWord);
+    const title = (r["назва рецепту"] || "").toLowerCase();
+    const ingredients = (r["інгредієнти"] || "").toLowerCase();
+    const content = (r["контент"] || "").toLowerCase();
+
+    const fullText = `${title} ${ingredients} ${content}`;
+    const normalized = fullText.split(/\s+/).map(normalizeWord);
 
     const matches = words.filter(w => normalized.includes(w)).length;
 
     if (matches > 0) {
-      let title = r["назва рецепту"];
+      let highlightedTitle = r["назва рецепту"];
       words.forEach(word => {
         const reg = new RegExp(`(${word}\\w*)`, 'gi');
-        title = title.replace(reg, '<strong>$1</strong>');
+        highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
       });
 
       results.push(`
         <div class="recipe-card">
-          <h3>${title}</h3>
+          <h3>${highlightedTitle}</h3>
           <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
           <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
         </div>
@@ -1263,6 +1267,7 @@ function updateMenuCategory(index, newValue) {
 
   container.innerHTML = results.length ? results.join('') : '<p>Нічого не знайдено 😞</p>';
 }
+
 
 
 function toggleProInfo() {
