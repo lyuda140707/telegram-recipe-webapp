@@ -1242,8 +1242,9 @@ function updateMenuCategory(index, newValue) {
     const normalized = fullText.split(/\s+/).map(normalizeWord);
 
     const matches = words.filter(w =>
-  normalized.some(n => n.includes(w) || w.includes(n))
+  normalized.includes(w)
 ).length;
+
 
 if (words.length === 0 || matches === 0) return;
 
