@@ -785,28 +785,33 @@ document.addEventListener("DOMContentLoaded", () => {
   autoScrollSliders(); // ✅ запускаємо автопрокрутку
 init();
     // 🖱️ Enter → пошук у холодильнику
-  document.getElementById('fridge-input')?.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      searchFridge();
-    }
-  });
+ document.getElementById('fridge-input')?.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    this.blur(); // ← ховає клавіатуру
+    searchFridge();
+  }
+});
+
 
   // 🖱️ Enter → askBot
   document.getElementById('bot-query')?.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      askBot();
-    }
-  });
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    this.blur(); // ← ховає клавіатуру
+    askBot();
+  }
+});
+
 
   // 🖱️ Enter → smart search
   document.getElementById('smart-search-input')?.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      runSmartSearch();
-    }
-  });
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    this.blur(); // ← ховає клавіатуру
+    runSmartSearch();
+  }
+});
 
     // 📱 Автопрокрутка до інпута при відкритті клавіатури
   document.querySelectorAll('input').forEach(input => {
