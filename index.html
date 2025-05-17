@@ -1601,53 +1601,57 @@ function runSmartSearch() {
 
    const id = `smart-result-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
 results.push(`
-  <div id="${id}" class="recipe-content">
-  ${(() => {
-    let firstImage = null;
-    let sliderImages = [];
-    let blocks = "";
+  <div class="recipe-card">
+    <h3>${highlightedTitle}</h3>
+    <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
+    <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+    <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+    <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
 
-    group.forEach(x => {
-      if (x["тип блоку"] === "текст") {
-        blocks += `<p>${x["контент"]}</p>`;
-      } else if (x["тип блоку"] === "фото") {
-        if (!firstImage) {
-          firstImage = `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-        } else {
-          sliderImages.push(x["контент"]);
-        }
-      } else if (x["тип блоку"] === "відео") {
-        let video = "";
-        if (x["контент"].includes("drive.google.com")) {
-          const match = x["контент"].match(/\/d\/([a-zA-Z0-9_-]+)/);
-          if (match && match[1]) {
-            video = `<iframe src="https://drive.google.com/file/d/${match[1]}/preview" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+    <div id="${id}" class="recipe-content open">
+      ${(() => {
+        let firstImage = null;
+        let sliderImages = [];
+        let blocks = "";
+
+        group.forEach(x => {
+          if (x["тип блоку"] === "текст") {
+            blocks += `<p>${x["контент"]}</p>`;
+          } else if (x["тип блоку"] === "фото") {
+            if (!firstImage) {
+              firstImage = `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+            } else {
+              sliderImages.push(x["контент"]);
+            }
+          } else if (x["тип блоку"] === "відео") {
+            let video = "";
+            if (x["контент"].includes("drive.google.com")) {
+              const match = x["контент"].match(/\/d\/([a-zA-Z0-9_-]+)/);
+              if (match && match[1]) {
+                video = `<iframe src="https://drive.google.com/file/d/${match[1]}/preview" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+              }
+            } else {
+              video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${x["контент"]}" type="video/mp4"></video>`;
+            }
+            blocks += video;
           }
-        } else {
-          video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${x["контент"]}" type="video/mp4"></video>`;
-        }
-        blocks += video;
-      }
-    });
+        });
 
-    const sliderHTML = sliderImages.length > 0 ? `
-      <div class="slider-container">
-        <div class="swipe-hint">📸 Гортай фото ➡️</div>
-        ${sliderImages.map(src => `<img src="${src}" alt="Фото">`).join('')}
-      </div>` : "";
+        const sliderHTML = sliderImages.length > 0 ? `
+          <div class="slider-container">
+            <div class="swipe-hint">📸 Гортай фото ➡️</div>
+            ${sliderImages.map(src => `<img src="${src}" alt="Фото">`).join('')}
+          </div>` : "";
 
-    return `
-      ${firstImage || ""}
-      ${blocks}
-      ${sliderHTML}
-    `;
-  })()}
-
-  <div style="text-align: center; margin-top: 20px;">
-    <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
-  </div>
-</div>
-
+        return `
+          ${firstImage || ""}
+          ${blocks}
+          ${sliderHTML}
+        `;
+      })()}
+      <div style="text-align: center; margin-top: 20px;">
+        <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+      </div>
     </div>
   </div>
 `);
