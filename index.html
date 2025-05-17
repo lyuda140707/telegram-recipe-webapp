@@ -457,16 +457,7 @@ h1, h2, h3 {
   <button onclick="runSmartSearch()" style="padding:8px;">🔎 Знайти</button>
   <div id="smart-search-results" style="margin-top:15px;"></div>
 </div>
-<div class="bottom-nav-wrapper">
-  <div class="bottom-nav" id="bottomNav">
-    <button onclick="showSection('section-profile')">👤 Профіль</button>
-    <button onclick="showSection('section-buy')">🛒 Що купити</button>
-    <button onclick="showSection('section-askbot')">🤖 Асистент</button>
-    <button onclick="showSection('section-search')">🔍 Пошук</button>
-    <button onclick="showSection('section-planner')">📅 Меню на тиждень</button>
-    <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
-  </div>
-</div>
+
   <!-- Нижнє меню -->
 
 
@@ -1554,6 +1545,18 @@ function scrollToTop() {
     <h2 style="color:#91326b;">🔒 Підписка обовʼязкова</h2>
     <p style="margin-top:10px; font-size:16px;">Щоб користуватись ботом, потрібно підписатись на канал!</p>
     <button id="subscribe-btn" style="margin-top:20px; padding:10px 20px; border:none; border-radius:20px; background:linear-gradient(to right,#fbc2eb,#a6c1ee); color:#4b2c5e; font-weight:bold; cursor:pointer;">🔔 Перейти до каналу</button>
+  </div>
+</div>
+
+
+<!-- ✅ Нижнє меню -->
+<div class="bottom-nav-wrapper">
+  <div class="bottom-nav" id="bottomNav">
+    <button onclick="goHome()">🏠 Головна</button>
+    <button onclick="showSection('section-fridge')">❄️ Холодильник</button>
+    <button onclick="showSection('section-planner')">📅 Меню</button>
+    <button onclick="showSection('section-buy')">🛒 Купити</button>
+    <button onclick="showSection('section-profile')">👤 Профіль</button>
   </div>
 </div>
 
