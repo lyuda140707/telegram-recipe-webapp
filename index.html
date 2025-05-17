@@ -512,6 +512,17 @@ async function loadCategories() {
     container.appendChild(btn);
   });
 }
+  
+function groupByRecipeNumber(data) {
+  const grouped = {};
+  data.forEach(row => {
+    const num = row["номер рецепту"]?.toString().trim();
+    if (!num) return;
+    if (!grouped[num]) grouped[num] = [];
+    grouped[num].push(row);
+  });
+  return Object.values(grouped);
+}
 
 async function loadDailyRecipe() {
   const recipes = await fetchRecipes();
