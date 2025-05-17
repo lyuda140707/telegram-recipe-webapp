@@ -129,39 +129,34 @@ h1 {
   background: white;
   z-index: 999;
   box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+  border-radius: 16px 16px 0 0;
+  padding: 8px 0; /* 🆕 додали внутрішній відступ */
 }
-
 
 
 .bottom-nav {
   display: flex;
-  gap: 12px;
   justify-content: space-around;
-  padding: 0 16px;
+  align-items: center;
 }
 
 .bottom-nav button {
-  flex: 0 0 auto;
-  padding: 8px 12px;
+  background: transparent;
   border: none;
-  border-radius: 20px;
-  background: linear-gradient(145deg, #ffd6e0, #ffb3c6);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  font-size: 14px;
-  cursor: pointer;
-  color: #333;
-  transition: all 0.3s ease;
-  white-space: nowrap;
+  font-size: 18px;            /* 🆙 Збільшили шрифт */
   font-weight: bold;
+  color: #7a2c5c;
+  cursor: pointer;
+  padding: 12px 10px;         /* 🆙 Збільшили відступи */
+  transition: color 0.3s;
 }
 
-.bottom-nav button.active,
 .bottom-nav button:hover {
-  background: linear-gradient(145deg, #ffb3c6, #ff9ab3);
-  color: #000;
-  font-weight: bold;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  color: #d81159;
+}
+.bottom-nav button.active {
+  color: #d81159;
+  border-bottom: 2px solid #d81159;
 }
 
 .back-button {
