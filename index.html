@@ -1167,9 +1167,10 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
 const ingredientWords = new Set(
   rawIngredients
     .split(/[,\n]+/)
-    .map(ing => normalizeWord(ing.trim()))
+    .flatMap(ing => normalizeWord(ing.trim()).split(/\s+/))
     .filter(Boolean)
 );
+
 
 
     const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
