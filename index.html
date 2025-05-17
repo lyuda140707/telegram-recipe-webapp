@@ -1163,13 +1163,14 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
   const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
 
   all.forEach(r => {
-    const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
-    const normalizedIngredients = rawIngredients
-      .split(/[,\n]+/)
-      .map(i => normalizeWord(i.trim()))
-      .join(' ');
+   const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
+const ingredientWords = new Set(
+  rawIngredients
+    .split(/[,\n]+/)
+    .flatMap(ing => normalizeWord(ing.trim()).split(' '))
+    .filter(Boolean)
+);
 
-    const ingredientWords = new Set(normalizedIngredients.split(/\s+/));
     const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
     const threshold = parseInt(document.getElementById('match-threshold').value, 10);
     if (matches >= threshold) {
