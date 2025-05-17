@@ -1212,6 +1212,13 @@ function updateMenuCategory(index, newValue) {
     localStorage.setItem('weekly_menu', JSON.stringify(menu));
   }
 }
+  function normalizeWord(word) {
+  return word
+    .toLowerCase()
+    .replace(/[ʼ’'’.,;!?]/g, '')  // прибирає розділові знаки
+    .replace(/[іїєґ]/g, ch => ({ і: 'и', ї: 'и', є: 'е', ґ: 'г' }[ch] || ch)); // спрощення
+}
+
   function askBot() {
   const input = document.getElementById('bot-query');
   const query = input.value.trim().toLowerCase();
