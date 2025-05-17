@@ -257,7 +257,7 @@ h1, h2, h3 {
   -webkit-appearance: none;   /* Для Safari */
   -moz-appearance: none;      /* Для Firefox */
   position: relative;
-  z-index: 9999;
+  z-index: 1;
   background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%237a2c5c' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 15px center;
@@ -293,12 +293,18 @@ h1, h2, h3 {
   </div>
 <div style="margin-top:10px; display: flex; align-items: center; gap: 10px;">
   <span style="font-size: 14px;">Мінімум збігів:</span>
-  <select id="match-threshold">
-    <option value="1">1</option>
-    <option value="2" selected>2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-  </select>
+  <button id="threshold-btn" onclick="cycleThreshold()" style="
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 16px;
+  width: 120px;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  font-weight: bold;
+  background-image: none;
+">2</button>
+
 </div>
 
 
@@ -1193,7 +1199,8 @@ const ingredientWords = new Set(
 
 
     const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
-    const threshold = parseInt(document.getElementById('match-threshold').value, 10);
+    const threshold = parseInt(document.getElementById('threshold-btn').innerText, 10);
+
     if (matches >= threshold) {
       // Підсвічуємо інгредієнти
       let highlighted = r["інгредієнти"];
@@ -1481,6 +1488,12 @@ function runSmartSearch() {
 
   const container = document.getElementById('smart-search-results');
   container.innerHTML = results.length ? results.join('') : '<p>Нічого не знайдено 😞</p>';
+}
+let threshold = 2;
+
+function cycleThreshold() {
+  threshold = threshold < 4 ? threshold + 1 : 1;
+  document.getElementById('threshold-btn').innerText = threshold;
 }
 
 </script>
