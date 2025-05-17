@@ -569,8 +569,7 @@ async function loadDailyRecipe() {
 function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
-
-  // 🔁 Зберігаємо лише унікальні рецепти за номером
+  // Залишаємо лише унікальні рецепти за номером
 const seen = new Set();
 const uniqueGroups = groups.filter(group => {
   const recipeId = group[0]["номер рецепту"];
@@ -578,6 +577,9 @@ const uniqueGroups = groups.filter(group => {
   seen.add(recipeId);
   return true;
 });
+
+
+  
 
   uniqueGroups.forEach((group, index) => {
   const hasText = group.some(r => r["тип блоку"] === "текст");
