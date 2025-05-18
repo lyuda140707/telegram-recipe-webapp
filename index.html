@@ -1404,6 +1404,12 @@ function updateMenuCategory(index, newValue) {
 
 const stopWords = ["з", "на", "що", "як", "і", "та", "або", "у", "в", "до", "по", "чи", "із", "із-за"];
 
+  if (!localStorage.getItem('all_recipes')) {
+  await fetch('https://recipe-backend-0gz1.onrender.com/recipes')
+    .then(res => res.json())
+    .then(data => localStorage.setItem('all_recipes', JSON.stringify(data)));
+}
+
 function askBot() {
   const input = document.getElementById('bot-query');
   const query = input.value.trim().toLowerCase();
