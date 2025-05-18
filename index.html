@@ -1367,10 +1367,11 @@ function askBot() {
 
 const grouped = {};
 all.forEach(r => {
-  const id = r["номер рецепту"];
-  if (!grouped[id]) grouped[id] = [];
-  grouped[id].push(r);
+  const key = `${r["номер рецепту"]}_${r["назва рецепту"]}`; // унікальна комбінація
+  if (!grouped[key]) grouped[key] = [];
+  grouped[key].push(r);
 });
+
 
 const results = [];
 
@@ -1571,13 +1572,13 @@ function runSmartSearch() {
     .map(normalizeWord)
     .filter(w => w.length > 2 && !stopWords.includes(w));
 
-  const grouped = {}; // 🔁 групуємо рецепти
+  const grouped = {};
+all.forEach(r => {
+  const key = `${r["номер рецепту"]}_${r["назва рецепту"]}`; // унікальна комбінація
+  if (!grouped[key]) grouped[key] = [];
+  grouped[key].push(r);
+});
 
-  all.forEach(r => {
-    const id = r["номер рецепту"];
-    if (!grouped[id]) grouped[id] = [];
-    grouped[id].push(r);
-  });
 
   const results = [];
 
