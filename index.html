@@ -1423,21 +1423,7 @@ if (words.length === 0 || matches === 0) return;
 // Далі вже формується один рецепт для всієї групи
 
 
-    const title = (r["назва рецепту"] || "").toLowerCase();
-    const ingredients = (r["інгредієнти"] || "").toLowerCase();
-    const content = (r["контент"] || "").toLowerCase();
-
-    const fullText = `${title} ${ingredients} ${content}`;
-    const normalized = new Set(
-      fullText
-        .replace(/[ʼ’'’.,;!?()\[\]]/g, '')
-        .split(/\s+/)
-        .map(normalizeWord)
-        .filter(Boolean)
-    );
-
-    const matches = words.filter(w => normalized.has(w)).length;
-    if (words.length === 0 || matches === 0) return;
+    
 
     let highlightedTitle = r["назва рецепту"];
     words.forEach(word => {
@@ -1647,18 +1633,7 @@ if (words.length === 0 || matches === 0) return;
 // Далі вже формується один рецепт для всієї групи
 
 
-    const title = (r["назва рецепту"] || "").toLowerCase();
-    const ingredients = (r["інгредієнти"] || "").toLowerCase();
-    const content = (r["контент"] || "").toLowerCase();
-
-    const fullText = `${title} ${ingredients} ${content}`;
-    const normalized = new Set(
-      fullText
-        .replace(/[ʼ’'’.,;!?()\[\]]/g, '')
-        .split(/\s+/)
-        .map(normalizeWord)
-        .filter(Boolean)
-    );
+    
 
     const matches = words.filter(w => normalized.has(w)).length;
     if (words.length === 0 || matches === 0) return;
