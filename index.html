@@ -599,7 +599,7 @@ function renderGroupedRecipes(groups, category) {
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
 
   const seen = new Set(); // 🔧 Додано!
-  const seenBlocks = new Set(); // 🔧 теж потрібно
+ 
 
   const uniqueGroups = groups.filter(group => {
     const recipeId = group[0]["номер рецепту"];
@@ -609,6 +609,7 @@ function renderGroupedRecipes(groups, category) {
   });
 
   uniqueGroups.forEach((group, index) => {
+    const seenBlocks = new Set(); // ✅ Сюди перенесли!
     // тут далі вже все як є — твої блоки картки рецепту
 
 
