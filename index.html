@@ -1416,28 +1416,35 @@ Object.values(grouped).forEach(group => {
           let sliderImages = [];
           let blocks = "";
 
-          group.forEach(x => {
-            if (x["тип блоку"] === "текст") {
-              blocks += `<p>${x["контент"]}</p>`;
-            } else if (x["тип блоку"] === "фото") {
-              if (!firstImage) {
-                firstImage = `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-              } else {
-                sliderImages.push(x["контент"]);
-              }
-            } else if (x["тип блоку"] === "відео") {
-              let video = "";
-              if (x["контент"].includes("drive.google.com")) {
-                const match = x["контент"].match(/\/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                  video = `<iframe src="https://drive.google.com/file/d/${match[1]}/preview" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
-                }
-              } else {
-                video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${x["контент"]}" type="video/mp4"></video>`;
-              }
-              blocks += video;
-            }
-          });
+          const seen = new Set();
+
+group.forEach(x => {
+  const key = `${x["тип блоку"]}|${x["контент"]}`;
+  if (seen.has(key)) return;
+  seen.add(key);
+
+  if (x["тип блоку"] === "текст") {
+    blocks += `<p>${x["контент"]}</p>`;
+  } else if (x["тип блоку"] === "фото") {
+    if (!firstImage) {
+      firstImage = `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+    } else {
+      sliderImages.push(x["контент"]);
+    }
+  } else if (x["тип блоку"] === "відео") {
+    let video = "";
+    if (x["контент"].includes("drive.google.com")) {
+      const match = x["контент"].match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        video = `<iframe src="https://drive.google.com/file/d/${match[1]}/preview" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+      }
+    } else {
+      video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${x["контент"]}" type="video/mp4"></video>`;
+    }
+    blocks += video;
+  }
+});
+
 
           const sliderHTML = sliderImages.length > 0 ? `
             <div class="slider-container">
@@ -1623,28 +1630,35 @@ results.push(`
         let sliderImages = [];
         let blocks = "";
 
-        group.forEach(x => {
-          if (x["тип блоку"] === "текст") {
-            blocks += `<p>${x["контент"]}</p>`;
-          } else if (x["тип блоку"] === "фото") {
-            if (!firstImage) {
-              firstImage = `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-            } else {
-              sliderImages.push(x["контент"]);
-            }
-          } else if (x["тип блоку"] === "відео") {
-            let video = "";
-            if (x["контент"].includes("drive.google.com")) {
-              const match = x["контент"].match(/\/d\/([a-zA-Z0-9_-]+)/);
-              if (match && match[1]) {
-                video = `<iframe src="https://drive.google.com/file/d/${match[1]}/preview" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
-              }
-            } else {
-              video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${x["контент"]}" type="video/mp4"></video>`;
-            }
-            blocks += video;
-          }
-        });
+        const seen = new Set();
+
+group.forEach(x => {
+  const key = `${x["тип блоку"]}|${x["контент"]}`;
+  if (seen.has(key)) return;
+  seen.add(key);
+
+  if (x["тип блоку"] === "текст") {
+    blocks += `<p>${x["контент"]}</p>`;
+  } else if (x["тип блоку"] === "фото") {
+    if (!firstImage) {
+      firstImage = `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+    } else {
+      sliderImages.push(x["контент"]);
+    }
+  } else if (x["тип блоку"] === "відео") {
+    let video = "";
+    if (x["контент"].includes("drive.google.com")) {
+      const match = x["контент"].match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        video = `<iframe src="https://drive.google.com/file/d/${match[1]}/preview" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+      }
+    } else {
+      video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${x["контент"]}" type="video/mp4"></video>`;
+    }
+    blocks += video;
+  }
+});
+
 
         const sliderHTML = sliderImages.length > 0 ? `
           <div class="slider-container">
