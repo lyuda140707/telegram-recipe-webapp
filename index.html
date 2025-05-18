@@ -649,9 +649,9 @@ group.forEach(r => {
   if (seenBlocks.has(blockKey)) return;
   seenBlocks.add(blockKey);
 
-  if (r["тип блоку"] === "текст" && !textBlock) {
-    textBlock = `<p>${r["контент"]}</p>`;
-  } else if (r["тип блоку"] === "фото") {
+  if (r["тип блоку"] === "текст") {
+  textBlock += `<p>${r["контент"]}</p>`;
+} else if (r["тип блоку"] === "фото") {
     if (!firstImage) {
       firstImage = `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
     } else {
