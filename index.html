@@ -1417,8 +1417,7 @@ const normalized = new Set(
     .filter(Boolean)
 );
 
-const matches = words.filter(w => normalized.has(w)).length;
-if (words.length === 0 || matches === 0) return;
+
 
 // Далі вже формується один рецепт для всієї групи
 
@@ -1627,16 +1626,16 @@ const normalized = new Set(
     .filter(Boolean)
 );
 
-const matches = words.filter(w => normalized.has(w)).length;
-if (words.length === 0 || matches === 0) return;
+
 
 // Далі вже формується один рецепт для всієї групи
 
 
     
 
-    const matches = words.filter(w => normalized.has(w)).length;
-    if (words.length === 0 || matches === 0) return;
+    const matchCount = words.filter(w => normalized.has(w)).length;
+if (words.length === 0 || matchCount === 0) return;
+
 
     let highlightedTitle = r["назва рецепту"];
     words.forEach(word => {
