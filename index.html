@@ -69,6 +69,11 @@ h1, h2, h3 {
       margin: 15px 0;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
+    @keyframes pulseHighlight {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.01); }
+  100% { transform: scale(1); }
+}
 
     
     .bottom-nav {
@@ -555,34 +560,19 @@ async function loadDailyRecipe() {
   });
 
   container.innerHTML = `
-    <div class="recipe-card" onclick="openDailyRecipeCategory('${category}')"
-         style="padding: 0; overflow: hidden; cursor: pointer;">
-      <div class="daily-image-wrapper" style="position: relative;">
-        <img src="${image}" alt="Рецепт дня"
-             style="width:100%; height:200px; object-fit:cover; border-radius: 16px 16px 0 0;">
-        <div class="daily-label" style="
-          position: absolute;
-          top: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: white;
-          padding: 6px 14px;
-          border-radius: 20px;
-          font-weight: bold;
-          color: #91326b;
-          font-size: 14px;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        ">Рецепт дня 🍓</div>
-      </div>
-      <div style="padding: 15px;">
-        <h2 style="margin-top: 0;">${title}</h2>
-        <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-        <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-        ${body}
-        <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
-      </div>
+  <div class="recipe-card" onclick="openDailyRecipeCategory('${category}', '${info["номер рецепту"]}')"
+       style="padding: 0; overflow: hidden; cursor: pointer;">
+    <div class="daily-image-wrapper" style="position: relative;">
+      <img src="${image}" alt="Рецепт дня"
+           style="width:100%; height:200px; object-fit:cover; border-radius: 16px 16px 0 0;">
+      <div class="daily-label" style="...">Рецепт дня 🍓</div>
     </div>
-  `;
+    <div style="padding: 15px;">
+      <h2 style="margin-top: 0;">${title}</h2>
+    </div>
+  </div>
+`;
+
 }
 
 
@@ -610,6 +600,8 @@ function renderGroupedRecipes(groups, category) {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
+    card.setAttribute('data-recipe-id', info["номер рецепту"]);
+
 
     let textBlock = "";
     let firstImage = null;
@@ -742,11 +734,21 @@ function toggleRecipe(id, btn) {
   }
 }
   
-async function openDailyRecipeCategory(category) {
+async function openDailyRecipeCategory(category, focusId = null) {
   const cleanCategory = category.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
   const raw = await fetchRecipes(cleanCategory.toLowerCase());
   const grouped = groupByRecipeNumber(raw);
   renderGroupedRecipes(grouped, cleanCategory);
+  // 🔽 Додати прокрутку до рецепта:
+setTimeout(() => {
+  if (focusId) {
+    const target = document.querySelector(`[data-recipe-id='${focusId}']`);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.classList.add('highlight'); // можна стилізувати через CSS
+    }
+  }
+}, 300);
 }
 
 
