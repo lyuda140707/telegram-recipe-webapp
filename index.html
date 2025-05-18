@@ -571,16 +571,19 @@ function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
 
-  // 🔁 Зберігаємо лише унікальні рецепти за номером
-const seen = new Set();
-const uniqueGroups = groups.filter(group => {
-  const recipeId = group[0]["номер рецепту"];
-  if (seen.has(recipeId)) return false;
-  seen.add(recipeId);
-  return true;
-});
+  const seen = new Set(); // 🔧 Додано!
+  const seenBlocks = new Set(); // 🔧 теж потрібно
+
+  const uniqueGroups = groups.filter(group => {
+    const recipeId = group[0]["номер рецепту"];
+    if (seen.has(recipeId)) return false;
+    seen.add(recipeId);
+    return true;
+  });
 
   uniqueGroups.forEach((group, index) => {
+    // тут далі вже все як є — твої блоки картки рецепту
+
 
     const id = `recipe-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
@@ -613,8 +616,8 @@ const uniqueGroups = groups.filter(group => {
 
 group.forEach(r => {
   const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
-  if (seen.has(blockKey)) return;
-  seen.add(blockKey);
+  if (seenBlocks.has(blockKey)) return;
+  seenBlocks.add(blockKey);
 
   if (r["тип блоку"] === "текст" && !textBlock) {
     textBlock = `<p>${r["контент"]}</p>`;
