@@ -1412,6 +1412,16 @@ const stopWords = ["з", "на", "що", "як", "і", "та", "або", "у", "
   }
 }
 
+async function askBot() {
+  const input = document.getElementById('bot-query');
+  const query = input.value.trim().toLowerCase();
+
+  // 🟢 Гарантія, що рецепти є
+  if (!localStorage.getItem('all_recipes')) {
+    await initAllRecipes();
+  }
+
+  const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
 
 function askBot() {
   const input = document.getElementById('bot-query');
@@ -1625,6 +1635,17 @@ function autoScrollSliders() {
     setInterval(scrollStep, 30); // 30 мс = плавно. Зменшити → швидше
   });
 }
+
+  async function runSmartSearch() {
+  const input = document.getElementById('smart-search-input');
+  const query = input.value.trim().toLowerCase();
+
+  // 🟢 Гарантуємо, що рецепти завантажені
+  if (!localStorage.getItem('all_recipes')) {
+    await initAllRecipes();
+  }
+
+  const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
 
 
 function runSmartSearch() {
