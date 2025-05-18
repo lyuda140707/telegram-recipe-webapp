@@ -683,8 +683,8 @@ group.forEach(r => {
 });
 
 block.innerHTML = `
-  ${textBlock}
   ${firstImage || ''}
+  ${textBlock}
   ${sliderImages.length > 0 ? `
     <div class="slider-container">
       <div class="swipe-hint">📸 Гортай фото ➡️</div>
@@ -696,6 +696,7 @@ block.innerHTML = `
     <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
   </div>
 `;
+
 
   });
   showSection('section-recipes');
