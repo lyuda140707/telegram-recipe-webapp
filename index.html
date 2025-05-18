@@ -1405,7 +1405,23 @@ function askBot() {
   const results = [];
 
   Object.values(grouped).forEach(group => {
-    const r = group.find(x => x["тип блоку"] === "текст") || group[0];
+    const fullText = group.map(x =>
+  `${x["назва рецепту"] || ""} ${x["інгредієнти"] || ""} ${x["контент"] || ""}`
+).join(' ').toLowerCase();
+
+const normalized = new Set(
+  fullText
+    .replace(/[ʼ’'’.,;!?()\[\]]/g, '')
+    .split(/\s+/)
+    .map(normalizeWord)
+    .filter(Boolean)
+);
+
+const matches = words.filter(w => normalized.has(w)).length;
+if (words.length === 0 || matches === 0) return;
+
+// Далі вже формується один рецепт для всієї групи
+
 
     const title = (r["назва рецепту"] || "").toLowerCase();
     const ingredients = (r["інгредієнти"] || "").toLowerCase();
@@ -1613,7 +1629,23 @@ function runSmartSearch() {
   const results = [];
 
   Object.values(grouped).forEach(group => {
-    const r = group.find(x => x["тип блоку"] === "текст") || group[0];
+    const fullText = group.map(x =>
+  `${x["назва рецепту"] || ""} ${x["інгредієнти"] || ""} ${x["контент"] || ""}`
+).join(' ').toLowerCase();
+
+const normalized = new Set(
+  fullText
+    .replace(/[ʼ’'’.,;!?()\[\]]/g, '')
+    .split(/\s+/)
+    .map(normalizeWord)
+    .filter(Boolean)
+);
+
+const matches = words.filter(w => normalized.has(w)).length;
+if (words.length === 0 || matches === 0) return;
+
+// Далі вже формується один рецепт для всієї групи
+
 
     const title = (r["назва рецепту"] || "").toLowerCase();
     const ingredients = (r["інгредієнти"] || "").toLowerCase();
