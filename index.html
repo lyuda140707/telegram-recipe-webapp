@@ -837,10 +837,10 @@ function goHome() {
 
 document.addEventListener("DOMContentLoaded", () => {
   async function init() {
+    await initAllRecipes(); // 🟢 виклик твоєї нової функції
     await loadCategories();
     await loadDailyRecipe();
     goHome();
-
   }
 
   autoScrollSliders(); // ✅ запускаємо автопрокрутку
@@ -1404,11 +1404,14 @@ function updateMenuCategory(index, newValue) {
 
 const stopWords = ["з", "на", "що", "як", "і", "та", "або", "у", "в", "до", "по", "чи", "із", "із-за"];
 
+  async function initAllRecipes() {
   if (!localStorage.getItem('all_recipes')) {
-  await fetch('https://recipe-backend-0gz1.onrender.com/recipes')
-    .then(res => res.json())
-    .then(data => localStorage.setItem('all_recipes', JSON.stringify(data)));
+    const res = await fetch('https://recipe-backend-0gz1.onrender.com/recipes');
+    const data = await res.json();
+    localStorage.setItem('all_recipes', JSON.stringify(data));
+  }
 }
+
 
 function askBot() {
   const input = document.getElementById('bot-query');
