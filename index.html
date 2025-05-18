@@ -609,7 +609,13 @@ const uniqueGroups = groups.filter(group => {
 
     const block = document.getElementById(id);
 
-  group.forEach(r => {
+ const seen = new Set();
+
+group.forEach(r => {
+  const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
+  if (seen.has(blockKey)) return;
+  seen.add(blockKey);
+
   if (r["тип блоку"] === "текст" && !textBlock) {
     textBlock = `<p>${r["контент"]}</p>`;
   } else if (r["тип блоку"] === "фото") {
@@ -642,6 +648,7 @@ const uniqueGroups = groups.filter(group => {
     }
   }
 });
+
 block.innerHTML = `
   ${textBlock}
   ${firstImage || ''}
