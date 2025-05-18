@@ -567,16 +567,6 @@ async function loadDailyRecipe() {
 }
 
 
-  const block = document.getElementById(id);
-
-  block.innerHTML += `
-    <div style="text-align: center; margin-top: 20px;">
-      <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
-      <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
-    </div>
-  `;
-}
-
 function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
