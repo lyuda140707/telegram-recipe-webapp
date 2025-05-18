@@ -525,6 +525,9 @@ async function loadDailyRecipe() {
 
   const id = `daily-details`;
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
+  const recipeCategory = info["категорія"] || "невідомо";
+
+
 
   let image = recipe.find(r => r["тип блоку"] === "фото")?.["контент"];
   const hasVideo = recipe.some(r => r["тип блоку"] === "відео");
@@ -534,7 +537,8 @@ async function loadDailyRecipe() {
   }
 
   container.innerHTML = `
-    <div class="recipe-card" style="padding: 0; overflow: hidden; cursor: pointer;" onclick="toggleRecipe('${id}')">
+    <div class="recipe-card" style="padding: 0; overflow: hidden; cursor: pointer;" onclick="loadCategoryFromDaily('${recipeCategory}')">
+
       <div class="daily-image-wrapper" style="position: relative;">
         <img src="${image || 'https://i.pinimg.com/736x/42/d0/47/42d0471e0094e28d71eaec86d78beec5.jpg'}"
              alt="Рецепт дня"
@@ -772,6 +776,8 @@ function goHome() {
   document.querySelector('.back-button').style.display = 'none';
 
   // Повторно завантажує рецепт дня
+
+  
   
   loadDailyRecipe();
 }
@@ -781,6 +787,13 @@ function goHome() {
   document.getElementById('subscribe-btn').onclick = function() {
     window.open('https://t.me/receptukTop', '_blank'); // <-- заміни на свій канал
   };
+}
+
+  async function loadCategoryFromDaily(category) {
+  const cleanCategory = category.trim().toLowerCase();
+  const raw = await fetchRecipes(cleanCategory);
+  const grouped = groupByRecipeNumber(raw);
+  renderGroupedRecipes(grouped, category);
 }
 
 
