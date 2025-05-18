@@ -789,12 +789,31 @@ function goHome() {
   };
 }
 
-  async function loadCategoryFromDaily(category) {
+ async function loadCategoryFromDaily(category) {
   const cleanCategory = category.trim().toLowerCase();
   const raw = await fetchRecipes(cleanCategory);
   const grouped = groupByRecipeNumber(raw);
-  renderGroupedRecipes(grouped, category);
+
+  // Шукаємо той самий рецепт, що показаний у daily-recipe
+  const recipeName = document.querySelector('#daily-recipe h2')?.innerText?.trim().toLowerCase();
+
+  const exact = grouped.find(group => {
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+    return (info["назва рецепту"] || "").trim().toLowerCase() === recipeName;
+  });
+
+  if (exact) {
+    renderGroupedRecipes([exact], category); // відображаємо лише цей рецепт
+    // Автоматично відкриваємо перший блок
+    setTimeout(() => {
+      const detailsBtn = document.querySelector('.detail-button');
+      if (detailsBtn) detailsBtn.click();
+    }, 300);
+  } else {
+    renderGroupedRecipes(grouped, category); // fallback — вся категорія
+  }
 }
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
