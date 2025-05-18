@@ -1424,21 +1424,25 @@ const normalized = new Set(
 
     
 
-    let highlightedTitle = r["назва рецепту"];
+    const info = group.find(x => x["тип блоку"] === "текст") || group[0];
+
     words.forEach(word => {
       const reg = new RegExp(`(${word}\\w*)`, 'gi');
       highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
     });
 
-    const id = `smart-result-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
+    const id = `smart-result-${info["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
+
 
     results.push(`
   <div class="recipe-card">
     <h3>${highlightedTitle}</h3>
-    <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-    <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+    <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+    <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
     <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-    <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
+    <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У список</button>
+
+
 
     <div id="${id}" class="recipe-content">
       ${(() => {
@@ -1637,20 +1641,22 @@ const normalized = new Set(
 if (words.length === 0 || matchCount === 0) return;
 
 
-    let highlightedTitle = r["назва рецепту"];
+    let highlightedTitle = info["назва рецепту"] || "";
+
     words.forEach(word => {
       const reg = new RegExp(`(${word}\\w*)`, 'gi');
       highlightedTitle = highlightedTitle.replace(reg, '<strong>$1</strong>');
     });
 
-   const id = `smart-result-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
+   const id = `smart-result-${info["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
+
 results.push(`
   <div class="recipe-card">
     <h3>${highlightedTitle}</h3>
-    <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
-    <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
+    <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+    <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
     <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-    <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
+    <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У список</button>
 
     <div id="${id}" class="recipe-content">
 
