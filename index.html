@@ -534,7 +534,7 @@ async function loadDailyRecipe() {
   }
 
   container.innerHTML = `
-    <div class="recipe-card" style="padding: 0; overflow: hidden;">
+    <div class="recipe-card" style="padding: 0; overflow: hidden; cursor: pointer;" onclick="toggleRecipe('${id}')">
       <div class="daily-image-wrapper" style="position: relative;">
         <img src="${image || 'https://i.pinimg.com/736x/42/d0/47/42d0471e0094e28d71eaec86d78beec5.jpg'}"
              alt="Рецепт дня"
@@ -556,8 +556,13 @@ async function loadDailyRecipe() {
       </div>
       <div style="padding: 15px;">
         <h2 style="margin-top: 0;">${info["назва рецепту"]}</h2>
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <div id="${id}" class="recipe-content">
+        <div id="${id}" class="recipe-content open">
+          <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
+        </div>
+      </div>
+    </div>
+  `;
+
           <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
           <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
         </div>
