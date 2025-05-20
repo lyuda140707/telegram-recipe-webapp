@@ -645,17 +645,34 @@ function renderSingleRecipe(group, container, index) {
         sliderImages.push(r["контент"]);
       }
     } else if (r["тип блоку"] === "відео" && !videoBlock) {
-      let video = r["контент"];
-      if (video.includes("drive.google.com")) {
-        const match = video.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        if (match && match[1]) {
-          video = `https://drive.google.com/file/d/${match[1]}/preview`;
-          videoBlock = `<iframe src="${video}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
-        }
-      } else {
-        videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${video}" type="video/mp4"></video>`;
+  let content = r["контент"];
+
+  if (content.startsWith("BAA")) {
+    // 🟡 Якщо це file_id від Telegram — отримай справжній URL
+    try {
+      const res = await fetch(`/get-file-url?file_id=${content}`);
+      const data = await res.json();
+      if (data.url) {
+        videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
+                        <source src="${data.url}" type="video/mp4">
+                      </video>`;
       }
+    } catch (err) {
+      console.error("❌ Помилка отримання відео через file_id:", err);
     }
+  } else if (content.includes("drive.google.com")) {
+    const match = content.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      const embed = `https://drive.google.com/file/d/${match[1]}/preview`;
+      videoBlock = `<iframe src="${embed}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+    }
+  } else {
+    videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
+                    <source src="${content}" type="video/mp4">
+                  </video>`;
+  }
+}
+
   });
 
   card.innerHTML = `
