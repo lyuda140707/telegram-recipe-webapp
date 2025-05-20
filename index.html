@@ -620,7 +620,8 @@ function renderGroupedRecipes(groups, category) {
   renderNextBatch(container);
 }
 
-function renderSingleRecipe(group, container, index) {
+async function renderSingleRecipe(group, container, index) {
+
   const id = `recipe-details-${index}`;
   const info = group.find(r => r["тип блоку"] === "текст") || group[0];
   const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
@@ -632,48 +633,48 @@ function renderSingleRecipe(group, container, index) {
   const seenBlocks = new Set();
 
   group.forEach(r => {
-    const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
-    if (seenBlocks.has(blockKey)) return;
-    seenBlocks.add(blockKey);
+    for (const r of group) {
+  const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
+  if (seenBlocks.has(blockKey)) continue;
+  seenBlocks.add(blockKey);
 
-    if (r["тип блоку"] === "текст") {
-      textBlock += `<p>${r["контент"]}</p>`;
-    } else if (r["тип блоку"] === "фото") {
-      if (!firstImage) {
-        firstImage = `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-      } else {
-        sliderImages.push(r["контент"]);
-      }
-    } else if (r["тип блоку"] === "відео" && !videoBlock) {
-  let content = r["контент"];
+  if (r["тип блоку"] === "текст") {
+    textBlock += `<p>${r["контент"]}</p>`;
+  } else if (r["тип блоку"] === "фото") {
+    if (!firstImage) {
+      firstImage = `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+    } else {
+      sliderImages.push(r["контент"]);
+    }
+  } else if (r["тип блоку"] === "відео" && !videoBlock) {
+    let content = r["контент"];
 
-  if (content.startsWith("BAA")) {
-    // 🟡 Якщо це file_id від Telegram — отримай справжній URL
-    try {
-      const res = await fetch(`/get-file-url?file_id=${content}`);
-      const data = await res.json();
-      if (data.url) {
-        videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
-                        <source src="${data.url}" type="video/mp4">
-                      </video>`;
+    if (content.startsWith("BAA")) {
+      try {
+        const res = await fetch(`/get-file-url?file_id=${content}`);
+        const data = await res.json();
+        if (data.url) {
+          videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
+                          <source src="${data.url}" type="video/mp4">
+                        </video>`;
+        }
+      } catch (err) {
+        console.error("❌ Помилка отримання відео через file_id:", err);
       }
-    } catch (err) {
-      console.error("❌ Помилка отримання відео через file_id:", err);
+    } else if (content.includes("drive.google.com")) {
+      const match = content.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        const embed = `https://drive.google.com/file/d/${match[1]}/preview`;
+        videoBlock = `<iframe src="${embed}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+      }
+    } else {
+      videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
+                      <source src="${content}" type="video/mp4">
+                    </video>`;
     }
-  } else if (content.includes("drive.google.com")) {
-    const match = content.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      const embed = `https://drive.google.com/file/d/${match[1]}/preview`;
-      videoBlock = `<iframe src="${embed}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
-    }
-  } else {
-    videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
-                    <source src="${content}" type="video/mp4">
-                  </video>`;
   }
 }
 
-  });
 
   card.innerHTML = `
     <h3>${info["назва рецепту"]}</h3>
@@ -705,9 +706,12 @@ function renderSingleRecipe(group, container, index) {
   
 function renderNextBatch(container) {
   const batch = currentUniqueGroups.slice(currentRecipeIndex, currentRecipeIndex + visibleRecipeCount);
-  batch.forEach((group, index) => {
-    renderSingleRecipe(group, container, currentRecipeIndex + index);
-  });
+  await Promise.all(
+  batch.map((group, index) =>
+    renderSingleRecipe(group, container, currentRecipeIndex + index)
+  )
+);
+
 
   currentRecipeIndex += visibleRecipeCount;
 
