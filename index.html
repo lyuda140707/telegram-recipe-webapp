@@ -704,7 +704,7 @@ async function renderSingleRecipe(group, container, index) {
   container.appendChild(card);
 }
   
-function renderNextBatch(container) {
+async function renderNextBatch(container) {
   const batch = currentUniqueGroups.slice(currentRecipeIndex, currentRecipeIndex + visibleRecipeCount);
   await Promise.all(
   batch.map((group, index) =>
