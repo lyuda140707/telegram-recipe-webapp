@@ -1304,7 +1304,7 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
 
   
 
-  function searchFridge() {
+  async function searchFridge() {
   const input = document.getElementById('fridge-input').value.toLowerCase();
   const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
   const normFridgeItems = fridgeItems.map(normalizeWord);
