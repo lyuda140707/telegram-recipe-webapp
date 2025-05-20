@@ -666,12 +666,12 @@ group.forEach(r => {
       sliderImages.push(r["контент"]);
     }
   } else if (r["тип блоку"] === "відео" && !videoBlock) {
-    let videoLink = r["контент"];
-    if (videoLink.includes('drive.google.com')) {
-      const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-      }
+  let videoLink = r["контент"];
+
+  if (videoLink.includes('drive.google.com')) {
+    const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
       videoBlock = `
         <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
           <iframe 
@@ -680,14 +680,33 @@ group.forEach(r => {
             allowfullscreen>
           </iframe>
         </div>`;
-    } else {
-      videoBlock = `
-        <video controls style="width:100%; border-radius:10px; margin-top:10px;">
-          <source src="${videoLink}" type="video/mp4">
-          Ваш браузер не підтримує відтворення відео.
-        </video>`;
     }
+  } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
+    // Вважаємо це file_id з Telegram
+    const fileId = videoLink;
+    videoBlock = `<div id="video-${id}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
+    fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${fileId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.url) {
+          document.getElementById("video-" + id).innerHTML = `
+            <video controls style="width:100%; border-radius:10px;">
+              <source src="${data.url}" type="video/mp4">
+              Ваш браузер не підтримує відео.
+            </video>`;
+        } else {
+          document.getElementById("video-" + id).innerHTML = `❌ Не вдалося завантажити відео`;
+        }
+      });
+  } else {
+    videoBlock = `
+      <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+        <source src="${videoLink}" type="video/mp4">
+        Ваш браузер не підтримує відтворення відео.
+      </video>`;
   }
+}
+
 });
 
 block.innerHTML = `
