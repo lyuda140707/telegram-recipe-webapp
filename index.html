@@ -510,12 +510,8 @@ async function fetchRecipes(category = null) {
 }
 
 function groupByRecipeNumber(data) {
-  const grouped = {};
-  data.forEach(row => {
-    const id = row["номер рецепту"];
-    if (!grouped[id]) grouped[id] = [];
-    grouped[id].push(row);
-  });
+  const grouped = groupByRecipeNumber(all);
+
   return Object.values(grouped);
 }
 
@@ -1306,7 +1302,8 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
   const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
   const normFridgeItems = fridgeItems.map(normalizeWord);
   const results = [];
-  const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
+  const all = await fetchRecipes(); // тягне тільки зараз
+
 
   all.forEach(r => {
    const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
@@ -1344,6 +1341,11 @@ const ingredientWords = new Set(
     if (b.hasFirst !== a.hasFirst) return b.hasFirst - a.hasFirst;
     return b.matches - a.matches;
   });
+
+    // 🔽 Обмежуємо кількість результатів
+results.length = Math.min(results.length, 20);
+
+  
 
   const container = document.getElementById('fridge-results');
   container.innerHTML = results.length
@@ -1412,7 +1414,8 @@ const stopWords = ["з", "на", "що", "як", "і", "та", "або", "у", "
   if (!localStorage.getItem('all_recipes')) {
     const res = await fetch('https://recipe-backend-0gz1.onrender.com/recipes');
     const data = await res.json();
-    localStorage.setItem('all_recipes', JSON.stringify(data));
+    window._all_recipes = data;
+
   }
 }
 
@@ -1422,21 +1425,19 @@ async function askBot() {
 
   // 🟢 Гарантія, що рецепти є
   if (!localStorage.getItem('all_recipes')) {
-    await initAllRecipes();
+    <! -await initAllRecipes();->
   }
 
-  const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
+  const all = await fetchRecipes(); // тягне тільки зараз
+
 
   const words = query
     .split(/\s+/)
     .map(normalizeWord)
     .filter(w => w.length > 2 && !stopWords.includes(w));
 
-  const grouped = {};
-  all.forEach(r => {
-    const key = `${r["номер рецепту"]}_${r["назва рецепту"]}`;
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(r);
+  const grouped = groupByRecipeNumber(all);
+
   });
 
   const results = [];
@@ -1525,6 +1526,10 @@ async function askBot() {
       </div>
     `);
   });
+// 🔽 Обмежуємо до 20 результатів
+if (results.length > 20) {
+  results.length = 20;
+}
 
   const container = document.getElementById('bot-response');
   if (!query) {
@@ -1639,19 +1644,16 @@ function autoScrollSliders() {
     await initAllRecipes();
   }
 
-  const all = JSON.parse(localStorage.getItem('all_recipes')) || [];
+  const all = await fetchRecipes(); // тягне тільки зараз
+
 
   const words = query
     .split(/\s+/)
     .map(normalizeWord)
     .filter(w => w.length > 2 && !stopWords.includes(w));
 
-  const grouped = {};
-  all.forEach(r => {
-    const key = `${r["номер рецепту"]}_${r["назва рецепту"]}`;
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(r);
-  });
+  const grouped = groupByRecipeNumber(all);
+
 
   const results = [];
 
