@@ -632,8 +632,7 @@ async function renderSingleRecipe(group, container, index) {
   let textBlock = "", firstImage = null, sliderImages = [], videoBlock = "";
   const seenBlocks = new Set();
 
-  group.forEach(r => {
-     for (const r of group) {
+  for (const r of group) {
   const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
   if (seenBlocks.has(blockKey)) continue;
   seenBlocks.add(blockKey);
@@ -663,6 +662,8 @@ async function renderSingleRecipe(group, container, index) {
     }
   }
 }
+
+
 
 
 
