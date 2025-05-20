@@ -540,14 +540,17 @@ async function loadCategories() {
 
 async function loadDailyRecipe() {
   const recipes = await fetchRecipes();
-  localStorage.setItem('all_recipes', JSON.stringify(recipes));
-  const container = document.getElementById('daily-recipe');
+localStorage.setItem('all_recipes', JSON.stringify(recipes));
+const container = document.getElementById('daily-recipe');
 
-  const grouped = groupByRecipeNumber(recipes);
-  if (grouped.length === 0) return;
+const grouped = groupByRecipeNumber(recipes); // 🟢 додано
+const groupKeys = Object.keys(grouped);
+if (groupKeys.length === 0) return;
 
-  const dayIndex = new Date().getDate() % grouped.length;
-  const recipe = grouped[dayIndex];
+const dayIndex = new Date().getDate() % groupKeys.length;
+const recipe = grouped[groupKeys[dayIndex]];
+
+
 
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
   const category = info["категорія"] || "Інше";
