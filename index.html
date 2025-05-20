@@ -1495,18 +1495,37 @@ async function askBot() {
             sliderImages.push(x["контент"]);
           }
         } else if (x["тип блоку"] === "відео") {
-          let video = x["контент"];
-          if (video.includes("drive.google.com")) {
-            const match = video.match(/\/d\/([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
-              video = `https://drive.google.com/file/d/${match[1]}/preview`;
-              blocks += `<iframe src="${video}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
-              return;
-            }
-          }
-          blocks += `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${video}" type="video/mp4"></video>`;
+  let videoLink = x["контент"];
+  if (videoLink.includes('drive.google.com')) {
+    const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+      blocks += `<iframe src="${videoLink}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+    }
+  } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
+    // Це file_id з Telegram
+    const uniqueId = `video-${id}-${Math.random().toString(36).substr(2, 5)}`;
+    blocks += `<div id="${uniqueId}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
+    fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${videoLink}`)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById(uniqueId);
+        if (!container) return;
+        if (data.url) {
+          container.innerHTML = `
+            <video controls style="width:100%; border-radius:10px;">
+              <source src="${data.url}" type="video/mp4">
+            </video>`;
+        } else {
+          container.innerHTML = `❌ Не вдалося завантажити відео`;
         }
       });
+  } else {
+    blocks += `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${videoLink}" type="video/mp4"></video>`;
+  }
+}
+
+ });
 
       const sliderHTML = sliderImages.length ? `
         <div class="slider-container">
@@ -1714,17 +1733,35 @@ function autoScrollSliders() {
                   sliderImages.push(x["контент"]);
                 }
               } else if (x["тип блоку"] === "відео") {
-                let video = "";
-                if (x["контент"].includes("drive.google.com")) {
-                  const match = x["контент"].match(/\/d\/([a-zA-Z0-9_-]+)/);
-                  if (match && match[1]) {
-                    video = `<iframe src="https://drive.google.com/file/d/${match[1]}/preview" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
-                  }
-                } else {
-                  video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${x["контент"]}" type="video/mp4"></video>`;
-                }
-                blocks += video;
-              }
+  let videoLink = x["контент"];
+  if (videoLink.includes("drive.google.com")) {
+    const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+      blocks += `<iframe src="${videoLink}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+    }
+  } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
+    const uniqueId = `video-${id}-${Math.random().toString(36).substr(2, 5)}`;
+    blocks += `<div id="${uniqueId}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
+    fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${videoLink}`)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById(uniqueId);
+        if (!container) return;
+        if (data.url) {
+          container.innerHTML = `
+            <video controls style="width:100%; border-radius:10px;">
+              <source src="${data.url}" type="video/mp4">
+            </video>`;
+        } else {
+          container.innerHTML = `❌ Не вдалося завантажити відео`;
+        }
+      });
+  } else {
+    blocks += `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${videoLink}" type="video/mp4"></video>`;
+  }
+}
+
             });
 
             const sliderHTML = sliderImages.length > 0 ? `
