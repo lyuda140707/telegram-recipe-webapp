@@ -684,20 +684,23 @@ group.forEach(r => {
   } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
     // Вважаємо це file_id з Telegram
     const fileId = videoLink;
-    videoBlock = `<div id="video-${id}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
-    fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${fileId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.url) {
-          document.getElementById("video-" + id).innerHTML = `
-            <video controls style="width:100%; border-radius:10px;">
-              <source src="${data.url}" type="video/mp4">
-              Ваш браузер не підтримує відео.
-            </video>`;
-        } else {
-          document.getElementById("video-" + id).innerHTML = `❌ Не вдалося завантажити відео`;
-        }
-      });
+    const uniqueId = `video-${id}-${Math.random().toString(36).substr(2, 5)}`;
+videoBlock = `<div id="${uniqueId}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
+fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${fileId}`)
+  .then(res => res.json())
+  .then(data => {
+    const videoContainer = document.getElementById(uniqueId);
+    if (!videoContainer) return;
+    if (data.url) {
+      videoContainer.innerHTML = `
+        <video controls style="width:100%; border-radius:10px;">
+          <source src="${data.url}" type="video/mp4">
+        </video>`;
+    } else {
+      videoContainer.innerHTML = `❌ Не вдалося завантажити відео`;
+    }
+  });
+
   } else {
     videoBlock = `
       <video controls style="width:100%; border-radius:10px; margin-top:10px;">
@@ -1065,7 +1068,7 @@ async function loadFavorites() {
 
   const allRecipes = await fetchRecipes();
   const grouped = groupByRecipeNumber(allRecipes);
-  const filteredGroups = grouped.filter(group => {
+  const filteredGroups = Object.values(grouped).filter(group => {
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
     return favorites.includes(String(info["номер рецепту"]));
   });
@@ -1777,7 +1780,6 @@ function cycleThreshold() {
 ">
   ✅ Додано до улюбленого!
 </div>
-
 
 </body>
 </html>
