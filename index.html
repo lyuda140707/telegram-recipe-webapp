@@ -1511,7 +1511,7 @@ async function askBot() {
           <h3>${r["назва рецепту"]}</h3>
           <p><strong>Час:</strong> ${r["час приготування"] || "?"} хв</p>
           <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
-          <button class="detail-button" onclick="loadRecipeDetails('${info["номер рецепту"]}', '${id}', this)">➕ Детальніше</button>
+          <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
           <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
           <div id="${id}" class="recipe-content"></div>
 
