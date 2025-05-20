@@ -648,7 +648,6 @@ async function renderSingleRecipe(group, container, index) {
     }
   } else if (r["тип блоку"] === "відео" && !videoBlock) {
     let content = r["контент"];
-
     if (content.startsWith("BAA")) {
       try {
         const res = await fetch(`/get-file-url?file_id=${content}`);
@@ -659,21 +658,13 @@ async function renderSingleRecipe(group, container, index) {
                         </video>`;
         }
       } catch (err) {
-        console.error("❌ Помилка отримання відео через file_id:", err);
+        console.error("❌ Помилка отримання відео:", err);
       }
-    } else if (content.includes("drive.google.com")) {
-      const match = content.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        const embed = `https://drive.google.com/file/d/${match[1]}/preview`;
-        videoBlock = `<iframe src="${embed}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
-      }
-    } else {
-      videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
-                      <source src="${content}" type="video/mp4">
-                    </video>`;
     }
   }
 }
+
+
 
 
   card.innerHTML = `
