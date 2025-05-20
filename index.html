@@ -510,10 +510,17 @@ async function fetchRecipes(category = null) {
 }
 
 function groupByRecipeNumber(data) {
-  const grouped = groupByRecipeNumber(all);
-
-  return Object.values(grouped);
+  const grouped = {};
+  data.forEach(item => {
+    const num = item["номер рецепту"];
+    if (num) {
+      grouped[num] = grouped[num] || [];
+      grouped[num].push(item);
+    }
+  });
+  return grouped;
 }
+
 
 async function loadCategories() {
   const container = document.getElementById('section-categories');
@@ -597,12 +604,12 @@ function renderGroupedRecipes(groups, category) {
   const seen = new Set(); // 🔧 Додано!
  
 
-  const uniqueGroups = groups.filter(group => {
-    const recipeId = group[0]["номер рецепту"];
-    if (seen.has(recipeId)) return false;
-    seen.add(recipeId);
-    return true;
-  });
+  const uniqueGroups = Object.values(groups).filter(group => {
+  const recipeId = group[0]["номер рецепту"];
+  if (seen.has(recipeId)) return false;
+  seen.add(recipeId);
+  return true;
+});
 
   uniqueGroups.forEach((group, index) => {
     const seenBlocks = new Set(); // ✅ Сюди перенесли!
