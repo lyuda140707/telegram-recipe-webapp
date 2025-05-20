@@ -707,14 +707,10 @@ function renderNextBatch(container) {
   } else {
     existingButton?.remove();
   }
-}
+} // ← це кінець функції
 
-
-  
-  showSection('section-recipes');
-}
-
-
+// 🔽 ОКРЕМИЙ ВИКЛИК (не в середині функції)
+showSection('section-recipes');
 
 
 function toggleFavorite(recipeId, button) {
