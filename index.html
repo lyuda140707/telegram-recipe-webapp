@@ -1540,16 +1540,18 @@ async function askBot() {
         const container = document.getElementById(uniqueId);
         if (!container) return;
         if (data.url) {
-          container.innerHTML = `
-            <video controls style="width:100%; border-radius:10px;">
-              <source src="${data.url}" type="video/mp4">
-            </video>`;
+         container.innerHTML = `
+  <video controls style="width:100%; height:100px; object-fit:cover; border-radius:10px;" class="video-preview">
+    <source src="${data.url}" type="video/mp4">
+  </video>`;
+
         } else {
           container.innerHTML = `❌ Не вдалося завантажити відео`;
         }
       });
   } else {
-    blocks += `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${videoLink}" type="video/mp4"></video>`;
+    blocks += `<video controls style="width:100%; height:100px; object-fit:cover; border-radius:10px; margin-top:10px;" class="video-preview"><source src="${videoLink}" type="video/mp4"></video>`;
+
   }
 }
 
