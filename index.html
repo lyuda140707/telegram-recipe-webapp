@@ -800,17 +800,28 @@ function toggleFavorite(recipeId, button) {
 
   
 function toggleRecipe(id, btn) {
-  const el = document.getElementById(id);
-  if (!el) return;
+  const current = document.getElementById(id);
+  if (!current) return;
 
-  if (el.classList.contains('open')) {
-    el.classList.remove('open');
+  // 1. Закриваємо всі інші відкриті блоки
+  document.querySelectorAll('.recipe-content.open').forEach(el => {
+    if (el.id !== id) {
+      el.classList.remove('open');
+      const otherBtn = el.parentElement.querySelector('.detail-button, .recipe-toggle');
+      if (otherBtn) otherBtn.innerText = '➕ Детальніше';
+    }
+  });
+
+  // 2. Тоглимо поточний
+  if (current.classList.contains('open')) {
+    current.classList.remove('open');
     if (btn) btn.innerText = '➕ Детальніше';
   } else {
-    el.classList.add('open');
+    current.classList.add('open');
     if (btn) btn.innerText = '🔼 Згорнути';
   }
 }
+
   
 async function openDailyRecipeCategory(category, focusId = null) {
   const cleanCategory = category.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
@@ -1823,10 +1834,18 @@ function cycleThreshold() {
 function expandVideo(wrapper) {
   const video = wrapper.querySelector('video');
   if (!video) return;
-  video.classList.remove('video-preview');
-  video.classList.add('video-full');
-  wrapper.onclick = null;
+
+  if (video.classList.contains('video-full')) {
+    // 🔄 Повернути назад у превʼю
+    video.classList.remove('video-full');
+    video.classList.add('video-preview');
+  } else {
+    // 🔼 Збільшити
+    video.classList.remove('video-preview');
+    video.classList.add('video-full');
+  }
 }
+
 
 
 </script>
