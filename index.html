@@ -682,15 +682,17 @@ function renderGroupedRecipes(groups, category) {
   });
 
   recipesRendered = 0; // обнуляємо лічильник
- const loadMoreBtn = document.createElement("button");
+// ⛔️ Не додаємо кнопку одразу
+recipesRendered = 0; // обнуляємо лічильник
+loadMoreRecipes(container, uniqueGroups, category);
+
+// ✅ Після завантаження першої партії — додаємо кнопку
+const loadMoreBtn = document.createElement("button");
 loadMoreBtn.id = "load-more-btn";
 loadMoreBtn.innerText = "⬇️ Показати ще";
 loadMoreBtn.className = "main-button generate";
 loadMoreBtn.onclick = () => loadMoreRecipes(container, uniqueGroups, category);
 container.appendChild(loadMoreBtn);
-
-// 🔽 Лише після того, як кнопка створена:
-loadMoreRecipes(container, uniqueGroups, category);
 
 
   showSection('section-recipes');
