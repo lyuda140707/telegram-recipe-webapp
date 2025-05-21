@@ -601,149 +601,100 @@ const recipe = grouped[groupKeys[dayIndex]];
   </div>
 `;
 
+}function renderRecipeCard(container, group, index) {
+  const seenBlocks = new Set();
+  const id = `recipe-details-${index}`;
+  const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+  const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
+
+  const card = document.createElement('div');
+  card.className = 'recipe-card';
+  card.setAttribute('data-recipe-id', info["номер рецепту"]);
+
+  let textBlock = "";
+  let firstImage = null;
+  let sliderImages = [];
+  let videoBlock = "";
+
+  group.forEach(r => {
+    const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
+    if (seenBlocks.has(blockKey)) return;
+    seenBlocks.add(blockKey);
+
+    if (r["тип блоку"] === "текст") {
+      textBlock += `<p>${r["контент"]}</p>`;
+    } else if (r["тип блоку"] === "фото") {
+      if (!firstImage) {
+        firstImage = `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+      } else {
+        sliderImages.push(r["контент"]);
+      }
+    } else if (r["тип блоку"] === "відео" && !videoBlock) {
+      let videoLink = r["контент"];
+      if (videoLink.includes("drive.google.com")) {
+        const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+          videoBlock = `<iframe src="${videoLink}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+        }
+      } else {
+        videoBlock = `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${videoLink}" type="video/mp4"></video>`;
+      }
+    }
+  });
+
+  card.innerHTML = `
+    <h3>${info["назва рецепту"]}</h3>
+    <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+    <p><strong>Інгредієнти:</strong></p>
+    <pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${info["інгредієнти"] || "Не вказано"}</pre>
+    <div class="recipe-buttons">
+      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+      <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У список</button>
+    </div>
+    <div id="${id}" class="recipe-content">
+      ${firstImage || ''}
+      ${textBlock}
+      ${sliderImages.length ? `<div class="slider-container">${sliderImages.map(src => `<img src="${src}">`).join('')}</div>` : ''}
+      ${videoBlock}
+      <div style="text-align: center; margin-top: 20px;">
+        <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(card);
 }
+
+
 
 
 function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
 
-  const seen = new Set(); // 🔧 Додано!
- 
-
+  const seen = new Set();
   const uniqueGroups = Object.values(groups).filter(group => {
-  const recipeId = group[0]["номер рецепту"];
-  if (seen.has(recipeId)) return false;
-  seen.add(recipeId);
-  return true;
-});
-
-  uniqueGroups.forEach((group, index) => {
-    const seenBlocks = new Set(); // ✅ Сюди перенесли!
-    // тут далі вже все як є — твої блоки картки рецепту
-
-
-    const id = `recipe-details-${index}`;
-    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
-    const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
-
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
-    card.setAttribute('data-recipe-id', info["номер рецепту"]);
-
-
-    let textBlock = "";
-    let firstImage = null;
-    let sliderImages = [];
-    let videoBlock = "";
-
-    card.innerHTML = `
-      <h3>${info["назва рецепту"]}</h3>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong></p>
-<pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${info["інгредієнти"] || "Не вказано"}</pre>
-
-      <div class="recipe-buttons">
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
-      </div>
-      <div id="${id}" class="recipe-content"></div>
-    `;
-
-    container.appendChild(card);
-
-    const block = document.getElementById(id);
-
- const seen = new Set();
-
-group.forEach(r => {
-  const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
-  if (seenBlocks.has(blockKey)) return;
-  seenBlocks.add(blockKey);
-
-  if (r["тип блоку"] === "текст") {
-  textBlock += `<p>${r["контент"]}</p>`;
-} else if (r["тип блоку"] === "фото") {
-    if (!firstImage) {
-      firstImage = `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-    } else {
-      sliderImages.push(r["контент"]);
-    }
-  } else if (r["тип блоку"] === "відео" && !videoBlock) {
-  let videoLink = r["контент"];
-
-  if (videoLink.includes('drive.google.com')) {
-    const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-      videoBlock = `
-        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
-          <iframe 
-            src="${videoLink}" 
-            style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
-            allowfullscreen>
-          </iframe>
-        </div>`;
-    }
-  } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
-    // Вважаємо це file_id з Telegram
-    const fileId = videoLink;
-    const uniqueId = `video-${id}-${Math.random().toString(36).substr(2, 5)}`;
-videoBlock = `<div id="${uniqueId}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
-fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${fileId}`)
-  .then(res => res.json())
-  .then(data => {
-    const videoContainer = document.getElementById(uniqueId);
-    if (!videoContainer) return;
-    if (data.url) {
-      videoContainer.innerHTML = `
-        <video controls style="width:100%; border-radius:10px;">
-          <source src="${data.url}" type="video/mp4">
-        </video>`;
-    } else {
-      videoContainer.innerHTML = `❌ Не вдалося завантажити відео`;
-    }
+    const recipeId = group[0]["номер рецепту"];
+    if (seen.has(recipeId)) return false;
+    seen.add(recipeId);
+    return true;
   });
 
-  } else {
-    videoBlock = `
-      <video controls style="width:100%; border-radius:10px; margin-top:10px;">
-        <source src="${videoLink}" type="video/mp4">
-        Ваш браузер не підтримує відтворення відео.
-      </video>`;
-  }
-}
+  recipesRendered = 0; // обнуляємо лічильник
+  loadMoreRecipes(container, uniqueGroups, category); // показуємо першу партію
 
-});
-
-block.innerHTML = `
-  ${firstImage || ''}
-  ${textBlock}
-  ${sliderImages.length > 0 ? `
-    <div class="slider-container">
-      <div class="swipe-hint">📸 Гортай фото ➡️</div>
-      ${sliderImages.map(src => `<img src="${src}" alt="Фото" />`).join('')}
-    </div>` : ''}
-  ${videoBlock}
-  <div style="text-align: center; margin-top: 20px;">
-    <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
-    <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
-  </div>
-`;
-
-
-  });
-  showSection('section-recipes');
   // Додаємо кнопку "Показати ще"
-const loadMoreBtn = document.createElement("button");
-loadMoreBtn.id = "load-more-btn";
-loadMoreBtn.innerText = "⬇️ Показати ще";
-loadMoreBtn.className = "main-button generate";
-loadMoreBtn.style.display = "none";
-loadMoreBtn.onclick = () => loadMoreRecipes(container, uniqueGroups, category);
-container.appendChild(loadMoreBtn);
+  const loadMoreBtn = document.createElement("button");
+  loadMoreBtn.id = "load-more-btn";
+  loadMoreBtn.innerText = "⬇️ Показати ще";
+  loadMoreBtn.className = "main-button generate";
+  loadMoreBtn.onclick = () => loadMoreRecipes(container, uniqueGroups, category);
+  container.appendChild(loadMoreBtn);
 
+  showSection('section-recipes');
 }
+
 
 function loadMoreRecipes(container, uniqueGroups, category) {
   const nextBatch = uniqueGroups.slice(recipesRendered, recipesRendered + recipesPerBatch);
