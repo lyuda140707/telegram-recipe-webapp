@@ -359,3 +359,24 @@ h1 {
   box-shadow: 0 6px 20px rgba(171, 100, 255, 0.9);
   transform: scale(1.15);
 }
+
+#load-more-btn {
+  display: block;
+  margin: 25px auto;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(to right, #ff9a9e, #fad0c4);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#load-more-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
