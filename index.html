@@ -682,15 +682,16 @@ function renderGroupedRecipes(groups, category) {
   });
 
   recipesRendered = 0; // обнуляємо лічильник
-  loadMoreRecipes(container, uniqueGroups, category); // показуємо першу партію
+ const loadMoreBtn = document.createElement("button");
+loadMoreBtn.id = "load-more-btn";
+loadMoreBtn.innerText = "⬇️ Показати ще";
+loadMoreBtn.className = "main-button generate";
+loadMoreBtn.onclick = () => loadMoreRecipes(container, uniqueGroups, category);
+container.appendChild(loadMoreBtn);
 
-  // Додаємо кнопку "Показати ще"
-  const loadMoreBtn = document.createElement("button");
-  loadMoreBtn.id = "load-more-btn";
-  loadMoreBtn.innerText = "⬇️ Показати ще";
-  loadMoreBtn.className = "main-button generate";
-  loadMoreBtn.onclick = () => loadMoreRecipes(container, uniqueGroups, category);
-  container.appendChild(loadMoreBtn);
+// 🔽 Лише після того, як кнопка створена:
+loadMoreRecipes(container, uniqueGroups, category);
+
 
   showSection('section-recipes');
 }
@@ -707,11 +708,13 @@ function loadMoreRecipes(container, uniqueGroups, category) {
 
   // Якщо ще залишились рецепти — показуємо кнопку
   const btn = document.getElementById("load-more-btn");
+if (btn) {
   if (recipesRendered < uniqueGroups.length) {
     btn.style.display = "block";
   } else {
     btn.style.display = "none";
   }
+ }
 }
 
 
