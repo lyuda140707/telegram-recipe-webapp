@@ -700,21 +700,26 @@ container.appendChild(loadMoreBtn);
 
 
 function loadMoreRecipes(container, uniqueGroups, category) {
-  const nextBatch = uniqueGroups.slice(recipesRendered, recipesRendered + recipesPerBatch);
-  recipesRendered += recipesPerBatch;
+  // Прибираємо стару кнопку (якщо є)
+  const oldBtn = document.getElementById("load-more-btn");
+  if (oldBtn) oldBtn.remove();
 
+  const nextBatch = uniqueGroups.slice(recipesRendered, recipesRendered + recipesPerBatch);
   nextBatch.forEach((group, index) => {
-    const recipeIndex = recipesRendered - recipesPerBatch + index;
+    const recipeIndex = recipesRendered + index;
     renderRecipeCard(container, group, recipeIndex);
   });
 
-  // Якщо ще залишились рецепти — показуємо кнопку
-  const btn = document.getElementById("load-more-btn");
-if (btn) {
+  recipesRendered += nextBatch.length;
+
+  // Якщо залишились ще рецепти — показати кнопку знову
   if (recipesRendered < uniqueGroups.length) {
-    btn.style.display = "block";
-  } else {
-    btn.style.display = "none";
+    const loadMoreBtn = document.createElement("button");
+    loadMoreBtn.id = "load-more-btn";
+    loadMoreBtn.innerText = "⬇️ Показати ще";
+    loadMoreBtn.className = "main-button generate";
+    loadMoreBtn.onclick = () => loadMoreRecipes(container, uniqueGroups, category);
+    container.appendChild(loadMoreBtn);
   }
  }
 }
