@@ -953,6 +953,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   async function init() {
+      // 🔍 Якщо є параметр ?search= — автоматично запускаємо пошук
+  const params = new URLSearchParams(window.location.search);
+  const searchQuery = params.get("search");
+  if (searchQuery) {
+    const input = document.getElementById('smart-search-input');
+    if (input) {
+      input.value = searchQuery;
+      showSection('section-search'); // відкриває секцію пошуку
+      setTimeout(() => runSmartSearch(), 300); // викликає пошук
+    }
+  }
+
     await initAllRecipes(); // 🟢 виклик твоєї нової функції
     await loadCategories();
     await loadDailyRecipe();
