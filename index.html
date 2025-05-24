@@ -1902,6 +1902,16 @@ function expandVideo(wrapper) {
 ">
   ✅ Додано до улюбленого!
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const recipeId = urlParams.get("recipe_id");
+
+  if (recipeId) {
+    showRecipeById(recipeId); // 👉 твоя функція, яка відображає рецепт
+  }
+});
+</script>
 
 </body>
 </html>
