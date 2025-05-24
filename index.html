@@ -624,7 +624,18 @@ const recipe = grouped[groupKeys[dayIndex]];
     <div class="daily-image-wrapper" style="position: relative;">
       <img src="${image}" alt="Рецепт дня"
            style="width:100%; height:200px; object-fit:cover; border-radius: 16px 16px 0 0;">
-      <div class="daily-label" style="...">Рецепт дня 🍓</div>
+      <div class="daily-label" style="
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #5c3e59;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+">Рецепт дня 🍓</div>
+
     </div>
     <div style="padding: 15px;">
       <h2 style="margin-top: 0;">${title}</h2>
