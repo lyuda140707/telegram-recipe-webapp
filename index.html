@@ -555,6 +555,21 @@ function groupByRecipeNumber(data) {
   });
   return grouped;
 }
+async function showRecipeById(recipeId) {
+  const all = await fetchRecipes(); // тягне всі рецепти
+  const grouped = groupByRecipeNumber(all);
+  const recipe = grouped[recipeId];
+
+  if (!recipe) {
+    alert("Рецепт не знайдено 😞");
+    return;
+  }
+
+  const container = document.getElementById("section-recipes");
+  container.innerHTML = `<h2>🔗 Обраний рецепт</h2>`;
+  renderRecipeCard(container, recipe, 0);
+  showSection('section-recipes');
+}
 
 
 async function loadCategories() {
