@@ -944,7 +944,12 @@ function goHome() {
     window.open('https://t.me/receptukTop', '_blank'); // <-- заміни на свій канал
   };
 }
-
+document.addEventListener("DOMContentLoaded", () => {
+  // 🛡️ Захист від відкриття в браузері
+  if (!window.Telegram.WebApp || !Telegram.WebApp.initDataUnsafe?.user?.id) {
+    document.body.innerHTML = "<div style='padding:20px;font-size:20px;'>❌ Відкрий цей рецепт через Telegram</div>";
+    throw new Error("Not in Telegram WebApp");
+  }
 
 document.addEventListener("DOMContentLoaded", () => {
   async function init() {
