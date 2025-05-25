@@ -777,22 +777,13 @@ recent.forEach((group, index) => {
   });
 
   if (compact) {
-  card.innerHTML = `
-    ${firstImage || ""}
-    <h3>${info["назва рецепту"]}</h3>
-    <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-    <div class="recipe-buttons">
-      <button class="detail-button" onclick="showRecipeById('${info["номер рецепту"]}')">➕ Детальніше</button>
-    </div>
-  `;
-} else {
-  card.innerHTML = `
+    card.innerHTML = `
     <h3>${info["назва рецепту"]}</h3>
     <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
     <p><strong>Інгредієнти:</strong></p>
     <pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${info["інгредієнти"] || "Не вказано"}</pre>
     <div class="recipe-buttons">
-      <button class="detail-button" onclick="showRecipeById('${info["номер рецепту"]}')">➕ Детальніше</button>
+      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
       <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У список</button>
     </div>
     <div id="${id}" class="recipe-content">
@@ -805,7 +796,7 @@ recent.forEach((group, index) => {
       </div>
     </div>
   `;
-}
+
 
   container.appendChild(card);
 }
