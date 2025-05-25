@@ -943,7 +943,10 @@ function showSection(id) {
   document.querySelectorAll('.section').forEach(el => {
   el.classList.remove('active');
 });
-document.getElementById('section-categories').classList.remove('active'); // явно сховати
+  if (id !== 'section-categories') {
+    document.getElementById('section-categories')?.classList.remove('active');
+  }
+
 const target = document.getElementById(id);
 if (!target) {
   alert(`❌ showSection("${id}") — не знайдено елемент!`);
@@ -1032,8 +1035,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (container && !container.innerHTML.trim()) {
     loadLatestRecipes();
   }
- loadCategories();
-  }, 1000);
+
+  // 🟡 НЕ ВИКЛИКАЙ повторно loadCategories(), бо вже було
+}, 1000);
+
 
 }); // ⛔️ ОЦІЄЇ НЕМАЄ або обірвана
   
