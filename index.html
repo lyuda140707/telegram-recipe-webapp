@@ -609,6 +609,7 @@ async function showRecipeById(recipeId) {
 
 
 async function loadCategories() {
+  console.log("📦 loadCategories запускається");
   const container = document.getElementById('section-categories');
   container.innerHTML = '';
   categories.forEach(cat => {
@@ -1031,7 +1032,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (container && !container.innerHTML.trim()) {
     loadLatestRecipes();
   }
-}, 1000);
+ loadCategories();
+  }, 1000);
 
 }); // ⛔️ ОЦІЄЇ НЕМАЄ або обірвана
   
@@ -1967,6 +1969,7 @@ function expandVideo(wrapper) {
  }
 
 };
+
   
 </script>
 <div id="subscribe-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
