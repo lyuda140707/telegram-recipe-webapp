@@ -945,35 +945,36 @@ function goHome() {
   };
 }
 document.addEventListener("DOMContentLoaded", () => {
-  async function init() {
-    // 🟢 Тут твій код ініціалізації
-    const urlParams = new URLSearchParams(window.location.search);
-    const recipeId = urlParams.get("recipe_id");
+async function init() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const recipeId = urlParams.get("recipe_id");
 
-    if (recipeId) {
-      showRecipeById(recipeId);
+  if (recipeId) {
+    showRecipeById(recipeId);
+  }
+
+  const searchQuery = urlParams.get("search");
+  if (searchQuery) {
+    const input = document.getElementById('smart-search-input');
+    if (input) {
+      input.value = searchQuery;
+      showSection('section-search');
+      setTimeout(() => runSmartSearch(), 300);
     }
+  }
 
-    const searchQuery = urlParams.get("search");
-    if (searchQuery) {
-      const input = document.getElementById('smart-search-input');
-      if (input) {
-        input.value = searchQuery;
-        showSection('section-search');
-        setTimeout(() => runSmartSearch(), 300);
-      }
-    }
-
-    await initAllRecipes();
-    await loadCategories();
-    await fetchRecipes(); // просто щоб переконатись, що дані є
-    await loadDailyRecipe(); // чекаємо точно
-    goHome();
-
-
-
+  await initAllRecipes();
+  await loadCategories();
+  await fetchRecipes(); // просто щоб переконатись, що дані є
+  await loadDailyRecipe(); // чекаємо точно
+  goHome();
   autoScrollSliders();
-  init();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  init(); // ✅ тільки тут викликаємо
+});
+
   
     // 🖱️ Enter → пошук у холодильнику
  document.getElementById('fridge-input')?.addEventListener('keydown', function (e) {
