@@ -950,21 +950,18 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadCategories(); 
     await fetchRecipes();  
     await loadDailyRecipe();
-}
+  } // 🟢 ← додай цю фігуру дужку, бо вона ЗАКРИВАЄ функцію init
 
+  init(); // ✅ Тепер викликається вже поза нею
 
-    
-  }
-
-  init(); // ← викликаємо функцію одразу
   setTimeout(() => {
-  const container = document.getElementById("daily-recipe");
-  if (container && !container.innerHTML.trim()) {
-    loadDailyRecipe();
-  }
-}, 1000);
-
+    const container = document.getElementById("daily-recipe");
+    if (container && !container.innerHTML.trim()) {
+      loadDailyRecipe();
+    }
+  }, 1000);
 });
+
 
   
     // 🖱️ Enter → пошук у холодильнику
