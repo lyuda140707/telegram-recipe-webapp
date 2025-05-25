@@ -117,19 +117,37 @@ h1, h2, h3 {
 
 .latest-grid .recipe-card {
   flex: 0 0 auto;
-  width: 160px;
-  padding: 12px;
-  background: #1c1c1c;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,255,255,0.1);
+  width: 180px;
+  padding: 14px;
+  background: linear-gradient(145deg, #ffe3ec, #e0f7fa);
+  border-radius: 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   scroll-snap-align: start;
 }
 
 .latest-grid .recipe-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 6px 16px rgba(0,255,255,0.3);
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
 }
+
+.latest-grid .recipe-card h3 {
+  font-family: 'Lobster', cursive;
+  color: #4b2c5e;
+  font-size: 16px;
+  text-align: center;
+  background: #fff6fb;
+  padding: 10px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+}
+
+.latest-grid .recipe-card p strong {
+  background-color: #fff2aa;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
 
 
     .back-button {
