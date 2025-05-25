@@ -737,7 +737,7 @@ async function loadLatestRecipes() {
       ${sliderImages.length ? `<div class="slider-container">${sliderImages.map(src => `<img src="${src}">`).join('')}</div>` : ''}
       ${videoBlock}
       <div style="text-align: center; margin-top: 20px;">
-        <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+        <button class="recipe-toggle" onclick='toggleRecipe("${id}", this)'>🔼 Згорнути</button>
       </div>
     </div>
   `;
@@ -1874,7 +1874,7 @@ function autoScrollSliders() {
             return `${firstImage || ""}${blocks}${sliderHTML}`;
           })()}
           <div style="text-align: center; margin-top: 20px;">
-            <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+            <button class="recipe-toggle" onclick='toggleRecipe("${id}", this)'>🔼 Згорнути</button>
           </div>
         </div>
       </div>
@@ -1903,11 +1903,9 @@ function expandVideo(wrapper) {
     // 🔼 Збільшити
     video.classList.remove('video-preview');
     video.classList.add('video-full');
-  }
-}
-
-
-
+   }
+ }
+})
 </script>
 <div id="subscribe-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
   <div style="background:white; padding:20px; border-radius:20px; max-width:300px; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.2); animation: fade 0.4s;">
