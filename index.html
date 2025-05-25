@@ -642,7 +642,7 @@ async function loadDailyRecipe() {
 }
 
 
-}function renderRecipeCard(container, group, index) {
+ function renderRecipeCard(container, group, index) {
   const seenBlocks = new Set();
   const id = `recipe-details-${index}`;
   const info = group.find(r => r["тип блоку"] === "текст") || group[0];
