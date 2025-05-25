@@ -955,7 +955,13 @@ document.getElementById('daily-recipe').classList.remove('active');
 
   // Активуємо поточну
   
-  document.getElementById(id).classList.add('active');
+  const target = document.getElementById(id);
+if (target) {
+  target.classList.add('active');
+} else {
+  console.error(`❌ Елемент з id=${id} не знайдено в DOM`);
+}
+
 
   // ✅ Показуємо кнопку "⬅ На головну"
   document.querySelector('.back-button').style.display = 'block';
