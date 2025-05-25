@@ -229,6 +229,19 @@ h1, h2, h3 {
       animation: pulse 1.5s infinite;
       margin-bottom: 10px;
     }
+    .swipe-hint {
+  text-align: center;
+  font-size: 14px;
+  color: #7a2c5c;
+  animation: pulse 1.5s infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
 
     @keyframes pulse {
       0% { opacity: 1; }
@@ -684,7 +697,12 @@ async function loadLatestRecipes() {
     const grouped = groupByRecipeNumber(data);
     const recent = Object.values(grouped).slice(-5).reverse(); // 5 останніх
 
-   container.innerHTML = '<h2>🆕 Нещодавно додані рецепти</h2><div class="latest-grid" id="latest-grid"></div>';
+   container.innerHTML = `
+  <h2>🆕 Нещодавно додані рецепти</h2>
+  <div class="swipe-hint">📱 Гортай ➡️</div>
+  <div class="latest-grid" id="latest-grid"></div>
+`;
+
 const grid = document.getElementById('latest-grid');
 recent.forEach((group, index) => {
   renderRecipeCard(grid, group, index, true); // 👉 компактний вигляд
