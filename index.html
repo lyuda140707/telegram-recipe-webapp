@@ -287,6 +287,9 @@ h1, h2, h3 {
   border-radius: 10px;
 }
 
+#daily-recipe.active {
+  display: block !important;
+}
     
   </style>
 
@@ -658,6 +661,8 @@ const recipe = grouped[groupKeys[dayIndex]];
     </div>
   </div>
 `;
+container.offsetHeight; // 🔄 Примусове оновлення DOM
+
 
 }function renderRecipeCard(container, group, index) {
   const seenBlocks = new Set();
@@ -967,12 +972,22 @@ document.addEventListener("DOMContentLoaded", () => {
     await initAllRecipes();
     await loadCategories(); 
     await fetchRecipes();  
-    await loadDailyRecipe();
+    if (tg && tg.initDataUnsafe?.user?.id) {
+      await loadDailyRecipe();
+}
+
 
     
   }
 
   init(); // ← викликаємо функцію одразу
+  setTimeout(() => {
+  const container = document.getElementById("daily-recipe");
+  if (container && !container.innerHTML.trim()) {
+    loadDailyRecipe();
+  }
+}, 1000);
+
 });
 
   
