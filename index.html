@@ -1015,6 +1015,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const tg = window.Telegram?.WebApp;
+  if (tg) tg.ready();
 
 if (tg && tg.initDataUnsafe?.user?.id) {
   const userId = tg.initDataUnsafe.user.id;
