@@ -782,7 +782,7 @@ recent.forEach((group, index) => {
     <h3>${info["назва рецепту"]}</h3>
     <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
     <div class="recipe-buttons">
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+      <button class="detail-button" onclick="showRecipeById('${info["номер рецепту"]}')">➕ Детальніше</button>
     </div>
   `;
 } else {
