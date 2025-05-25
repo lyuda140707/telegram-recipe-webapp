@@ -945,34 +945,34 @@ function goHome() {
   };
 }
 document.addEventListener("DOMContentLoaded", () => {
-  // 🛡️ Захист від відкриття в браузері
-  if (!window.Telegram.WebApp || !Telegram.WebApp.initDataUnsafe?.user?.id) {
-    document.body.innerHTML = "<div style='padding:20px;font-size:20px;'>❌ Відкрий цей рецепт через Telegram</div>";
-    throw new Error("Not in Telegram WebApp");
-  }
-
-document.addEventListener("DOMContentLoaded", () => {
   async function init() {
-      // 🔍 Якщо є параметр ?search= — автоматично запускаємо пошук
-  const params = new URLSearchParams(window.location.search);
-  const searchQuery = params.get("search");
-  if (searchQuery) {
-    const input = document.getElementById('smart-search-input');
-    if (input) {
-      input.value = searchQuery;
-      showSection('section-search'); // відкриває секцію пошуку
-      setTimeout(() => runSmartSearch(), 300); // викликає пошук
-    }
-  }
+    // 🟢 Тут твій код ініціалізації
+    const urlParams = new URLSearchParams(window.location.search);
+    const recipeId = urlParams.get("recipe_id");
 
-    await initAllRecipes(); // 🟢 виклик твоєї нової функції
+    if (recipeId) {
+      showRecipeById(recipeId);
+    }
+
+    const searchQuery = urlParams.get("search");
+    if (searchQuery) {
+      const input = document.getElementById('smart-search-input');
+      if (input) {
+        input.value = searchQuery;
+        showSection('section-search');
+        setTimeout(() => runSmartSearch(), 300);
+      }
+    }
+
+    await initAllRecipes();
     await loadCategories();
     await loadDailyRecipe();
     goHome();
   }
 
-  autoScrollSliders(); // ✅ запускаємо автопрокрутку
-init();
+  autoScrollSliders();
+  init();
+  
     // 🖱️ Enter → пошук у холодильнику
  document.getElementById('fridge-input')?.addEventListener('keydown', function (e) {
   if (e.key === 'Enter') {
@@ -1934,16 +1934,6 @@ function expandVideo(wrapper) {
 ">
   ✅ Додано до улюбленого!
 </div>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const urlParams = new URLSearchParams(window.location.search);
-  const recipeId = urlParams.get("recipe_id");
-
-  if (recipeId) {
-    showRecipeById(recipeId); // 👉 твоя функція, яка відображає рецепт
-  }
-});
-</script>
 
 </body>
 </html>
