@@ -825,7 +825,6 @@ function renderGroupedRecipes(groups, category) {
     return true;
   });
 
-  // 🟢 Перемішуємо рецепти у випадковому порядку
   for (let i = uniqueGroups.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [uniqueGroups[i], uniqueGroups[j]] = [uniqueGroups[j], uniqueGroups[i]];
@@ -833,9 +832,12 @@ function renderGroupedRecipes(groups, category) {
 
   recipesRendered = 0;
   loadMoreRecipes(container, uniqueGroups, category);
+
+  // 🧪 Ось ТУТ додай лог:
+  console.log("📍 Показуємо секцію:", 'section-recipes', document.getElementById('section-recipes'));
+
   showSection('section-recipes');
 }
-
 
 
 function loadMoreRecipes(container, uniqueGroups, category) {
@@ -951,11 +953,12 @@ function showSection(id) {
 });
 document.getElementById('section-categories').classList.remove('active'); // явно сховати
 const target = document.getElementById(id);
-if (target) {
-  target.classList.add('active');
-} else {
-  console.error(`❌ Елемент з id=${id} не знайдено в DOM`);
+if (!target) {
+  alert(`❌ showSection("${id}") — не знайдено елемент!`);
+  return; // Зупиняємось, щоб не було .classList of null
 }
+target.classList.add('active');
+
 
 
   // ✅ Показуємо кнопку "⬅ На головну"
