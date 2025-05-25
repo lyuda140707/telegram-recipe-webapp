@@ -966,8 +966,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     await initAllRecipes();
     await loadCategories();
-    await loadDailyRecipe();  // ⏳ дочекаємось рецепта дня
-    goHome();  // 🏠 тільки після того
+    await fetchRecipes(); // просто щоб переконатись, що дані є
+    await loadDailyRecipe(); // чекаємо точно
+    goHome();
+
 
 
   autoScrollSliders();
