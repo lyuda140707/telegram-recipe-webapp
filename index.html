@@ -972,8 +972,7 @@ document.addEventListener("DOMContentLoaded", () => {
     await initAllRecipes();
     await loadCategories(); 
     await fetchRecipes();  
-    if (tg && tg.initDataUnsafe?.user?.id) {
-      await loadDailyRecipe();
+    await loadDailyRecipe();
 }
 
 
