@@ -1161,6 +1161,7 @@ proBtn.onclick = () => {
 };
 document.getElementById("pro-button-container")?.appendChild(proBtn);
 
+ 
 
   document.getElementById('open-favorites')?.addEventListener('click', () => {
   const block = document.getElementById('fav-accordion');
@@ -1814,6 +1815,9 @@ function autoScrollSliders() {
     setInterval(scrollStep, 30); // 30 мс = плавно. Зменшити → швидше
   });
 }
+}); // ← Встав саме сюди. Це закриває document.addEventListener("DOMContentLoaded", ...)
+
+
 
  async function runSmartSearch() {
   const input = document.getElementById('smart-search-input');
