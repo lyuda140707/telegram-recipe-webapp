@@ -589,6 +589,7 @@ async function loadCategories() {
 }
 
 async function loadDailyRecipe() {
+  console.log("🚀 loadDailyRecipe запускається");
   const recipes = await fetchRecipes();
 localStorage.setItem('all_recipes', JSON.stringify(recipes));
 const container = document.getElementById('daily-recipe');
@@ -637,7 +638,7 @@ const recipe = grouped[groupKeys[dayIndex]];
   <div class="recipe-card" onclick="openDailyRecipeCategory('${category}', '${info["номер рецепту"]}')"
        style="padding: 0; overflow: hidden; cursor: pointer;">
     <div class="daily-image-wrapper" style="position: relative;">
-      <img src="${image}" alt="Рецепт дня"
+      <img src="${image}" loading="lazy" alt="Рецепт дня"
            style="width:100%; height:200px; object-fit:cover; border-radius: 16px 16px 0 0;">
       <div class="daily-label" style="
   position: absolute;
@@ -964,11 +965,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     await initAllRecipes();
-    await loadCategories();
-    await fetchRecipes();
-    await loadDailyRecipe();
-    goHome();
-    autoScrollSliders();
+    await loadCategories(); 
+    await fetchRecipes();  
+    wait loadDailyRecipe(); 
+    
   }
 
   init(); // ← викликаємо функцію одразу
