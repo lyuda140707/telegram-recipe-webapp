@@ -108,20 +108,24 @@ h1, h2, h3 {
 }
 .latest-grid {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
 .latest-grid .recipe-card {
-  width: 180px;
+  flex: 0 0 auto;
+  width: 160px;
   padding: 12px;
   background: #1c1c1c;
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0,255,255,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  scroll-snap-align: start;
 }
+
 .latest-grid .recipe-card:hover {
   transform: scale(1.03);
   box-shadow: 0 6px 16px rgba(0,255,255,0.3);
