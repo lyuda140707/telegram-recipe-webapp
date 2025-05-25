@@ -106,6 +106,26 @@ h1, h2, h3 {
 .bottom-nav button:hover {
   color: #d81159;
 }
+.latest-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.latest-grid .recipe-card {
+  width: 180px;
+  padding: 12px;
+  background: #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,255,255,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.latest-grid .recipe-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 16px rgba(0,255,255,0.3);
+}
 
 
     .back-button {
@@ -642,10 +662,13 @@ async function loadLatestRecipes() {
     const grouped = groupByRecipeNumber(data);
     const recent = Object.values(grouped).slice(-5).reverse(); // 5 останніх
 
-    container.innerHTML = '<h2>🆕 Нещодавно додані рецепти</h2>';
-    recent.forEach((group, index) => {
-      renderRecipeCard(container, group, index);
-    });
+   container.innerHTML = '<h2>🆕 Нещодавно додані рецепти</h2><div class="latest-grid" id="latest-grid"></div>';
+const grid = document.getElementById('latest-grid');
+recent.forEach((group, index) => {
+  renderRecipeCard(grid, group, index, true); // 👉 компактний вигляд
+});
+
+
   } catch (err) {
     console.error("❌ Помилка завантаження останніх рецептів:", err);
     container.innerHTML = '⚠️ Не вдалося завантажити рецепти';
@@ -653,7 +676,7 @@ async function loadLatestRecipes() {
 }
 
   
- function renderRecipeCard(container, group, index) {
+ function renderRecipeCard(container, group, index, compact = false) {
   const seenBlocks = new Set();
   const id = `recipe-details-${index}`;
   const info = group.find(r => r["тип блоку"] === "текст") || group[0];
@@ -722,6 +745,16 @@ async function loadLatestRecipes() {
 
   });
 
+  if (compact) {
+  card.innerHTML = `
+    ${firstImage || ""}
+    <h3>${info["назва рецепту"]}</h3>
+    <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+    <div class="recipe-buttons">
+      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+    </div>
+  `;
+} else {
   card.innerHTML = `
     <h3>${info["назва рецепту"]}</h3>
     <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
@@ -741,6 +774,7 @@ async function loadLatestRecipes() {
       </div>
     </div>
   `;
+}
 
   container.appendChild(card);
 }
