@@ -323,10 +323,7 @@ h1, h2, h3 {
   border-radius: 10px;
 }
 
-#daily-recipe.active {
-  display: block !important;
-}
-    
+
   </style>
 
 </head>
@@ -618,55 +615,7 @@ async function loadCategories() {
   });
 }
 
-// 🔄 Заміна існуючої функції loadDailyRecipe() на нову
-async function loadDailyRecipe() {
-  console.log("🚀 loadDailyRecipe запускається");
-  const container = document.getElementById('daily-recipe');
-  container.innerHTML = '<p>⏳ Завантаження рецепта дня...</p>';
 
-  try {
-    const response = await fetch("https://recipe-backend-0gz1.onrender.com/recipes");
-    if (!response.ok) throw new Error("❌ Помилка завантаження: статус " + response.status);
-
-    const recipes = await response.json();
-    if (!recipes || recipes.length === 0) {
-      container.innerHTML = '<p>😞 Немає доступних рецептів дня.</p>';
-      return;
-    }
-
-    localStorage.setItem('all_recipes', JSON.stringify(recipes));
-
-    const grouped = groupByRecipeNumber(recipes);
-    const groupKeys = Object.keys(grouped);
-    const dayIndex = new Date().getDate() % groupKeys.length;
-    const recipe = grouped[groupKeys[dayIndex]];
-    const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-    const category = info["категорія"] || "Інше";
-    const title = info["назва рецепту"];
-
-    const imageBlock = recipe.find(r => r["тип блоку"] === "фото");
-    const image = imageBlock ? imageBlock["контент"] : "https://i.pinimg.com/736x/42/d0/47/42d0471e0094e28d71eaec86d78beec5.jpg";
-
-    container.innerHTML = `
-      <div class="recipe-card" onclick="openDailyRecipeCategory('${category}', '${info["номер рецепту"]}')"
-           style="padding: 0; overflow: hidden; cursor: pointer;">
-        <div class="daily-image-wrapper" style="position: relative;">
-          <img src="${image}" loading="lazy" alt="Рецепт дня"
-               style="width:100%; height:200px; object-fit:cover; border-radius: 16px 16px 0 0;">
-          <div class="daily-label" style="position: absolute; bottom: 10px; left: 10px;
-            background: rgba(255, 255, 255, 0.8); color: #5c3e59; font-weight: bold; padding: 6px 12px;
-            border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">Рецепт дня 🍓</div>
-        </div>
-        <div style="padding: 15px;">
-          <h2 style="margin-top: 0;">${title}</h2>
-        </div>
-      </div>
-    `;
-  } catch (error) {
-    console.error("❌ Помилка в loadDailyRecipe:", error);
-    container.innerHTML = '<p>⚠️ Не вдалося завантажити рецепт дня. Спробуйте пізніше.</p>';
-  }
-}
 
 async function loadLatestRecipes() {
   const container = document.getElementById('latest-recipes');
@@ -1965,7 +1914,6 @@ function expandVideo(wrapper) {
    }
  }
 
-
   
 </script>
 <div id="subscribe-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
@@ -1997,4 +1945,3 @@ function expandVideo(wrapper) {
 
 </body>
 </html>
-
