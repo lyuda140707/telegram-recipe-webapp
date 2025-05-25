@@ -792,7 +792,7 @@ recent.forEach((group, index) => {
     <p><strong>Інгредієнти:</strong></p>
     <pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${info["інгредієнти"] || "Не вказано"}</pre>
     <div class="recipe-buttons">
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+      <button class="detail-button" onclick="showRecipeById('${info["номер рецепту"]}')">➕ Детальніше</button>
       <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У список</button>
     </div>
     <div id="${id}" class="recipe-content">
