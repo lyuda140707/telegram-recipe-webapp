@@ -709,7 +709,7 @@ recent.forEach((group, index) => {
   
  function renderRecipeCard(container, group, index, compact = false) {
   const seenBlocks = new Set();
-  const id = `recipe-details-${index}`;
+  const id = `recipe-details-${info["номер рецепту"]}-${index}`;
   const info = group.find(r => r["тип блоку"] === "текст") || group[0];
   const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
 
