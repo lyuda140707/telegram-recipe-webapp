@@ -22,6 +22,13 @@ h1, h2, h3 {
 }
 
 
+  
+
+
+    h1, h2, h3 {
+      color: #4b2c5e;
+    }
+
     .section {
       display: none;
       animation: fade 0.4s ease;
@@ -68,17 +75,7 @@ h1, h2, h3 {
   100% { transform: scale(1); }
 }
 
-
-.recipe-card h3 {
-  background: linear-gradient(to right, #fff0f5, #e0c3fc);
-  padding: 10px 15px;
-  border-radius: 14px;
-  margin-bottom: 10px;
-  color: #4b2c5e;
-  font-size: 18px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
+    
     .bottom-nav {
       display: flex;
       justify-content: space-around;
@@ -99,48 +96,6 @@ h1, h2, h3 {
 .bottom-nav button:hover {
   color: #d81159;
 }
-.latest-grid {
-  display: flex;
-  overflow-x: auto;
-  gap: 12px;
-  padding: 10px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-}
-
-.latest-grid .recipe-card {
-  flex: 0 0 auto;
-  width: 180px;
-  padding: 14px;
-  background: linear-gradient(145deg, #ffe3ec, #e0f7fa);
-  border-radius: 20px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  scroll-snap-align: start;
-}
-
-.latest-grid .recipe-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
-}
-
-.latest-grid .recipe-card h3 {
-  font-family: 'Lobster', cursive;
-  color: #4b2c5e;
-  font-size: 16px;
-  text-align: center;
-  background: #fff6fb;
-  padding: 10px;
-  border-radius: 14px;
-  margin-bottom: 10px;
-}
-
-.latest-grid .recipe-card p strong {
-  background-color: #fff2aa;
-  padding: 2px 6px;
-  border-radius: 8px;
-}
-
 
 
     .back-button {
@@ -223,7 +178,6 @@ h1, h2, h3 {
       margin-bottom: 10px;
     }
 
-
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.4; }
@@ -303,27 +257,6 @@ h1, h2, h3 {
   background-size: 16px 16px;
 }
 
-.video-wrapper {
-  margin-top: 10px;
-  overflow: hidden;
-  border-radius: 10px;
-  cursor: pointer;
-  position: relative;
-}
-.video-preview {
-  width: 100%;
-  max-height: 160px;
-  object-fit: cover;
-  opacity: 0.85;
-  border-radius: 10px;
-}
-.video-full {
-  width: 100%;
-  max-height: none;
-  border-radius: 10px;
-}
-
-
   </style>
 
 </head>
@@ -339,13 +272,23 @@ h1, h2, h3 {
     
 
 
-<p style="text-align: center; font-size: 17px; font-family: 'Nunito', sans-serif; color: #5c3e59; font-weight: 600; background: linear-gradient(to right, #e8defc, #ffe0f0); padding: 12px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 3px 6px rgba(0,0,0,0.05);">
-  🆕 Нещодавно додані рецепти — найсвіжіші ідеї для натхнення!
+<p style="
+  text-align: center;
+  font-size: 17px;
+  font-family: 'Nunito', sans-serif;
+  color: #5c3e59;
+  font-weight: 600;
+  background: linear-gradient(to right, #e8defc, #ffe0f0);
+  padding: 12px;
+  border-radius: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+">
+  🍰 Щодня — нова смачна ідея 🌟 Гортай вниз, щоб знайти натхнення для обіду чи вечері!
 </p>
 
-
     
-<div id="latest-recipes" class="section active"></div>
+<div id="daily-recipe" class="section active"></div>
 <button class="back-button" style="display:none;" onclick="goHome()">⬅ На головну</button>
 <div id="section-recipes" class="section"></div>
 
@@ -566,10 +509,6 @@ async function fetchRecipes(category = null) {
   }
 }
 
-let groupedRecipes = [];
-let recipesRendered = 0;
-const recipesPerBatch = 10;
-
 function groupByRecipeNumber(data) {
   const grouped = {};
   data.forEach(item => {
@@ -581,25 +520,9 @@ function groupByRecipeNumber(data) {
   });
   return grouped;
 }
-async function showRecipeById(recipeId) {
-  const all = await fetchRecipes(); // тягне всі рецепти
-  const grouped = groupByRecipeNumber(all);
-  const recipe = grouped[recipeId];
-
-  if (!recipe) {
-    alert("Рецепт не знайдено 😞");
-    return;
-  }
-
-  const container = document.getElementById("section-recipes");
-  container.innerHTML = `<h2>🔗 Обраний рецепт</h2>`;
-  renderRecipeCard(container, recipe, 0);
-  showSection('section-recipes');
-}
 
 
 async function loadCategories() {
-  console.log("📦 loadCategories запускається");
   const container = document.getElementById('section-categories');
   container.innerHTML = '';
   categories.forEach(cat => {
@@ -615,187 +538,199 @@ async function loadCategories() {
   });
 }
 
+async function loadDailyRecipe() {
+  const recipes = await fetchRecipes();
+localStorage.setItem('all_recipes', JSON.stringify(recipes));
+const container = document.getElementById('daily-recipe');
+
+const grouped = groupByRecipeNumber(recipes); // 🟢 додано
+const groupKeys = Object.keys(grouped);
+if (groupKeys.length === 0) return;
+
+const dayIndex = new Date().getDate() % groupKeys.length;
+const recipe = grouped[groupKeys[dayIndex]];
 
 
-async function loadLatestRecipes() {
-  const container = document.getElementById('latest-recipes');
-  container.innerHTML = '⏳ Завантаження...';
 
-  try {
-    const response = await fetch("https://recipe-backend-0gz1.onrender.com/recipes");
-    const data = await response.json();
+  const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
+  const category = info["категорія"] || "Інше";
+  const title = info["назва рецепту"];
 
-    const grouped = groupByRecipeNumber(data);
-    const recent = Object.values(grouped).slice(-5).reverse(); // 5 останніх
+  // Фото
+  const imageBlock = recipe.find(r => r["тип блоку"] === "фото");
+  const image = imageBlock ? imageBlock["контент"] : "https://i.pinimg.com/736x/42/d0/47/42d0471e0094e28d71eaec86d78beec5.jpg";
 
-   container.innerHTML = `
-  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(to right, #fff0f5, #e0f7fa); padding: 12px 16px; border-radius: 20px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-  <span style="background:#4285f4; color:white; padding: 2px 8px; border-radius: 8px; font-size: 12px; font-weight: bold;">NEW</span>
-  <h2 style="margin: 0; font-size: 18px; color:#4b2c5e;">Нещодавно додані рецепти</h2>
-</div>
+  // Вміст рецепта (тіло)
+  let body = "";
+  recipe.forEach(r => {
+    if (r["тип блоку"] === "текст") {
+      body += `<p>${r["контент"]}</p>`;
+    } else if (r["тип блоку"] === "фото" && r !== imageBlock) {
+      body += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+    } else if (r["тип блоку"] === "відео") {
+      let video = r["контент"];
+      if (video.includes("drive.google.com")) {
+        const match = video.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          video = `https://drive.google.com/file/d/${match[1]}/preview`;
+          body += `<iframe src="${video}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+        }
+      } else {
+        body += `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
+                   <source src="${video}" type="video/mp4">
+                 </video>`;
+      }
+    }
+  });
 
-  <div class="latest-grid" id="latest-grid"></div>
+  container.innerHTML = `
+  <div class="recipe-card" onclick="openDailyRecipeCategory('${category}', '${info["номер рецепту"]}')"
+       style="padding: 0; overflow: hidden; cursor: pointer;">
+    <div class="daily-image-wrapper" style="position: relative;">
+      <img src="${image}" alt="Рецепт дня"
+           style="width:100%; height:200px; object-fit:cover; border-radius: 16px 16px 0 0;">
+      <div class="daily-label" style="...">Рецепт дня 🍓</div>
+    </div>
+    <div style="padding: 15px;">
+      <h2 style="margin-top: 0;">${title}</h2>
+    </div>
+  </div>
 `;
 
-const grid = document.getElementById('latest-grid');
-recent.forEach((group, index) => {
-  renderRecipeCard(grid, group, index, true); // 👉 компактний вигляд
-});
-
-
-  } catch (err) {
-    console.error("❌ Помилка завантаження останніх рецептів:", err);
-    container.innerHTML = '⚠️ Не вдалося завантажити рецепти';
-  }
 }
-
-  
- function renderRecipeCard(container, group, index, compact = false) {
-  const seenBlocks = new Set();
-  const id = `recipe-details-${index}`;
-  const info = group.find(r => r["тип блоку"] === "текст") || group[0];
-  const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
-
-  const card = document.createElement('div');
-  card.className = 'recipe-card';
-  card.setAttribute('data-recipe-id', info["номер рецепту"]);
-
-  let textBlock = "";
-  let firstImage = null;
-  let sliderImages = [];
-  let videoBlock = "";
-
-  group.forEach(r => {
-    const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
-    if (seenBlocks.has(blockKey)) return;
-    seenBlocks.add(blockKey);
-
-    if (r["тип блоку"] === "текст") {
-      textBlock += `<p>${r["контент"]}</p>`;
-    } else if (r["тип блоку"] === "фото") {
-      if (!firstImage) {
-        firstImage = `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-      } else {
-        sliderImages.push(r["контент"]);
-      }
-    } else if (r["тип блоку"] === "відео" && !videoBlock) {
-  let videoLink = r["контент"];
-  const uniqueId = `video-${index}-${Math.random().toString(36).substr(2, 5)}`;
-
-  if (videoLink.includes("drive.google.com")) {
-    const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-      videoBlock = `<iframe src="${videoLink}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
-    }
-  } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
-    // Telegram file_id
-    videoBlock = `<div id="${uniqueId}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
-    fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${videoLink}`)
-      .then(res => res.json())
-      .then(data => {
-        const el = document.getElementById(uniqueId);
-        if (!el) return;
-        if (data.url) {
-          el.innerHTML = `<div class="video-wrapper" onclick="expandVideo(this)">
-          <video controls class="video-preview">
-            <source src="${data.url}" type="video/mp4">
-          </video>
-           </div>`;
-
-        } else {
-          el.innerHTML = `❌ Не вдалося завантажити відео`;
-        }
-      });
-  } else {
-    videoBlock = `<div class="video-wrapper" onclick="expandVideo(this)">
-  <video controls class="video-preview">
-    <source src="${videoLink}" type="video/mp4">
-  </video>
-</div>`;
-
-  }
-}
-
-
-  if (compact) {
-    card.innerHTML = `
-    <h3>${info["назва рецепту"]}</h3>
-    <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-    <p><strong>Інгредієнти:</strong></p>
-    <pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${info["інгредієнти"] || "Не вказано"}</pre>
-    <div class="recipe-buttons">
-      <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-      <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У список</button>
-    </div>
-    <div id="${id}" class="recipe-content">
-      ${firstImage || ''}
-      ${textBlock}
-      ${sliderImages.length ? `<div class="slider-container">${sliderImages.map(src => `<img src="${src}">`).join('')}</div>` : ''}
-      ${videoBlock}
-      <div style="text-align: center; margin-top: 20px;">
-        <button class="recipe-toggle" onclick='toggleRecipe("${id}", this)'>🔼 Згорнути</button>
-      </div>
-    </div>
-  `;
-
-
-  container.appendChild(card);
-}
-
-
 
 
 function renderGroupedRecipes(groups, category) {
   const container = document.getElementById('section-recipes');
   container.innerHTML = `<h2>🍴 ${category}</h2>`;
 
-  const seen = new Set();
+  const seen = new Set(); // 🔧 Додано!
+ 
+
   const uniqueGroups = Object.values(groups).filter(group => {
-    const recipeId = group[0]["номер рецепту"];
-    if (seen.has(recipeId)) return false;
-    seen.add(recipeId);
-    return true;
+  const recipeId = group[0]["номер рецепту"];
+  if (seen.has(recipeId)) return false;
+  seen.add(recipeId);
+  return true;
+});
+
+  uniqueGroups.forEach((group, index) => {
+    const seenBlocks = new Set(); // ✅ Сюди перенесли!
+    // тут далі вже все як є — твої блоки картки рецепту
+
+
+    const id = `recipe-details-${index}`;
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+    const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
+
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    card.setAttribute('data-recipe-id', info["номер рецепту"]);
+
+
+    let textBlock = "";
+    let firstImage = null;
+    let sliderImages = [];
+    let videoBlock = "";
+
+    card.innerHTML = `
+      <h3>${info["назва рецепту"]}</h3>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong></p>
+<pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${info["інгредієнти"] || "Не вказано"}</pre>
+
+      <div class="recipe-buttons">
+        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У списку</button>
+      </div>
+      <div id="${id}" class="recipe-content"></div>
+    `;
+
+    container.appendChild(card);
+
+    const block = document.getElementById(id);
+
+ const seen = new Set();
+
+group.forEach(r => {
+  const blockKey = `${r["тип блоку"]}|${r["контент"]}`;
+  if (seenBlocks.has(blockKey)) return;
+  seenBlocks.add(blockKey);
+
+  if (r["тип блоку"] === "текст") {
+  textBlock += `<p>${r["контент"]}</p>`;
+} else if (r["тип блоку"] === "фото") {
+    if (!firstImage) {
+      firstImage = `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+    } else {
+      sliderImages.push(r["контент"]);
+    }
+  } else if (r["тип блоку"] === "відео" && !videoBlock) {
+  let videoLink = r["контент"];
+
+  if (videoLink.includes('drive.google.com')) {
+    const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+      videoBlock = `
+        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-top:10px;">
+          <iframe 
+            src="${videoLink}" 
+            style="position: absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:10px;" 
+            allowfullscreen>
+          </iframe>
+        </div>`;
+    }
+  } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
+    // Вважаємо це file_id з Telegram
+    const fileId = videoLink;
+    const uniqueId = `video-${id}-${Math.random().toString(36).substr(2, 5)}`;
+videoBlock = `<div id="${uniqueId}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
+fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${fileId}`)
+  .then(res => res.json())
+  .then(data => {
+    const videoContainer = document.getElementById(uniqueId);
+    if (!videoContainer) return;
+    if (data.url) {
+      videoContainer.innerHTML = `
+        <video controls style="width:100%; border-radius:10px;">
+          <source src="${data.url}" type="video/mp4">
+        </video>`;
+    } else {
+      videoContainer.innerHTML = `❌ Не вдалося завантажити відео`;
+    }
   });
 
-  for (let i = uniqueGroups.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [uniqueGroups[i], uniqueGroups[j]] = [uniqueGroups[j], uniqueGroups[i]];
+  } else {
+    videoBlock = `
+      <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+        <source src="${videoLink}" type="video/mp4">
+        Ваш браузер не підтримує відтворення відео.
+      </video>`;
   }
-
-  recipesRendered = 0;
-  loadMoreRecipes(container, uniqueGroups, category);
-
-  // 🧪 Ось ТУТ додай лог:
-  console.log("📍 Показуємо секцію:", 'section-recipes', document.getElementById('section-recipes'));
-
-  showSection('section-recipes');
 }
 
+});
 
-function loadMoreRecipes(container, uniqueGroups, category) {
-  // Прибираємо стару кнопку (якщо є)
-  const oldBtn = document.getElementById("load-more-btn");
-  if (oldBtn) oldBtn.remove();
+block.innerHTML = `
+  ${firstImage || ''}
+  ${textBlock}
+  ${sliderImages.length > 0 ? `
+    <div class="slider-container">
+      <div class="swipe-hint">📸 Гортай фото ➡️</div>
+      ${sliderImages.map(src => `<img src="${src}" alt="Фото" />`).join('')}
+    </div>` : ''}
+  ${videoBlock}
+  <div style="text-align: center; margin-top: 20px;">
+    <p style="font-size: 12px; color: #999; margin-top: 10px;">👩‍🍳 Автор: ${info["автор"] || "невідомо"}</p>
+    <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+  </div>
+`;
 
-  const nextBatch = uniqueGroups.slice(recipesRendered, recipesRendered + recipesPerBatch);
-  nextBatch.forEach((group, index) => {
-    const recipeIndex = recipesRendered + index;
-    renderRecipeCard(container, group, recipeIndex);
+
   });
-
-  recipesRendered += nextBatch.length;
-
-  // Якщо залишились ще рецепти — показати кнопку знову
-  if (recipesRendered < uniqueGroups.length) {
-    const loadMoreBtn = document.createElement("button");
-    loadMoreBtn.id = "load-more-btn";
-    loadMoreBtn.innerText = "⬇️ Показати ще";
-    loadMoreBtn.className = "main-button generate";
-    loadMoreBtn.onclick = () => loadMoreRecipes(container, uniqueGroups, category);
-    container.appendChild(loadMoreBtn);
-  }
- }
+  showSection('section-recipes');
+}
 
 
 
@@ -837,28 +772,17 @@ function toggleFavorite(recipeId, button) {
 
   
 function toggleRecipe(id, btn) {
-  const current = document.getElementById(id);
-  if (!current) return;
+  const el = document.getElementById(id);
+  if (!el) return;
 
-  // 1. Закриваємо всі інші відкриті блоки
-  document.querySelectorAll('.recipe-content.open').forEach(el => {
-    if (el.id !== id) {
-      el.classList.remove('open');
-      const otherBtn = el.parentElement.querySelector('.detail-button, .recipe-toggle');
-      if (otherBtn) otherBtn.innerText = '➕ Детальніше';
-    }
-  });
-
-  // 2. Тоглимо поточний
-  if (current.classList.contains('open')) {
-    current.classList.remove('open');
+  if (el.classList.contains('open')) {
+    el.classList.remove('open');
     if (btn) btn.innerText = '➕ Детальніше';
   } else {
-    current.classList.add('open');
+    el.classList.add('open');
     if (btn) btn.innerText = '🔼 Згорнути';
   }
 }
-
   
 async function openDailyRecipeCategory(category, focusId = null) {
   const cleanCategory = category.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
@@ -884,18 +808,13 @@ function showSection(id) {
   document.querySelectorAll('.section').forEach(el => {
   el.classList.remove('active');
 });
-  if (id !== 'section-categories') {
-    document.getElementById('section-categories')?.classList.remove('active');
-  }
-
-const target = document.getElementById(id);
-if (!target) {
-  alert(`❌ showSection("${id}") — не знайдено елемент!`);
-  return; // Зупиняємось, щоб не було .classList of null
-}
-target.classList.add('active');
+document.getElementById('section-categories').classList.remove('active'); // явно сховати
+document.getElementById('daily-recipe').classList.remove('active');
 
 
+  // Активуємо поточну
+  
+  document.getElementById(id).classList.add('active');
 
   // ✅ Показуємо кнопку "⬅ На головну"
   document.querySelector('.back-button').style.display = 'block';
@@ -926,15 +845,17 @@ function goHome() {
   // Приховує всі секції
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
 
-  // Показує верхнє меню категорій і рецепт дня
+  // Активує верхнє меню категорій і рецепт дня
   document.getElementById('section-categories').classList.add('active');
-  document.getElementById('latest-recipes').classList.add('active');
-
+  document.getElementById('daily-recipe').classList.add('active');
 
   // Ховає кнопку "⬅ На головну"
   document.querySelector('.back-button').style.display = 'none';
+
+  // Повторно завантажує рецепт дня
+  
+  loadDailyRecipe();
 }
- 
 
   function showSubscribeModal() {
   document.getElementById('subscribe-modal').style.display = 'flex';
@@ -942,43 +863,18 @@ function goHome() {
     window.open('https://t.me/receptukTop', '_blank'); // <-- заміни на свій канал
   };
 }
+
+
 document.addEventListener("DOMContentLoaded", () => {
   async function init() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const recipeId = urlParams.get("recipe_id");
-
-    if (recipeId) {
-      showRecipeById(recipeId);
-    }
-
-    const searchQuery = urlParams.get("search");
-    if (searchQuery) {
-      const input = document.getElementById('smart-search-input');
-      if (input) {
-        input.value = searchQuery;
-        showSection('section-search');
-        setTimeout(() => runSmartSearch(), 300);
-      }
-    }
-
-    await initAllRecipes();
-    await loadCategories(); 
-    await fetchRecipes();  
-    await loadLatestRecipes();
-  } // 🟢 ← додай цю фігуру дужку, бо вона ЗАКРИВАЄ функцію init
-
-  init(); // ✅ Тепер викликається вже поза нею
-
-  setTimeout(() => {
-  const container = document.getElementById("latest-recipes");
-  if (container && !container.innerHTML.trim()) {
-    loadLatestRecipes();
+    await initAllRecipes(); // 🟢 виклик твоєї нової функції
+    await loadCategories();
+    await loadDailyRecipe();
+    goHome();
   }
 
-  // 🟡 НЕ ВИКЛИКАЙ повторно loadCategories(), бо вже було
-}, 1000);
-
-  
+  autoScrollSliders(); // ✅ запускаємо автопрокрутку
+init();
     // 🖱️ Enter → пошук у холодильнику
  document.getElementById('fridge-input')?.addEventListener('keydown', function (e) {
   if (e.key === 'Enter') {
@@ -1018,7 +914,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const tg = window.Telegram?.WebApp;
-  if (tg) tg.ready();
 
 if (tg && tg.initDataUnsafe?.user?.id) {
   const userId = tg.initDataUnsafe.user.id;
@@ -1108,7 +1003,6 @@ proBtn.onclick = () => {
 };
 document.getElementById("pro-button-container")?.appendChild(proBtn);
 
- 
 
   document.getElementById('open-favorites')?.addEventListener('click', () => {
   const block = document.getElementById('fav-accordion');
@@ -1144,6 +1038,8 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
   }
 });
 
+
+});
 
   // 🔽 Динамічна кнопка "Отримати PRO"
 
@@ -1616,18 +1512,16 @@ async function askBot() {
         const container = document.getElementById(uniqueId);
         if (!container) return;
         if (data.url) {
-         container.innerHTML = `
-  <video controls style="width:100%; height:100px; object-fit:cover; border-radius:10px;" class="video-preview">
-    <source src="${data.url}" type="video/mp4">
-  </video>`;
-
+          container.innerHTML = `
+            <video controls style="width:100%; border-radius:10px;">
+              <source src="${data.url}" type="video/mp4">
+            </video>`;
         } else {
           container.innerHTML = `❌ Не вдалося завантажити відео`;
         }
       });
   } else {
-    blocks += `<video controls style="width:100%; height:100px; object-fit:cover; border-radius:10px; margin-top:10px;" class="video-preview"><source src="${videoLink}" type="video/mp4"></video>`;
-
+    blocks += `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${videoLink}" type="video/mp4"></video>`;
   }
 }
 
@@ -1763,8 +1657,6 @@ function autoScrollSliders() {
   });
 }
 
-
-
  async function runSmartSearch() {
   const input = document.getElementById('smart-search-input');
   const query = input.value.trim().toLowerCase();
@@ -1881,7 +1773,7 @@ function autoScrollSliders() {
             return `${firstImage || ""}${blocks}${sliderHTML}`;
           })()}
           <div style="text-align: center; margin-top: 20px;">
-            <button class="recipe-toggle" onclick='toggleRecipe("${id}", this)'>🔼 Згорнути</button>
+            <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
           </div>
         </div>
       </div>
@@ -1897,21 +1789,6 @@ function cycleThreshold() {
   threshold = threshold < 4 ? threshold + 1 : 1;
   document.getElementById('threshold-btn').innerText = threshold;
 }
-
-function expandVideo(wrapper) {
-  const video = wrapper.querySelector('video');
-  if (!video) return;
-
-  if (video.classList.contains('video-full')) {
-    // 🔄 Повернути назад у превʼю
-    video.classList.remove('video-full');
-    video.classList.add('video-preview');
-  } else {
-    // 🔼 Збільшити
-    video.classList.remove('video-preview');
-    video.classList.add('video-full');
-   }
- }
 
 </script>
 <div id="subscribe-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
