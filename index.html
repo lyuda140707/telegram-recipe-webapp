@@ -908,16 +908,18 @@ function toggleRecipe(id, btn) {
   const current = document.getElementById(id);
   if (!current) return;
 
-  // 1. Закриваємо всі інші відкриті блоки
-  document.querySelectorAll('.recipe-content.open').forEach(el => {
-    if (el.id !== id) {
-      el.classList.remove('open');
-      const otherBtn = el.parentElement.querySelector('.detail-button, .recipe-toggle');
-      if (otherBtn) otherBtn.innerText = '➕ Детальніше';
-    }
-  });
+  // ⏬ Закриваємо інші тільки для тижневого меню
+  if (id.match(/^[ПВСЧН][а-я]-\d+$/)) {
+    document.querySelectorAll('.recipe-content.open').forEach(el => {
+      if (el.id !== id) {
+        el.classList.remove('open');
+        const otherBtn = el.parentElement.querySelector('.detail-button, .recipe-toggle');
+        if (otherBtn) otherBtn.innerText = '➕ Детальніше';
+      }
+    });
+  }
 
-  // 2. Тоглимо поточний
+  // ⏯️ Перемикаємо поточний
   if (current.classList.contains('open')) {
     current.classList.remove('open');
     if (btn) btn.innerText = '➕ Детальніше';
@@ -925,6 +927,8 @@ function toggleRecipe(id, btn) {
     current.classList.add('open');
     if (btn) btn.innerText = '🔼 Згорнути';
   }
+}
+
 }
 
   
