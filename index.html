@@ -966,8 +966,8 @@ async function loadFavorites() {
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
     return favorites.includes(String(info["номер рецепту"]));
   });
-}
-  container.innerHTML = '';
+
+  container.innerHTML = ''; // 🟢 ЦЕ тепер у функції
   filteredGroups.forEach((group, index) => {
     const id = `favorite-details-${index}`;
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
@@ -987,6 +987,7 @@ async function loadFavorites() {
       </div>
       <div id="${id}" class="recipe-content"></div>
     `;
+
     container.appendChild(card);
 
     const block = document.getElementById(id);
@@ -1008,9 +1009,7 @@ async function loadFavorites() {
           }
           block.innerHTML += `<iframe src="${videoLink}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
         } else {
-          block.innerHTML += `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
-            <source src="${videoLink}" type="video/mp4">
-          </video>`;
+          block.innerHTML += `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${videoLink}" type="video/mp4"></video>`;
         }
         contentAdded = true;
       }
@@ -1027,6 +1026,8 @@ async function loadFavorites() {
       block.innerHTML = `<p>🤷 У цього рецепту немає детального опису.</p>`;
     }
   });
+}
+
 
 function loadWeeklyInProfile() {
   const list = document.getElementById('weekly-list-profile');
