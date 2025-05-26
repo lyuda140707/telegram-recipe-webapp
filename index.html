@@ -1958,7 +1958,8 @@ async function submitPaymentCheck() {
 }
 // ✅ ВИНЕСЕНА ЗОВНІ ФУНКЦІЯ:
 async function loadRecipesForDay(day, category, container) {
-  const data = await fetchRecipes(category.toLowerCase());
+  const apiCategory = backendCategoryMap[category] || category;
+  const data = await fetchRecipes(apiCategory.toLowerCase());
   const grouped = groupByRecipeNumber(data);
   const recipe = grouped[0];
   if (!recipe) {
