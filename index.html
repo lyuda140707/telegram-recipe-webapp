@@ -1726,22 +1726,7 @@ async function loadRecipesForDay(day, category, container) {
 
 }
 
-function generateWeeklyMenu() {
-  const categories = [
-    "Перші страви", "Другі страви", "Салати", "Десерти", "Випічка", "Закуски", "Напої"
-  ];
-  const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
-  const list = [];
 
-  days.forEach(day => {
-    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-    list.push({ day, category: randomCategory });
-  });
-
-  // Зберігаємо в localStorage
-  localStorage.setItem("weekly_menu", JSON.stringify(list));
-  renderWeeklyMenu(list);
-}
 function renderWeeklyMenu(menu) {
   const container = document.getElementById('weekly-menu-list');
   container.innerHTML = '';
@@ -2050,7 +2035,23 @@ async function submitPaymentCheck() {
     console.error("❌ Помилка надсилання запиту:", err);
   }
 }
-  
+
+ function generateWeeklyMenu() {
+  const categories = [
+    "Перші страви", "Другі страви", "Салати", "Десерти", "Випічка", "Закуски", "Напої"
+  ];
+  const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
+  const list = [];
+
+  days.forEach(day => {
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    list.push({ day, category: randomCategory });
+  });
+
+  // Зберігаємо в localStorage
+  localStorage.setItem("weekly_menu", JSON.stringify(list));
+  renderWeeklyMenu(list);
+} 
 </script>
 
 <button id="scrollTopBtn" onclick="scrollToTop()">⬆️</button>
