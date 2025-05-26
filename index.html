@@ -1727,60 +1727,6 @@ async function loadRecipesForDay(day, category, container) {
 }
 
 
-function renderWeeklyMenu(menu) {
-  const container = document.getElementById('weekly-menu-list');
-  container.innerHTML = '';
-
-  const allCategories = [
-    "Перші страви", "Другі страви", "Салати", "Десерти",
-    "Випічка", "Закуски", "Напої"
-  ];
-
-  menu.forEach((item, index) => {
-   const li = document.createElement('li');
-    li.className = 'weekly-item';
-    const select = document.createElement('select');
-    const recipeContainer = document.createElement('div'); // 🟢 перенесли сюди!
-
-    recipeContainer.className = 'recipe-card hidden';
-    recipeContainer.id = `${item.day}-${index}`;
-
-    allCategories.forEach(cat => {
-      const option = document.createElement('option');
-      option.value = cat;
-      option.textContent = cat;
-      if (cat === item.category) option.selected = true;
-      select.appendChild(option);
-    });
-
-    select.onchange = () => {
-      updateMenuCategory(index, select.value);
-      loadRecipesForDay(item.day, select.value, recipeContainer); // ✅ тепер працює
-    };
-
-    const dayIcons = {
-  'Пн': '🌞', 'Вт': '🌿', 'Ср': '🥕', 'Чт': '🍅',
-  'Пт': '🍝', 'Сб': '🍰', 'Нд': '☕'
-};
-li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
-
-    li.appendChild(select);
-
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'recipe-toggle';
-    toggleBtn.innerHTML = '<span class="rotate-toggle">🔽</span> Згорнути';
-    toggleBtn.onclick = () => toggleRecipe(`${item.day}-${index}`, toggleBtn);
-
-    li.appendChild(toggleBtn);
-    li.appendChild(recipeContainer);
-    container.appendChild(li);
-
-    loadRecipesForDay(item.day, item.category, recipeContainer);
-  });
-}
-
-  
-
   async function searchFridge() {
   const input = document.getElementById('fridge-input').value.toLowerCase();
   const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
@@ -2036,6 +1982,58 @@ async function submitPaymentCheck() {
   }
 }
 
+function renderWeeklyMenu(menu) {
+  const container = document.getElementById('weekly-menu-list');
+  container.innerHTML = '';
+
+  const allCategories = [
+    "Перші страви", "Другі страви", "Салати", "Десерти",
+    "Випічка", "Закуски", "Напої"
+  ];
+
+  menu.forEach((item, index) => {
+   const li = document.createElement('li');
+    li.className = 'weekly-item';
+    const select = document.createElement('select');
+    const recipeContainer = document.createElement('div'); // 🟢 перенесли сюди!
+
+    recipeContainer.className = 'recipe-card hidden';
+    recipeContainer.id = `${item.day}-${index}`;
+
+    allCategories.forEach(cat => {
+      const option = document.createElement('option');
+      option.value = cat;
+      option.textContent = cat;
+      if (cat === item.category) option.selected = true;
+      select.appendChild(option);
+    });
+
+    select.onchange = () => {
+      updateMenuCategory(index, select.value);
+      loadRecipesForDay(item.day, select.value, recipeContainer); // ✅ тепер працює
+    };
+
+    const dayIcons = {
+  'Пн': '🌞', 'Вт': '🌿', 'Ср': '🥕', 'Чт': '🍅',
+  'Пт': '🍝', 'Сб': '🍰', 'Нд': '☕'
+};
+li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
+
+    li.appendChild(select);
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'recipe-toggle';
+    toggleBtn.innerHTML = '<span class="rotate-toggle">🔽</span> Згорнути';
+    toggleBtn.onclick = () => toggleRecipe(`${item.day}-${index}`, toggleBtn);
+
+    li.appendChild(toggleBtn);
+    li.appendChild(recipeContainer);
+    container.appendChild(li);
+
+    loadRecipesForDay(item.day, item.category, recipeContainer);
+  });
+}
+  
  function generateWeeklyMenu() {
   const categories = [
     "Перші страви", "Другі страви", "Салати", "Десерти", "Випічка", "Закуски", "Напої"
