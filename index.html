@@ -1980,7 +1980,9 @@ async function loadRecipesForDay(day, category, container) {
   }
 
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  renderRecipeCard(container, recipe, 0, false); // ❌ не відкривати одразу
+  container.innerHTML = ''; // очищення
+  renderRecipeCard(container, recipe, 0, false, container.id); // передаємо ID
+
 
 }
 function renderWeeklyMenu(menu) {
@@ -2018,7 +2020,7 @@ function updateMenuCategory(index, newValue) {
 }
     select.onchange = () => {
       updateMenuCategory(index, select.value);
-      loadRecipesForDay(item.day, select.value, recipeContainer); // ✅ тепер працює
+      loadRecipesForDay(item.day, select.value, recipeContainer.id);
     };
 
     const dayIcons = {
