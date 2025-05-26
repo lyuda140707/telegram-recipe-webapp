@@ -1971,7 +1971,7 @@ async function loadRecipesForDay(day, category, container) {
   const apiCategory = backendCategoryMap[category] || category;
   const data = await fetchRecipes(apiCategory.toLowerCase());
   const grouped = groupByRecipeNumber(data);
-  const recipe = grouped[0];
+  const recipe = Object.values(grouped)[0];
   if (!recipe) {
     container.innerHTML = "<p>Немає рецептів 😞</p>";
     return;
