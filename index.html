@@ -1956,6 +1956,16 @@ async function submitPaymentCheck() {
     console.error("❌ Помилка надсилання запиту:", err);
   }
 }
+
+const backendCategoryMap = {
+  "Перші страви": "перші страви",
+  "Другі страви": "другі страви",
+  "Салати": "салати",
+  "Десерти": "десерти",
+  "Випічка": "випічка",
+  "Закуски": "закуски",
+  "Напої": "напої"
+};  
 // ✅ ВИНЕСЕНА ЗОВНІ ФУНКЦІЯ:
 async function loadRecipesForDay(day, category, container) {
   const apiCategory = backendCategoryMap[category] || category;
