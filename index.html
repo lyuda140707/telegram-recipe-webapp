@@ -1978,14 +1978,7 @@ async function loadRecipesForDay(day, category, container) {
   }
 
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  container.innerHTML = `
-    <div class="recipe-card">
-      <h3>${info["назва рецепту"]}</h3>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-    </div>
-  `;
-
+  renderRecipeCard(container, recipe, 0); // де recipe — це масив блоків рецепта
 }
 function renderWeeklyMenu(menu) {
   const container = document.getElementById('weekly-menu-list');
