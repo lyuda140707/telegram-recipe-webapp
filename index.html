@@ -1016,6 +1016,7 @@ function goHome() {
   };
 }
 document.addEventListener("DOMContentLoaded", () => {
+document.getElementById("scrollTopBtn").addEventListener("click", scrollToTop);
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     const recipeId = urlParams.get("recipe_id");
