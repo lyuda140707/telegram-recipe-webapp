@@ -870,7 +870,9 @@ function showSection(id) {
   el.classList.remove('active');
 });
 document.getElementById('section-categories').classList.remove('active'); // явно сховати
-document.getElementById('daily-recipe').classList.remove('active');
+const el = document.getElementById('daily-recipe');
+if (el) el.classList.remove('active');
+
 
 
   // Активуємо поточну
