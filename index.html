@@ -719,7 +719,8 @@ async function loadLatestRecipes() {
 }
 
 
- function renderRecipeCard(container, group, index) {
+ function renderRecipeCard(container, group, index, initiallyOpen = false) {
+
   const seenBlocks = new Set();
   const id = `recipe-details-${index}`;
   const info = group.find(r => r["тип блоку"] === "текст") || group[0];
@@ -797,7 +798,8 @@ async function loadLatestRecipes() {
       <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
       <button class="favorite-button" onclick="toggleFavorite('${info["номер рецепту"]}', this)">💛 У список</button>
     </div>
-    <div id="${id}" class="recipe-content">
+    <div id="${id}" class="recipe-content ${initiallyOpen ? 'open' : ''}">
+
       ${firstImage || ''}
       ${textBlock}
       ${sliderImages.length ? `<div class="slider-container">${sliderImages.map(src => `<img src="${src}">`).join('')}</div>` : ''}
