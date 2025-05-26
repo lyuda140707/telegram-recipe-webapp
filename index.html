@@ -618,6 +618,11 @@ const categories = [
   "🍞 Випічка", "🥪 Закуски", "🫕 Соуси та заправки"
 ];
 let threshold = 2; // 🟢 додано!
+let groupedRecipes = [];
+let recipesRendered = 0;
+const recipesPerBatch = 10;
+let currentPage = 0;
+
 
 function cycleThreshold() {
   threshold = threshold < 4 ? threshold + 1 : 1;
@@ -847,16 +852,19 @@ function renderGroupedRecipes(groups, category) {
     return true;
   });
 
-  // 🟢 Перемішуємо рецепти у випадковому порядку
+  // 🔁 Перемішуємо рецепти
   for (let i = uniqueGroups.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [uniqueGroups[i], uniqueGroups[j]] = [uniqueGroups[j], uniqueGroups[i]];
   }
 
-  recipesRendered = 0;
-  loadMoreRecipes(container, uniqueGroups, category);
+  groupedRecipes = uniqueGroups; // зберігаємо глобально
+  currentPage = 0;               // починаємо з 0 сторінки
+
+  renderRecipePage(container, groupedRecipes, currentPage);
   showSection('section-recipes');
 }
+
 
 
 
@@ -866,6 +874,8 @@ function loadMoreRecipes(container, uniqueGroups, category) {
   if (oldBtn) oldBtn.remove();
 
   const nextBatch = uniqueGroups.slice(recipesRendered, recipesRendered + recipesPerBatch);
+  // 🔥 Прибираємо всі попередні рецепти
+document.querySelectorAll('#section-recipes .recipe-card').forEach(card => card.remove());
   nextBatch.forEach((group, index) => {
     const recipeIndex = recipesRendered + index;
     renderRecipeCard(container, group, recipeIndex);
@@ -1082,6 +1092,49 @@ async function loadFavorites() {
   });
 }
 
+function renderRecipePage(container, uniqueGroups, page) {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  container.innerHTML = ''; // 🔄 очищаємо попередні рецепти
+
+  const start = page * recipesPerBatch;
+  const end = start + recipesPerBatch;
+  const batch = uniqueGroups.slice(start, end);
+
+  batch.forEach((group, index) => {
+    renderRecipeCard(container, group, start + index);
+  });
+
+  // 🔘 Створюємо навігацію
+  const nav = document.createElement("div");
+  nav.style.textAlign = "center";
+  nav.style.marginTop = "20px";
+
+  if (page > 0) {
+    const prevBtn = document.createElement("button");
+    prevBtn.innerText = "⬅️ Назад";
+    prevBtn.className = "main-button clear";
+    prevBtn.onclick = () => {
+      currentPage--;
+      renderRecipePage(container, uniqueGroups, currentPage);
+    };
+    nav.appendChild(prevBtn);
+  }
+
+  if (end < uniqueGroups.length) {
+    const nextBtn = document.createElement("button");
+    nextBtn.innerText = "➡️ Далі";
+    nextBtn.className = "main-button generate";
+    nextBtn.style.marginLeft = "10px";
+    nextBtn.onclick = () => {
+      currentPage++;
+      renderRecipePage(container, uniqueGroups, currentPage);
+    };
+    nav.appendChild(nextBtn);
+  }
+
+  container.appendChild(nav);
+}
 
 function showSection(id) {
   // Приховуємо всі секції
