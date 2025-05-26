@@ -1365,8 +1365,10 @@ function loadCustomList() {
 }
 
 function addToCustomList() {
-  const inputs = document.querySelectorAll('.custom-list-input');
-  const input = Array.from(inputs).find(el => el.offsetParent !== null);
+  const activeSection = document.querySelector('.section.active');
+  if (!activeSection) return;
+
+  const input = activeSection.querySelector('.custom-list-input');
   if (!input) return;
 
   const value = input.value.trim();
@@ -1378,9 +1380,10 @@ function addToCustomList() {
   input.value = '';
   loadCustomList();
 
-  // ✅ Автоматичне фокусування на поле
+  // Автоматичне фокусування
   setTimeout(() => input.focus(), 0);
 }
+
 
 
 
