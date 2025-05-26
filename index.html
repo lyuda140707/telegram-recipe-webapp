@@ -1328,45 +1328,10 @@ if (contentAdded) {
 }
 
 
-
-
   });
 }
 
-function loadCustomList() {
-  const items = JSON.parse(localStorage.getItem('custom_list')) || [];
 
-  // 🔁 1. Оновлюємо список у профілі
-  const containerProfile = document.getElementById('custom-list');
-  if (containerProfile) {
-    containerProfile.innerHTML = '';
-    if (!items.length) {
-      containerProfile.innerHTML = '<li>Порожньо</li>';
-    } else {
-      items.forEach((item, index) => {
-        const li = document.createElement('li');
-            li.className = 'weekly-item';;
-        li.innerHTML = `${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
-        containerProfile.appendChild(li);
-      });
-    }
-  }
-
-  // 🔁 2. Оновлюємо список у секції "Що купити"
-  const containerBuy = document.getElementById('custom-list-buy');
-  if (containerBuy) {
-    containerBuy.innerHTML = '';
-    if (!items.length) {
-      containerBuy.innerHTML = '<li>Порожньо</li>';
-    } else {
-      items.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `• ${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
-        containerBuy.appendChild(li);
-      });
-    }
-  }
-}
 
 
 function toggleWeeklyInProfile() {
@@ -1994,6 +1959,41 @@ function removeFromCustomList(index) {
   loadCustomList(); // оновлюємо список на сторінці
 } // ← ✅ оце було потрібно
 
+
+function loadCustomList() {
+  const items = JSON.parse(localStorage.getItem('custom_list')) || [];
+
+  // 🔁 1. Оновлюємо список у профілі
+  const containerProfile = document.getElementById('custom-list');
+  if (containerProfile) {
+    containerProfile.innerHTML = '';
+    if (!items.length) {
+      containerProfile.innerHTML = '<li>Порожньо</li>';
+    } else {
+      items.forEach((item, index) => {
+        const li = document.createElement('li');
+            li.className = 'weekly-item';;
+        li.innerHTML = `${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
+        containerProfile.appendChild(li);
+      });
+    }
+  }
+
+  // 🔁 2. Оновлюємо список у секції "Що купити"
+  const containerBuy = document.getElementById('custom-list-buy');
+  if (containerBuy) {
+    containerBuy.innerHTML = '';
+    if (!items.length) {
+      containerBuy.innerHTML = '<li>Порожньо</li>';
+    } else {
+      items.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `• ${item} <button onclick="removeFromCustomList(${index})" style="margin-left:10px; cursor:pointer;">🗑</button>`;
+        containerBuy.appendChild(li);
+      });
+    }
+  }
+}  
 </script>
 
 <button id="scrollTopBtn" onclick="scrollToTop()">⬆️</button>
