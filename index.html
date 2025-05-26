@@ -451,7 +451,8 @@ h1, h2, h3 {
   <h2>🛒 Що купити</h2>
   <div style="margin-top:10px;">
     <input class="custom-list-input" placeholder="Додати до списку..." style="padding:14px 16px; font-size:16px; border-radius:14px; width:85%; max-width:400px;">
-    <button onclick="addToCustomList()" style="padding:8px;">➕</button>
+    <button id="add-to-list-profile" style="padding:8px;">➕</button>
+
   </div>
   <ul id="custom-list-buy" style="padding-left: 20px;"></ul>
 </div>
@@ -543,7 +544,7 @@ h1, h2, h3 {
   <div class="accordion-content" id="custom-wrapper">
     <div style="margin-top:10px;">
       <input class="custom-list-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
-      <button onclick="addToCustomList()" style="padding:8px;">➕</button>
+      <button id="add-to-list-buy" style="padding:8px;">➕</button>
     </div>
      <ul id="custom-list" style="padding-left: 20px;"></ul>
   </div> <!-- ✅ оце має бути тут -->
@@ -1016,6 +1017,9 @@ function goHome() {
   };
 }
 document.addEventListener("DOMContentLoaded", () => {
+document.getElementById("add-to-list-profile")?.addEventListener("click", addToCustomList);
+document.getElementById("add-to-list-buy")?.addEventListener("click", addToCustomList);
+
 document.getElementById("scrollTopBtn").addEventListener("click", scrollToTop);
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
