@@ -1368,12 +1368,7 @@ function loadCustomList() {
   }
 }
 
-function removeFromCustomList(index) {
-  const items = JSON.parse(localStorage.getItem('custom_list')) || [];
-  items.splice(index, 1); // видаляємо обраний
-  localStorage.setItem('custom_list', JSON.stringify(items));
-  loadCustomList(); // оновлюємо список на сторінці
-} // ← ✅ оце було потрібно
+
 function toggleWeeklyInProfile() {
   showSection('section-planner'); // просто показуємо основну секцію меню
 }
@@ -1992,7 +1987,12 @@ function expandVideo(wrapper) {
 }
  });
 
-
+function removeFromCustomList(index) {
+  const items = JSON.parse(localStorage.getItem('custom_list')) || [];
+  items.splice(index, 1); // видаляємо обраний
+  localStorage.setItem('custom_list', JSON.stringify(items));
+  loadCustomList(); // оновлюємо список на сторінці
+} // ← ✅ оце було потрібно
 
 </script>
 
