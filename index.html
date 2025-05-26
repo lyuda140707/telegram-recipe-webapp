@@ -1853,12 +1853,6 @@ setTimeout(() => {
   }
 }
 
- 
-function toggleProInfo() {
-  const el = document.getElementById('pro-info');
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
 
 function autoScrollSliders() {
   const sliders = document.querySelectorAll('.slider-container');
@@ -2125,6 +2119,11 @@ window.addEventListener("load", () => {
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+  
+function toggleProInfo() {
+  const el = document.getElementById('pro-info');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
   
 </script>
