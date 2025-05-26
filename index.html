@@ -932,19 +932,24 @@ async function openDailyRecipeCategory(category, focusId = null) {
   const grouped = groupByRecipeNumber(raw);
   renderGroupedRecipes(grouped, cleanCategory);
 
-  // Через невеликий таймаут чекаємо, поки DOM оновиться
+  // даємо React-у/DOM час «вставити» всі cards
   setTimeout(() => {
     if (!focusId) return;
+    // знаходимо саме ту карточку за data-recipe-id
     const card = document.querySelector(`[data-recipe-id='${focusId}']`);
     if (!card) return;
 
-    // 1) Прокрутимо до карточки
+    // прокручуємо до неї
     card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // 2) Відкриємо «Детальніше»
+    // вручну розгортаємо секцію з деталями
+    const details = card.querySelector('.recipe-content');
     const detailBtn = card.querySelector('.detail-button');
-    if (detailBtn) detailBtn.click();
-  }, 300);
+    if (details && !details.classList.contains('open')) {
+      details.classList.add('open');
+      if (detailBtn) detailBtn.innerText = '🔼 Згорнути';
+    }
+  }, 500);
 }
 
 
