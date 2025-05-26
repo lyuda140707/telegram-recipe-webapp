@@ -310,13 +310,22 @@ h1, h2, h3 {
 /* кожна картка */
 /* стилі для карток у слайдері */
 #latest-slider .recipe-card {
-  flex: 0 0 40%;           /* тепер картка 40% ширини viewport */
+  flex: 0 0 40%;
   scroll-snap-align: start;
   margin: 0;
-  background: #fafafa;     /* світло-сірий фон */
-  border: 1px solid #e0e0e0;
-  padding: 16px;
-  box-shadow: 0 0 15px #ff69b4; /* чистий рожевий glow */     
+  background: linear-gradient(135deg, #ffffff, #ffe4ec);
+  border: 1px solid #ff69b4;
+
+  /* ⚡ Додали для більшої висоти і внутрішніх відступів */
+  min-height: 200px;
+  padding: 24px 16px;
+
+  /* плавна анімація підйому */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+  /* приємна тінь */
+  box-shadow: 0 4px 8px rgba(255,105,180,0.3);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -324,8 +333,11 @@ h1, h2, h3 {
   text-align: center;
 }
 #latest-slider .recipe-card:hover {
-  box-shadow: 0 0 25px #ff69b4; /* сильніше при наведенні */
+  /* піднімаємо картку і підсилюємо тінь */
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(255,105,180,0.5);
 }
+
 
 /* підпис категорії */
 #latest-slider .category-label {
@@ -919,17 +931,22 @@ async function openDailyRecipeCategory(category, focusId = null) {
   const raw = await fetchRecipes(cleanCategory.toLowerCase());
   const grouped = groupByRecipeNumber(raw);
   renderGroupedRecipes(grouped, cleanCategory);
-  // 🔽 Додати прокрутку до рецепта:
-setTimeout(() => {
-  if (focusId) {
-    const target = document.querySelector(`[data-recipe-id='${focusId}']`);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      target.classList.add('highlight'); // можна стилізувати через CSS
-    }
-  }
-}, 300);
+
+  // Через невеликий таймаут чекаємо, поки DOM оновиться
+  setTimeout(() => {
+    if (!focusId) return;
+    const card = document.querySelector(`[data-recipe-id='${focusId}']`);
+    if (!card) return;
+
+    // 1) Прокрутимо до карточки
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // 2) Відкриємо «Детальніше»
+    const detailBtn = card.querySelector('.detail-button');
+    if (detailBtn) detailBtn.click();
+  }, 300);
 }
+
 
 
 
