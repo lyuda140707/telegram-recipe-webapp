@@ -719,7 +719,7 @@ async function loadLatestRecipes() {
 }
 
 
- function renderRecipeCard(container, group, index, initiallyOpen = false) {
+ function renderRecipeCard(container, group, index, initiallyOpen = false, customId = null) {
 
   const seenBlocks = new Set();
   const id = customId || `recipe-details-${index}`;
