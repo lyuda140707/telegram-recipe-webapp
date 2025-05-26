@@ -722,7 +722,7 @@ async function loadLatestRecipes() {
  function renderRecipeCard(container, group, index, initiallyOpen = false) {
 
   const seenBlocks = new Set();
-  const id = `recipe-details-${index}`;
+  const id = customId || `recipe-details-${index}`;
   const info = group.find(r => r["тип блоку"] === "текст") || group[0];
   const isFavorite = JSON.parse(localStorage.getItem('favorites') || '[]').includes(info["номер рецепту"]);
 
