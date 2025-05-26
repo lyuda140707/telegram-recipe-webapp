@@ -316,12 +316,15 @@ h1, h2, h3 {
   background: #fafafa;     /* світло-сірий фон */
   border: 1px solid #e0e0e0;
   padding: 16px;
-  box-shadow: none;        /* прибрали тінь */
+  box-shadow: 0 0 15px #ff69b4; /* чистий рожевий glow */     
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+#latest-slider .recipe-card:hover {
+  box-shadow: 0 0 25px #ff69b4; /* сильніше при наведенні */
 }
 
 /* підпис категорії */
