@@ -518,14 +518,7 @@ h1, h2, h3 {
 
 </div>
 
-<div class="accordion-block" id="weekly-accordion">
-  <div class="accordion-title" onclick="toggleWeeklyInProfile()">
-  📅 Моє меню
-</div>
-  <div class="accordion-content" id="weekly-wrapper">
-    <ul id="weekly-list-profile" style="padding-left: 20px;"></ul>
-  </div>
-</div>
+
 
  <div class="accordion-block" id="fav-accordion">
 
@@ -537,19 +530,7 @@ h1, h2, h3 {
   </div>
 </div>
 
-<div class="accordion-block" id="list-accordion">
-  <div class="accordion-title" id="open-list">
-    🛒 Що купити <span id="arrow-list">🔽</span>
-  </div>
-  <div class="accordion-content" id="custom-wrapper">
-    <div style="margin-top:10px;">
-      <input class="custom-list-input" placeholder="Додати до списку..." style="padding:8px; width:80%;">
-      <button id="add-to-list-buy" style="padding:8px;">➕</button>
-    </div>
-     <ul id="custom-list" style="padding-left: 20px;"></ul>
-  </div> <!-- ✅ оце має бути тут -->
-</div>
-  </div>
+
     <div class="section" id="section-askbot">
  <h2>🤖 Запитай у Бота</h2>
 <p style="font-size: 15px; color: #5c3e59; background: #fff0f5; padding: 10px; border-radius: 12px;">
@@ -1073,11 +1054,10 @@ if (el) el.classList.remove('active');
   }
 
   // Якщо це профіль або список покупок — завантажити все
-  if (id === 'section-profile' || id === 'section-buy') {
-    loadFavorites();
-    loadCustomList();
-    loadWeeklyInProfile();
-  }
+  if (id === 'section-profile') {
+  loadFavorites();
+}
+
 }
 
 
@@ -1639,7 +1619,9 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
 
 
   document.getElementById('open-list')?.addEventListener('click', () => {
+  if (!document.getElementById('section-profile').classList.contains('active')) {
   showSection('section-profile');
+}
   const block = document.getElementById('list-accordion');
   const wrapper = document.getElementById('custom-wrapper');
   const arrow = document.getElementById('arrow-list');
@@ -1660,7 +1642,9 @@ document.getElementById("pro-button-container")?.appendChild(proBtn);
   
 // ✅ А ось функція ЗОВНІ:
 function toggleListSection() {
+  if (!document.getElementById('section-profile').classList.contains('active')) {
   showSection('section-profile');
+}
   const wrapper = document.getElementById('custom-wrapper');
   const arrow = document.getElementById('arrow-list');
   const isVisible = wrapper.style.display === 'block';
