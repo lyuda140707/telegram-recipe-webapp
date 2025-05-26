@@ -22,13 +22,6 @@ h1, h2, h3 {
 }
 
 
-  
-
-
-    h1, h2, h3 {
-      color: #4b2c5e;
-    }
-
     .section {
       display: none;
       animation: fade 0.4s ease;
@@ -522,6 +515,11 @@ h1, h2, h3 {
 
 
 <script>
+  
+   window.onerror = function (msg, url, lineNo, columnNo, error) {
+    alert("🚨 JavaScript помилка:\n" + msg + "\nрядок: " + lineNo);
+    return false;
+  };
   
 const categories = [
   "👶 Для дітей", "🥗 Вегетаріанське", "🌾 Без глютену", "⚡ Швидко", "🍲 Перші страви",
@@ -1901,25 +1899,7 @@ function expandVideo(wrapper) {
     <button id="subscribe-btn" style="margin-top:20px; padding:10px 20px; border:none; border-radius:20px; background:linear-gradient(to right,#fbc2eb,#a6c1ee); color:#4b2c5e; font-weight:bold; cursor:pointer;">🔔 Перейти до каналу</button>
   </div>
 </div>
-    <div id="toast" style="
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #4CAF50;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 20px;
-  font-weight: bold;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  display: none;
-  z-index: 9999;
-  font-size: 15px;
-  text-align: center;
-  animation: fadeInOut 3s ease-in-out;
-">
-  ✅ Додано до улюбленого!
-</div>
+   
 
 </body>
 </html>
