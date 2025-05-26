@@ -1708,6 +1708,81 @@ setTimeout(() => {
 }, 30000); // 10 секунд
 
 
+
+
+  async function searchFridge() {
+  const input = document.getElementById('fridge-input').value.toLowerCase();
+  const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
+  const normFridgeItems = fridgeItems.map(normalizeWord);
+  const results = [];
+  const all = await fetchRecipes(); // тягне тільки зараз
+
+
+  all.forEach(r => {
+   const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
+const ingredientWords = new Set(
+  rawIngredients
+    .split(/[,\n]+/)
+    .flatMap(ing => normalizeWord(ing.trim()).split(/\s+/))
+    .filter(Boolean)
+);
+
+
+
+    const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
+    const threshold = parseInt(document.getElementById('threshold-btn').innerText, 10);
+
+    if (matches >= threshold) {
+      // Підсвічуємо інгредієнти
+      let highlighted = r["інгредієнти"];
+      fridgeItems.forEach(word => {
+        const normWord = normalizeWord(word);
+        const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+        highlighted = highlighted.replace(regex, '<strong>$1</strong>');
+      });
+
+      results.push({
+        ...r,
+        matches,
+        hasFirst: ingredientWords.has(normFridgeItems[0]),
+        highlighted
+      });
+    }
+  });
+
+  results.sort((a, b) => {
+    if (b.hasFirst !== a.hasFirst) return b.hasFirst - a.hasFirst;
+    return b.matches - a.matches;
+  });
+
+    // 🔽 Обмежуємо кількість результатів
+results.length = Math.min(results.length, 20);
+
+  
+
+  const container = document.getElementById('fridge-results');
+  container.innerHTML = results.length
+    ? results.map(r => {
+        let title = r["назва рецепту"];
+        fridgeItems.forEach(word => {
+          const normWord = normalizeWord(word);
+          const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+          title = title.replace(regex, '<strong>$1</strong>');
+        });
+
+        return `<div class="recipe-card">
+  <h3>${title}</h3>
+  <p>${r["highlighted"]}</p>
+  <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
+</div>`;
+
+      }).join('')
+    : '<p>Нічого не знайдено 😞</p>';
+}
+
+
+  
+
   async function initAllRecipes() {
   if (!localStorage.getItem('all_recipes')) {
     const res = await fetch('https://recipe-backend-0gz1.onrender.com/recipes');
@@ -1985,29 +2060,6 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
   localStorage.setItem("weekly_menu", JSON.stringify(list));
   renderWeeklyMenu(list);
 } 
-
-  async function searchFridge() {
-  const input = document.getElementById('fridge-input').value.toLowerCase();
-  const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
-  const normFridgeItems = fridgeItems.map(normalizeWord);
-  const results = [];
-  const all = await fetchRecipes(); // тягне тільки зараз
-
-
-  all.forEach(r => {
-   const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
-const ingredientWords = new Set(
-  rawIngredients
-    .split(/[,\n]+/)
-    .flatMap(ing => normalizeWord(ing.trim()).split(/\s+/))
-    .filter(Boolean)
-);  
-
-function cycleThreshold() {
-  threshold = threshold < 4 ? threshold + 1 : 1;
-  document.getElementById('threshold-btn').innerText = threshold;
-}
-    
 </script>
 
 <button id="scrollTopBtn" onclick="scrollToTop()">⬆️</button>
