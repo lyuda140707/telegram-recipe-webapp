@@ -1811,8 +1811,10 @@ window.addEventListener("scroll", () => {
 
 // Плавне повернення вгору
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const el = document.querySelector('.app') || document.documentElement;
+  el.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 function autoScrollSliders() {
   const sliders = document.querySelectorAll('.slider-container');
 
