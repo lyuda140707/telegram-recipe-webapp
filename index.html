@@ -1802,14 +1802,12 @@ async function submitPaymentCheck() {
 }
 
 // Показувати кнопку після прокрутки
-window.onscroll = function() {
+window.addEventListener("scroll", () => {
   const btn = document.getElementById("scrollTopBtn");
-  if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
-    btn.style.display = "block";
-  } else {
-    btn.style.display = "none";
-  }
-};
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  btn.style.display = scrollTop > 400 ? "block" : "none";
+});
+
 
 // Плавне повернення вгору
 function scrollToTop() {
