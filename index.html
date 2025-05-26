@@ -966,7 +966,7 @@ async function loadFavorites() {
     const info = group.find(r => r["тип блоку"] === "текст") || group[0];
     return favorites.includes(String(info["номер рецепту"]));
   });
-
+}
 
 function showSection(id) {
   // Приховуємо всі секції
