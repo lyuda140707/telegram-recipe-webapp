@@ -540,22 +540,6 @@ function groupByRecipeNumber(data) {
   });
   return grouped;
 }
-async function showRecipeById(recipeId) {
-  const all = await fetchRecipes(); // тягне всі рецепти
-  const grouped = groupByRecipeNumber(all);
-  const recipe = grouped[recipeId];
-
-  if (!recipe) {
-    alert("Рецепт не знайдено 😞");
-    return;
-  }
-
-  const container = document.getElementById("section-recipes");
-  container.innerHTML = `<h2>🔗 Обраний рецепт</h2>`;
-  renderRecipeCard(container, recipe, 0);
-  showSection('section-recipes');
-}
-
 
 async function loadCategories() {
   const container = document.getElementById('section-categories');
@@ -783,24 +767,6 @@ function toggleRecipe(id, btn) {
   }
 }
 
-  
-async function openDailyRecipeCategory(category, focusId = null) {
-  const cleanCategory = category.replace(/^[^\wа-яА-ЯҐґІіЇїЄє]+/, '').trim();
-  const raw = await fetchRecipes(cleanCategory.toLowerCase());
-  const grouped = groupByRecipeNumber(raw);
-  renderGroupedRecipes(grouped, cleanCategory);
-  // 🔽 Додати прокрутку до рецепта:
-setTimeout(() => {
-  if (focusId) {
-    const target = document.querySelector(`[data-recipe-id='${focusId}']`);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      target.classList.add('highlight'); // можна стилізувати через CSS
-    }
-  }
-}, 300);
-}
-
 
 
 function showSection(id) {
@@ -858,11 +824,7 @@ function goHome() {
 document.addEventListener("DOMContentLoaded", () => {
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
-    const recipeId = urlParams.get("recipe_id");
-
-    if (recipeId) {
-      showRecipeById(recipeId);
-    }
+    
 
     const searchQuery = urlParams.get("search");
     if (searchQuery) {
