@@ -1829,20 +1829,23 @@ async function submitPaymentCheck() {
 
 // Показувати кнопку після прокрутки
 // Новий, більш надійний обробник скролу
+// Показувати кнопку після прокрутки .app
+const app = document.querySelector('.app');
 const scrollBtn = document.getElementById("scrollTopBtn");
 
-window.addEventListener("scroll", () => {
-  if (window.pageYOffset > 400) {
+app.addEventListener("scroll", () => {
+  if (app.scrollTop > 400) {
     scrollBtn.style.display = "block";
   } else {
     scrollBtn.style.display = "none";
   }
 });
 
-// Плавне повернення вгору
+// Плавне повернення вгору .app
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  app.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 function autoScrollSliders() {
   const sliders = document.querySelectorAll('.slider-container');
 
