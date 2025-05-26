@@ -1241,6 +1241,9 @@ function normalizeWord(word) {
 
   return word;
 }
+
+ const stopWords = ["з", "на", "що", "як", "і", "та", "або", "у", "в", "до", "по", "чи", "із", "із-за"];
+ 
  async function runSmartSearch() {
   const input = document.getElementById('smart-search-input');
   const query = input.value.trim().toLowerCase();
@@ -1871,8 +1874,6 @@ function updateMenuCategory(index, newValue) {
   }
 }
   
-
-const stopWords = ["з", "на", "що", "як", "і", "та", "або", "у", "в", "до", "по", "чи", "із", "із-за"];
 
   async function initAllRecipes() {
   if (!localStorage.getItem('all_recipes')) {
