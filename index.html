@@ -968,6 +968,16 @@ async function loadFavorites() {
   });
 }
 
+function loadWeeklyInProfile() {
+  const list = document.getElementById('weekly-list-profile');
+  const saved = JSON.parse(localStorage.getItem("weekly_menu")) || [];
+
+  list.innerHTML = saved.length
+    ? saved.map(item => `<li><strong>${item.day}:</strong> ${item.category}</li>`).join('')
+    : '<li>Нічого не збережено</li>';
+}
+
+
 function showSection(id) {
   // Приховуємо всі секції
   document.querySelectorAll('.section').forEach(el => {
@@ -1351,16 +1361,6 @@ function addToCustomList() {
 
   // Автоматичне фокусування
   setTimeout(() => input.focus(), 0);
-}
-
-
-function loadWeeklyInProfile() {
-  const list = document.getElementById('weekly-list-profile');
-  const saved = JSON.parse(localStorage.getItem("weekly_menu")) || [];
-
-  list.innerHTML = saved.length
-    ? saved.map(item => `<li><strong>${item.day}:</strong> ${item.category}</li>`).join('')
-    : '<li>Нічого не збережено</li>';
 }
 
 
