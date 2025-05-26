@@ -872,9 +872,12 @@ function toggleFavorite(recipeId, button) {
   button.disabled = false;
   localStorage.setItem('favorites', JSON.stringify(favorites));
 
-  if (document.getElementById('favorites-container')) {
-    loadFavorites(); // оновлюємо профіль після видалення
-  }
+const favContainer = document.getElementById('favorites-container');
+if (favContainer) {
+  favContainer.innerHTML = ''; // 🧹 очистити вміст, щоб уникнути конфліктів
+  setTimeout(() => loadFavorites(), 100);
+}
+
 }
 
   function showToast(message = "✅ Додано до улюбленого!") {
