@@ -360,33 +360,7 @@ h1, h2, h3 {
 #latest-slider::-webkit-scrollbar {
   display: none;
 }
-
-/* 1. Фіксуємо кнопку внизу праворуч та ховаємо за замовчуванням */
-#scrollTopBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  display: none;             /* схована поки користувач не прокрутить вниз */
-  padding: 12px;
-  border: none;
-  border-radius: 50%;
-  background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  z-index: 1000;
-}
-/* 2. Легка анімація при наведенні */
-#scrollTopBtn:hover {
-  transform: scale(1.1);
-}
-.app {
-  /* вся висота вікна браузера, щоб прокрутка була на цьому блоці */
-  height: 100vh;
-  overflow-y: auto;
-}
-
+    
     
   </style>
 
@@ -1828,24 +1802,19 @@ async function submitPaymentCheck() {
 }
 
 // Показувати кнопку після прокрутки
-// Новий, більш надійний обробник скролу
-// Показувати кнопку після прокрутки .app
-const app = document.querySelector('.app');
-const scrollBtn = document.getElementById("scrollTopBtn");
-
-app.addEventListener("scroll", () => {
-  if (app.scrollTop > 400) {
-    scrollBtn.style.display = "block";
+window.onscroll = function() {
+  const btn = document.getElementById("scrollTopBtn");
+  if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+    btn.style.display = "block";
   } else {
-    scrollBtn.style.display = "none";
+    btn.style.display = "none";
   }
-});
+};
 
-// Плавне повернення вгору .app
+// Плавне повернення вгору
 function scrollToTop() {
-  app.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
 function autoScrollSliders() {
   const sliders = document.querySelectorAll('.slider-container');
 
