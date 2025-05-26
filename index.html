@@ -1050,16 +1050,6 @@ async function loadFavorites() {
 }
 
 
-function loadWeeklyInProfile() {
-  const list = document.getElementById('weekly-list-profile');
-  const saved = JSON.parse(localStorage.getItem("weekly_menu")) || [];
-
-  list.innerHTML = saved.length
-    ? saved.map(item => `<li><strong>${item.day}:</strong> ${item.category}</li>`).join('')
-    : '<li>Нічого не збережено</li>';
-}
-
-
 function showSection(id) {
   // Приховуємо всі секції
   document.querySelectorAll('.section').forEach(el => {
@@ -1090,7 +1080,7 @@ if (el) el.classList.remove('active');
   if (id === 'section-profile' || id === 'section-buy') {
     loadFavorites();
     loadCustomList();
-    loadWeeklyInProfile();
+    <!loadWeeklyInProfile();-->
   }
 }
 
