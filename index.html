@@ -1433,11 +1433,10 @@ results.length = Math.min(results.length, 20);
 }
 
   
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
 document.getElementById("add-to-list-profile")?.addEventListener("click", addToCustomList);
 document.getElementById("add-to-list-buy")?.addEventListener("click", addToCustomList);
 
-document.getElementById("scrollTopBtn").addEventListener("click", scrollToTop);
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     const recipeId = urlParams.get("recipe_id");
@@ -1787,11 +1786,7 @@ function toggleProInfo() {
 
 
 // Показувати кнопку після прокрутки
-window.addEventListener("scroll", () => {
-  const btn = document.getElementById("scrollTopBtn");
-  const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  btn.style.display = scrollTop > 400 ? "block" : "none";
-});
+
 
 
 // Плавне повернення вгору
@@ -2044,6 +2039,28 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
   localStorage.setItem("weekly_menu", JSON.stringify(list));
   renderWeeklyMenu(list);
 } 
+
+window.addEventListener("load", () => {
+  const btn = document.getElementById("scrollTopBtn");
+  if (btn) {
+    btn.addEventListener("click", scrollToTop);
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      btn.style.display = scrollTop > 400 ? "block" : "none";
+    });
+  }
+
+  document.getElementById("add-to-list-profile")?.addEventListener("click", addToCustomList);
+  document.getElementById("add-to-list-buy")?.addEventListener("click", addToCustomList);
+
+  // 🧠 далі — твій код init()
+  async function init() {
+    // усе, що у тебе вже є в init()
+  }
+
+  init();
+});
+  
 </script>
 
 
