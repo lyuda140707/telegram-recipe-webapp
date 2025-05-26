@@ -700,7 +700,7 @@ async function loadLatestRecipes() {
       const card = document.createElement("div");
       card.className = "recipe-card";
       card.style.cursor = "pointer";
-      card.onclick = () => openDailyRecipeCategory(category, info["номер рецепту"]);
+      card.onclick = () => showRecipeById(info["номер рецепту"]);
 
       card.innerHTML = `
   <div class="category-label">${category}</div>
