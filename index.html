@@ -952,7 +952,20 @@ async function openDailyRecipeCategory(category, focusId = null) {
   }, 500);
 }
 
+async function loadFavorites() {
+  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  const container = document.getElementById('favorites-container');
+  if (!favorites.length) {
+    container.innerHTML = '<p>Немає збережених рецептів</p>';
+    return;
+  }
 
+  const allRecipes = await fetchRecipes();
+  const grouped = groupByRecipeNumber(allRecipes);
+  const filteredGroups = Object.values(grouped).filter(group => {
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+    return favorites.includes(String(info["номер рецепту"]));
+  });
 
 
 function showSection(id) {
@@ -1236,23 +1249,6 @@ function toggleListSection() {
   if (!isVisible) loadCustomList();
 }
 
-
-
-
-async function loadFavorites() {
-  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  const container = document.getElementById('favorites-container');
-  if (!favorites.length) {
-    container.innerHTML = '<p>Немає збережених рецептів</p>';
-    return;
-  }
-
-  const allRecipes = await fetchRecipes();
-  const grouped = groupByRecipeNumber(allRecipes);
-  const filteredGroups = Object.values(grouped).filter(group => {
-    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
-    return favorites.includes(String(info["номер рецепту"]));
-  });
 
   container.innerHTML = '';
   filteredGroups.forEach((group, index) => {
