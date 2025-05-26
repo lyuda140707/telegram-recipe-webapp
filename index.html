@@ -1980,8 +1980,7 @@ async function loadRecipesForDay(day, category, container) {
   }
 
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  renderRecipeCard(container, recipe, `${day}-${index}`, false);
-
+  renderRecipeCard(container, recipe, 0, false); // ❌ не відкривати одразу
 
 }
 function renderWeeklyMenu(menu) {
@@ -2000,9 +1999,7 @@ function renderWeeklyMenu(menu) {
     const recipeContainer = document.createElement('div'); // 🟢 перенесли сюди!
 
     recipeContainer.className = 'recipe-card hidden';
-    const id = `weekly-${item.day}-${index}`;
-    recipeContainer.id = id;
-
+    recipeContainer.id = `${item.day}-${index}`;
 
     allCategories.forEach(cat => {
       const option = document.createElement('option');
@@ -2035,8 +2032,7 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'recipe-toggle';
     toggleBtn.innerHTML = '<span class="rotate-toggle">🔽</span> Згорнути';
-    toggleBtn.onclick = () => toggleRecipe(`weekly-${item.day}-${index}`, toggleBtn);
-
+    toggleBtn.onclick = () => toggleRecipe(`${item.day}-${index}`, toggleBtn);
 
     li.appendChild(toggleBtn);
     li.appendChild(recipeContainer);
