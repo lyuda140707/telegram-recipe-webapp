@@ -604,6 +604,11 @@ const categories = [
   "🍞 Випічка", "🥪 Закуски", "🫕 Соуси та заправки"
 ];
 let threshold = 2; // 🟢 додано!
+
+function cycleThreshold() {
+  threshold = threshold < 4 ? threshold + 1 : 1;
+  document.getElementById('threshold-btn').innerText = threshold;
+}  
 async function fetchRecipes(category = null) {
   try {
     let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
@@ -1837,10 +1842,7 @@ function autoScrollSliders() {
 }
 
 
-function cycleThreshold() {
-  threshold = threshold < 4 ? threshold + 1 : 1;
-  document.getElementById('threshold-btn').innerText = threshold;
-}
+
 
 function expandVideo(wrapper) {
   const video = wrapper.querySelector('video');
