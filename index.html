@@ -991,19 +991,49 @@ async function loadFavorites() {
       } else if (r["тип блоку"] === "фото") {
         block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
         contentAdded = true;
-      } else if (r["тип блоку"] === "відео") {
-        let videoLink = r["контент"];
-        if (videoLink.includes('drive.google.com')) {
-          const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
-          if (match && match[1]) {
-            videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
-          }
-          block.innerHTML += `<iframe src="${videoLink}" style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" allowfullscreen></iframe>`;
+} else if (r["тип блоку"] === "відео") {
+  let videoLink = r["контент"];
+
+  if (videoLink.includes('drive.google.com')) {
+    const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+      block.innerHTML += `
+        <iframe 
+          src="${videoLink}" 
+          style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" 
+          allowfullscreen>
+        </iframe>
+      `;
+    }
+  } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
+    const uniqueId = `video-${index}-${Math.random().toString(36).substr(2, 5)}`;
+    block.innerHTML += `<div id="${uniqueId}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
+    
+    fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${videoLink}`)
+      .then(res => res.json())
+      .then(data => {
+        const el = document.getElementById(uniqueId);
+        if (!el) return;
+        if (data.url) {
+          el.innerHTML = `
+            <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+              <source src="${data.url}" type="video/mp4">
+            </video>`;
         } else {
-          block.innerHTML += `<video controls style="width:100%; border-radius:10px; margin-top:10px;"><source src="${videoLink}" type="video/mp4"></video>`;
+          el.innerHTML = `❌ Не вдалося завантажити відео`;
         }
-        contentAdded = true;
-      }
+      });
+  } else {
+    block.innerHTML += `
+      <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+        <source src="${videoLink}" type="video/mp4">
+      </video>`;
+  }
+
+  contentAdded = true;
+}
+
     });
 
     if (contentAdded) {
@@ -1688,20 +1718,39 @@ group.forEach(r => {
   } else if (r["тип блоку"] === "фото") {
     block.innerHTML += `<img src="${r["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
     contentAdded = true;
-  } else if (r["тип блоку"] === "відео") {
+} else if (r["тип блоку"] === "відео") {
   let videoLink = r["контент"];
+
   if (videoLink.includes('drive.google.com')) {
     const match = videoLink.match(/\/d\/([a-zA-Z0-9_-]+)/);
     if (match && match[1]) {
       videoLink = `https://drive.google.com/file/d/${match[1]}/preview`;
+      block.innerHTML += `
+        <iframe 
+          src="${videoLink}" 
+          style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" 
+          allowfullscreen>
+        </iframe>
+      `;
     }
-    block.innerHTML += `
-      <iframe 
-        src="${videoLink}" 
-        style="width:100%; height:300px; border:none; border-radius:10px; margin-top:10px;" 
-        allowfullscreen>
-      </iframe>
-    `;
+  } else if (videoLink.startsWith("BAAC") || videoLink.length > 40) {
+    const uniqueId = `video-fav-${Math.random().toString(36).substr(2, 5)}`;
+    block.innerHTML += `<div id="${uniqueId}" style="margin-top: 10px;">⏳ Завантаження відео...</div>`;
+    
+    fetch(`https://recipe-backend-0gz1.onrender.com/get-file-url?file_id=${videoLink}`)
+      .then(res => res.json())
+      .then(data => {
+        const el = document.getElementById(uniqueId);
+        if (!el) return;
+        if (data.url) {
+          el.innerHTML = `
+            <video controls style="width:100%; border-radius:10px; margin-top:10px;">
+              <source src="${data.url}" type="video/mp4">
+            </video>`;
+        } else {
+          el.innerHTML = `❌ Не вдалося завантажити відео`;
+        }
+      });
   } else {
     block.innerHTML += `
       <video controls style="width:100%; border-radius:10px; margin-top:10px;">
@@ -1710,8 +1759,10 @@ group.forEach(r => {
       </video>
     `;
   }
+
   contentAdded = true;
 }
+
 
 });
 
