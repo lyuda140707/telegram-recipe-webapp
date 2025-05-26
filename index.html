@@ -1797,13 +1797,7 @@ results.length = Math.min(results.length, 20);
     : '<p>Нічого не знайдено 😞</p>';
 }
 
-function updateMenuCategory(index, newValue) {
-  const menu = JSON.parse(localStorage.getItem('weekly_menu')) || [];
-  if (menu[index]) {
-    menu[index].category = newValue.trim();
-    localStorage.setItem('weekly_menu', JSON.stringify(menu));
-  }
-}
+
   
 
   async function initAllRecipes() {
@@ -2007,7 +2001,14 @@ function renderWeeklyMenu(menu) {
       if (cat === item.category) option.selected = true;
       select.appendChild(option);
     });
-
+    
+function updateMenuCategory(index, newValue) {
+  const menu = JSON.parse(localStorage.getItem('weekly_menu')) || [];
+  if (menu[index]) {
+    menu[index].category = newValue.trim();
+    localStorage.setItem('weekly_menu', JSON.stringify(menu));
+  }
+}
     select.onchange = () => {
       updateMenuCategory(index, select.value);
       loadRecipesForDay(item.day, select.value, recipeContainer); // ✅ тепер працює
