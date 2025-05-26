@@ -1705,26 +1705,7 @@ setTimeout(() => {
   }
 }, 30000); // 10 секунд
 
-// ✅ ВИНЕСЕНА ЗОВНІ ФУНКЦІЯ:
-async function loadRecipesForDay(day, category, container) {
-  const data = await fetchRecipes(category.toLowerCase());
-  const grouped = groupByRecipeNumber(data);
-  const recipe = grouped[0];
-  if (!recipe) {
-    container.innerHTML = "<p>Немає рецептів 😞</p>";
-    return;
-  }
 
-  const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  container.innerHTML = `
-    <div class="recipe-card">
-      <h3>${info["назва рецепту"]}</h3>
-      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
-      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
-    </div>
-  `;
-
-}
 
 
   async function searchFridge() {
@@ -1975,7 +1956,26 @@ async function submitPaymentCheck() {
     console.error("❌ Помилка надсилання запиту:", err);
   }
 }
+// ✅ ВИНЕСЕНА ЗОВНІ ФУНКЦІЯ:
+async function loadRecipesForDay(day, category, container) {
+  const data = await fetchRecipes(category.toLowerCase());
+  const grouped = groupByRecipeNumber(data);
+  const recipe = grouped[0];
+  if (!recipe) {
+    container.innerHTML = "<p>Немає рецептів 😞</p>";
+    return;
+  }
 
+  const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
+  container.innerHTML = `
+    <div class="recipe-card">
+      <h3>${info["назва рецепту"]}</h3>
+      <p><strong>Час:</strong> ${info["час приготування"] || "?"} хв</p>
+      <p><strong>Інгредієнти:</strong> ${info["інгредієнти"] || "Не вказано"}</p>
+    </div>
+  `;
+
+}
 function renderWeeklyMenu(menu) {
   const container = document.getElementById('weekly-menu-list');
   container.innerHTML = '';
