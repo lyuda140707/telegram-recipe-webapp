@@ -360,6 +360,29 @@ h1, h2, h3 {
 #latest-slider::-webkit-scrollbar {
   display: none;
 }
+.accordion-title {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px 20px;
+  background: linear-gradient(to right, #ffe0f0, #fbc2eb);
+  border-radius: 16px;
+  color: #5c3e59;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0;
+  transition: background 0.3s ease;
+}
+
+.accordion-title:hover {
+  background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+}
+
+.accordion-open .accordion-title {
+  background: linear-gradient(to right, #e0c3fc, #fbc2eb);
+}
     
     
   </style>
