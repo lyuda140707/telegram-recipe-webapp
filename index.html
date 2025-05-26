@@ -1785,20 +1785,6 @@ function toggleProInfo() {
 }
 
 
-// Показувати кнопку після прокрутки
-
-
-
-// Плавне повернення вгору
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-
-
-
-
-
 function autoScrollSliders() {
   const sliders = document.querySelectorAll('.slider-container');
 
@@ -2060,6 +2046,11 @@ window.addEventListener("load", () => {
 
   init();
 });
+
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
   
 </script>
 
