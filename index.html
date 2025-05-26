@@ -1978,7 +1978,8 @@ async function loadRecipesForDay(day, category, container) {
   }
 
   const info = recipe.find(r => r["тип блоку"] === "текст") || recipe[0];
-  renderRecipeCard(container, recipe, 0); // де recipe — це масив блоків рецепта
+  renderRecipeCard(container, recipe, 0, false); // ❌ не відкривати одразу
+
 }
 function renderWeeklyMenu(menu) {
   const container = document.getElementById('weekly-menu-list');
