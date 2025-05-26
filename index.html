@@ -2034,7 +2034,7 @@ li.innerHTML = `<strong>${dayIcons[item.day] || ''} ${item.day}:</strong> `;
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'recipe-toggle';
     toggleBtn.innerHTML = '<span class="rotate-toggle">🔽</span> Згорнути';
-    toggleBtn.onclick = () => toggleRecipe(`${item.day}-${index}`, toggleBtn);
+    toggleBtn.onclick = () => toggleRecipe(recipeContainer.id, toggleBtn);
 
     li.appendChild(toggleBtn);
     li.appendChild(recipeContainer);
