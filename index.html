@@ -292,8 +292,9 @@ h1, h2, h3 {
 }
 /* обгортка секції */
 #latest-recipes {
-  position: relative;
-  padding: 20px 0;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 16px;
 }
 
 /* сам слайдер */
@@ -307,11 +308,38 @@ h1, h2, h3 {
 }
 
 /* кожна картка */
+/* стилі для карток у слайдері */
 #latest-slider .recipe-card {
-  flex: 0 0 80%;           /* ширина картки — 80% ширини viewport */
+  flex: 0 0 40%;           /* тепер картка 40% ширини viewport */
   scroll-snap-align: start;
-  margin: 0;               /* міжкартковий відступ задає gap вище */
+  margin: 0;
+  background: #fafafa;     /* світло-сірий фон */
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+  box-shadow: none;        /* прибрали тінь */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
+
+/* підпис категорії */
+#latest-slider .category-label {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+/* Оверрайд стилів <h3> тільки для слайдера */
+#latest-slider .recipe-card h3 {
+  background: none;
+  padding: 0;
+  margin: 8px 0;
+  color: #4b2c5e;
+  font-size: 16px;
+}
+
 
 /* (опціонально) сховаємо скролбар у WebKit-браузерах */
 #latest-slider::-webkit-scrollbar {
@@ -660,18 +688,10 @@ async function loadLatestRecipes() {
       card.onclick = () => openDailyRecipeCategory(category, info["номер рецепту"]);
 
       card.innerHTML = `
-        <div style="position: relative;">
-          <img src="${image}" style="width:100%;height:160px;object-fit:cover;border-radius:16px">
-          <div style="position:absolute;bottom:10px;left:10px;
-                      background:rgba(255,255,255,0.8);padding:6px 10px;
-                      border-radius:12px;font-weight:bold;">
-            ${category}
-          </div>
-        </div>
-        <div style="padding:10px 0;">
-          <h3>${info["назва рецепту"]}</h3>
-        </div>
-      `;
+  <div class="category-label">${category}</div>
+  <h3>${info["назва рецепту"]}</h3>
+`;
+
       // ---------------------------------------------------------
 
       slider.appendChild(card);
