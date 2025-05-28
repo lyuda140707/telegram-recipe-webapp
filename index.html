@@ -1311,7 +1311,27 @@ async function askBot() {
 function normalizeWord(word) {
   word = word.toLowerCase()
     .replace(/[ʼ’'’.,;!?]/g, '')
-    .replace(/[іїєґ]/g, ch => ({ і: 'и', ї: 'и', є: 'е', ґ: 'г' }[ch] || ch));
+    .replace(/[іїєґ]/g, ch => ({ і: 'и', ї: 'и', є: 'е', ґ: 'г' }[ch] || ch))
+    .replace(/[\u{1F300}-\u{1F6FF}|\u{1F900}-\u{1F9FF}|\u{1F1E6}-\u{1F1FF}|\u{2600}-\u{26FF}|\u{2700}-\u{27BF}]/gu, ''); // 🧽 видалення emoji
+
+  const stems = {
+    'картопля': 'картопл',
+    'піта': 'піта',
+    'піта🥟': 'піта',
+    // можна додати ще вручну якщо потрібно
+  };
+
+  if (stems[word]) return stems[word];
+
+  const endings = ['ою', 'ею', 'єю', 'ами', 'ями', 'і', 'а', 'у', 'ю', 'ом', 'ем', 'о', 'е', 'ів', 'ев', 'ах', 'ях'];
+  for (const end of endings) {
+    if (word.endsWith(end) && word.length - end.length > 2) {
+      return word.slice(0, -end.length);
+    }
+  }
+
+  return word;
+}
 
   // Виправляємо найпопулярніші винятки
   const stems = {
