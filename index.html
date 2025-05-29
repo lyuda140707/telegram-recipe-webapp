@@ -1351,7 +1351,7 @@ function normalizeWord(word) {
   const words = query
     .split(/\s+/)
     .map(normalizeWord)
-    .filter(w => w.length > 2 && !stopWords.includes(w));
+    .filter(w => w.length > 1 && !stopWords.includes(w));
 
   const grouped = groupByRecipeNumber(all);
 
