@@ -1351,7 +1351,7 @@ function normalizeWord(word) {
   const words = query
     .split(/\s+/)
     .map(normalizeWord)
-    .filter(w => w.length > 1 && !stopWords.includes(w));
+    .filter(w => w.length > 2 && !stopWords.includes(w));
 
   const grouped = groupByRecipeNumber(all);
 
@@ -1484,7 +1484,9 @@ const ingredientWords = new Set(
 
 
     const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
-    const threshold = parseInt(document.getElementById('threshold-btn').innerText, 10);
+    // вже є глобальна змінна threshold — використовуємо її напряму
+// нічого не треба оголошувати
+
 
     if (matches >= threshold) {
       // Підсвічуємо інгредієнти
