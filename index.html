@@ -609,12 +609,12 @@ const recipesPerBatch = 10;
 let currentPage = 0;
 
 
-/*
+
 function cycleThreshold() {
   threshold = threshold < 4 ? threshold + 1 : 1;
   document.getElementById('threshold-btn').innerText = threshold;
 }
-*/
+
 async function fetchRecipes(category = null) {
   try {
     let url = 'https://recipe-backend-0gz1.onrender.com/recipes';
