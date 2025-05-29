@@ -1468,11 +1468,15 @@ function normalizeWord(word) {
   const input = document.getElementById('fridge-input').value.toLowerCase();
   const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
   const normFridgeItems = fridgeItems.map(normalizeWord);
-  const results = [];
   const all = await fetchRecipes();
 
-  all.forEach(r => {
-    const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
+  const grouped = groupByRecipeNumber(all);
+
+  const matchedGroups = [];
+
+  Object.values(grouped).forEach(group => {
+    const info = group.find(r => r["тип блоку"] === "текст") || group[0];
+    const rawIngredients = (info["інгредієнти"] || "").toLowerCase();
     const ingredientWords = new Set(
       rawIngredients
         .split(/[,\n]+/)
@@ -1484,63 +1488,31 @@ function normalizeWord(word) {
       Array.from(ingredientWords).some(w => w.startsWith(i) || i.startsWith(w))
     ).length;
 
-    const threshold = 1; // Мінімум збігів — фіксоване значення
-
+    const threshold = 1;
     if (matches >= threshold) {
-      let highlighted = r["інгредієнти"];
-      fridgeItems.forEach(word => {
-        const normWord = normalizeWord(word);
-        const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
-        highlighted = highlighted.replace(regex, '<strong>$1</strong>');
-      });
-
-      results.push({
-        ...r,
-        matches,
-        hasFirst: ingredientWords.has(normFridgeItems[0]),
-        highlighted
-      });
+      matchedGroups.push({ group, matches });
     }
   });
 
-  results.sort((a, b) => {
-    if (b.hasFirst !== a.hasFirst) return b.hasFirst - a.hasFirst;
-    return b.matches - a.matches;
-  });
+  // 🔁 Сортуємо за кількістю збігів
+  matchedGroups.sort((a, b) => b.matches - a.matches);
 
-  results.length = Math.min(results.length, 20);
+  // 🔁 Обрізаємо до 20 результатів
+  const topGroups = matchedGroups.slice(0, 20);
 
   const container = document.getElementById('fridge-results');
-  container.innerHTML = results.length
-    ? results.map(r => {
-        let title = r["назва рецепту"];
-        fridgeItems.forEach(word => {
-          const normWord = normalizeWord(word);
-          const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
-          title = title.replace(regex, '<strong>$1</strong>');
-        });
+  container.innerHTML = '';
 
-        const id = `fridge-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
+  if (!topGroups.length) {
+    container.innerHTML = '<p>Нічого не знайдено 😞</p>';
+    return;
+  }
 
-        return `
-          <div class="recipe-card">
-            <h3>${title}</h3>
-            <p><strong>Інгредієнти:</strong></p>
-            <pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${r["highlighted"]}</pre>
-            <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
-
-            <div class="recipe-buttons">
-              <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-              <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
-            </div>
-
-            <div id="${id}" class="recipe-content">
-              <p>${r["контент"] || ''}</p>
-            </div>
-          </div>`;
-      }).join('')
-    : '<p>Нічого не знайдено 😞</p>';
+  topGroups.forEach((item, index) => {
+    renderRecipeCard(container, item.group, index);
+  });
 }
+
 
 
   
