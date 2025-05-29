@@ -2184,13 +2184,23 @@ async function searchFridgeFromInput() {
     return;
   }
 
-  const ingredients = input.split(',').map(x => x.trim()).filter(Boolean);
-  const minMatch = threshold; // поточне значення кнопки "мінімум збігів"
+  const ingredients = input
+    .split(',')
+    .map(x => x.trim())
+    .filter(Boolean);
 
-  const data = await fetchRecipes(); // отримує всі рецепти з бекенду
-  const html = searchFridge(data, ingredients, minMatch); // викликає стару функцію
+  if (!ingredients.length) {
+    document.getElementById('fridge-results').innerHTML = '<p>Немає інгредієнтів 🧊</p>';
+    return;
+  }
+
+  const minMatch = threshold || 1;
+  const data = await fetchRecipes();
+
+  const html = searchFridge(data, ingredients, minMatch);
   document.getElementById('fridge-results').innerHTML = html;
 }
+
   
   
 </script>
