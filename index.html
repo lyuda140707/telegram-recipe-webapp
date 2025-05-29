@@ -1515,24 +1515,24 @@ results.length = Math.min(results.length, 20);
   
 
   const container = document.getElementById('fridge-results');
-  container.innerHTML = results.length
-    ? results.map(r => {
-        let title = r["назва рецепту"];
-        fridgeItems.forEach(word => {
-          const normWord = normalizeWord(word);
-          const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
-          title = title.replace(regex, '<strong>$1</strong>');
-        });
+container.innerHTML = '';
+if (results.length) {
+  const grouped = groupByRecipeNumber(all);
+  const seen = new Set();
 
-        return `<div class="recipe-card">
-  <h3>${title}</h3>
-  <p>${r["highlighted"]}</p>
-  <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
-</div>`;
+  results.forEach(r => {
+    const recipeId = r["номер рецепту"];
+    if (seen.has(recipeId)) return;
+    seen.add(recipeId);
 
-      }).join('')
-    : '<p>Нічого не знайдено 😞</p>';
+    const group = grouped[recipeId];
+    const index = Math.floor(Math.random() * 100000); // унікальний
+    renderRecipeCard(container, group, index);
+  });
+} else {
+  container.innerHTML = '<p>Нічого не знайдено 😞</p>';
 }
+
 
   
 window.addEventListener("load", () => {
