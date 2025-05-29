@@ -434,7 +434,7 @@ h1, h2, h3 {
   <input id="fridge-input" 
          placeholder="Що є в холодильнику..." 
          style="padding:14px 16px; font-size:16px; border-radius:16px; width:85%; max-width:400px;">
-  <button onclick="searchFridgeFromInput()" 
+  <button onclick="searchFridge()" 
           style="padding:14px 20px; font-size:16px; border-radius:16px; background:linear-gradient(to right,#fbc2eb,#a6c1ee); color:#4b2c5e; font-weight:bold; border:none;">🔍 Знайти рецепт</button>
 </div>
 
@@ -1392,7 +1392,7 @@ function normalizeWord(word) {
         <p><strong>Інгредієнти:</strong> ${r["інгредієнти"] || "Не вказано"}</p>
         <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
         <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
-        <div id="${id}" class="recipe-content open">
+        <div id="${id}" class="recipe-content">
           ${(() => {
             let firstImage = null;
             let sliderImages = [];
@@ -1464,78 +1464,75 @@ function normalizeWord(word) {
   container.innerHTML = results.length ? results.join('') : '<p>Нічого не знайдено 😞</p>';
 }
 
-  function searchFridge(data, ingredients, minMatch = 1) {
-  const normalized = ingredients.map(i => normalizeWord(i));
+  async function searchFridge() {
+  const input = document.getElementById('fridge-input').value.toLowerCase();
+  const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
+  const normFridgeItems = fridgeItems.map(normalizeWord);
   const results = [];
+  const all = await fetchRecipes(); // тягне тільки зараз
 
-  data.forEach(r => {
-    const all = `${r["назва"]} ${r["контент"]}`.toLowerCase();
-    let matches = 0;
-    let highlighted = all;
 
-    normalized.forEach(word => {
-      if (all.includes(word)) {
-        matches++;
-        const re = new RegExp(`(${word})`, 'gi');
-        highlighted = highlighted.replace(re, '<mark>$1</mark>');
-      }
-    });
+  all.forEach(r => {
+   const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
+const ingredientWords = new Set(
+  rawIngredients
+    .split(/[,\n]+/)
+    .flatMap(ing => normalizeWord(ing.trim()).split(/\s+/))
+    .filter(Boolean)
+);
 
-    if (matches >= minMatch) {
-      results.push({ ...r, matches, highlighted });
+
+
+    const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
+    const threshold = parseInt(document.getElementById('threshold-btn').innerText, 10);
+
+    if (matches >= threshold) {
+      // Підсвічуємо інгредієнти
+      let highlighted = r["інгредієнти"];
+      fridgeItems.forEach(word => {
+        const normWord = normalizeWord(word);
+        const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+        highlighted = highlighted.replace(regex, '<strong>$1</strong>');
+      });
+
+      results.push({
+        ...r,
+        matches,
+        hasFirst: ingredientWords.has(normFridgeItems[0]),
+        highlighted
+      });
     }
   });
 
-  if (!results.length) {
-    return `<p style="margin-top:10px;">Нічого не знайдено 🤷‍♀️</p>`;
-  }
+  results.sort((a, b) => {
+    if (b.hasFirst !== a.hasFirst) return b.hasFirst - a.hasFirst;
+    return b.matches - a.matches;
+  });
 
-  results.sort((a, b) => b.matches - a.matches);
+    // 🔽 Обмежуємо кількість результатів
+results.length = Math.min(results.length, 20);
 
-  return results.map(r => {
-    const title = r["назва рецепту"] || "Без назви";
-    const id = `fridge-result-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
-    return `<div class="recipe-card">
-      <h3>${title}</h3>
-      <p>${r["highlighted"]}</p>
-      <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
-      <div class="recipe-buttons">
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
-      </div>
-      <div id="${id}" class="recipe-content">
-        ${(() => {
-          let blocks = "";
-          let seen = new Set();
-          let firstImage = null;
-          let sliderImages = [];
-          groupByRecipeNumber(data)[r["номер рецепту"]]?.forEach(x => {
-            const key = `${x["тип блоку"]}|${x["контент"]}`;
-            if (seen.has(key)) return;
-            seen.add(key);
-            if (x["тип блоку"] === "текст") {
-              blocks += `<p>${x["контент"]}</p>`;
-            } else if (x["тип блоку"] === "фото") {
-              if (!firstImage) {
-                firstImage = `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
-              } else {
-                sliderImages.push(x["контент"]);
-              }
-            }
-          });
-          const slider = sliderImages.length
-            ? `<div class="slider-container">${sliderImages.map(src => `<img src="${src}">`).join('')}</div>`
-            : '';
-          return `${firstImage || ''}${blocks}${slider}`;
-        })()}
-        <div style="text-align:center; margin-top:20px;">
-          <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
-        </div>
-      </div>
-    </div>`;
-  }).join("");
+  
+
+  const container = document.getElementById('fridge-results');
+  container.innerHTML = results.length
+    ? results.map(r => {
+        let title = r["назва рецепту"];
+        fridgeItems.forEach(word => {
+          const normWord = normalizeWord(word);
+          const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+          title = title.replace(regex, '<strong>$1</strong>');
+        });
+
+        return `<div class="recipe-card">
+  <h3>${title}</h3>
+  <p>${r["highlighted"]}</p>
+  <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
+</div>`;
+
+      }).join('')
+    : '<p>Нічого не знайдено 😞</p>';
 }
-
 
   
 window.addEventListener("load", () => {
@@ -2176,32 +2173,6 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-
-async function searchFridgeFromInput() {
-  const input = document.getElementById('fridge-input').value.trim();
-  if (!input) {
-    document.getElementById('fridge-results').innerHTML = '<p>Введіть інгредієнти 🧊</p>';
-    return;
-  }
-
-  const ingredients = input
-    .split(',')
-    .map(x => x.trim())
-    .filter(Boolean);
-
-  if (!ingredients.length) {
-    document.getElementById('fridge-results').innerHTML = '<p>Немає інгредієнтів 🧊</p>';
-    return;
-  }
-
-  const minMatch = threshold || 1;
-  const data = await fetchRecipes();
-
-  const html = searchFridge(data, ingredients, minMatch);
-  document.getElementById('fridge-results').innerHTML = html;
-}
-
-  
   
 </script>
 
