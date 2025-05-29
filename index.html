@@ -1493,7 +1493,7 @@ function normalizeWord(word) {
   results.sort((a, b) => b.matches - a.matches);
 
   return results.map(r => {
-    const title = r["назва"];
+    const title = r["назва рецепту"] || "Без назви";
     const id = `fridge-result-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
     return `<div class="recipe-card">
       <h3>${title}</h3>
