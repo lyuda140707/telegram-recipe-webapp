@@ -434,7 +434,7 @@ h1, h2, h3 {
   <input id="fridge-input" 
          placeholder="Що є в холодильнику..." 
          style="padding:14px 16px; font-size:16px; border-radius:16px; width:85%; max-width:400px;">
-  <button onclick="searchFridge()" 
+  <button onclick="searchFridgeFromInput()" 
           style="padding:14px 20px; font-size:16px; border-radius:16px; background:linear-gradient(to right,#fbc2eb,#a6c1ee); color:#4b2c5e; font-weight:bold; border:none;">🔍 Знайти рецепт</button>
 </div>
 
@@ -2176,6 +2176,22 @@ function toggleProInfo() {
   const el = document.getElementById('pro-info');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
+
+async function searchFridgeFromInput() {
+  const input = document.getElementById('fridge-input').value.trim();
+  if (!input) {
+    document.getElementById('fridge-results').innerHTML = '<p>Введіть інгредієнти 🧊</p>';
+    return;
+  }
+
+  const ingredients = input.split(',').map(x => x.trim()).filter(Boolean);
+  const minMatch = threshold; // поточне значення кнопки "мінімум збігів"
+
+  const data = await fetchRecipes(); // отримує всі рецепти з бекенду
+  const html = searchFridge(data, ingredients, minMatch); // викликає стару функцію
+  document.getElementById('fridge-results').innerHTML = html;
+}
+  
   
 </script>
 
