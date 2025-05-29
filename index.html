@@ -1464,95 +1464,78 @@ function normalizeWord(word) {
   container.innerHTML = results.length ? results.join('') : '<p>Нічого не знайдено 😞</p>';
 }
 
-async function searchFridge() {
-  const input = document.getElementById("fridge-input").value.trim().toLowerCase();
-  const ingredients = input.split(/[\s,;]+/).filter(word => word.length > 0);
-  const minMatches = parseInt(document.getElementById("threshold-btn").innerText || "1");
-
-  const recipes = await fetchRecipes();
+  function searchFridge(data, ingredients, minMatch = 1) {
+  const normalized = ingredients.map(i => normalizeWord(i));
   const results = [];
 
-  for (const recipe of recipes) {
-    if (!recipe["інгредієнти"]) continue;
-
-    const normalizedIngredients = normalizeText(recipe["інгредієнти"]);
+  data.forEach(r => {
+    const all = `${r["назва"]} ${r["контент"]}`.toLowerCase();
     let matches = 0;
-    const highlightedWords = [];
+    let highlighted = all;
 
-    for (const word of ingredients) {
-      const norm = normalizeWord(word);
-      if (normalizedIngredients.includes(norm)) {
+    normalized.forEach(word => {
+      if (all.includes(word)) {
         matches++;
-        highlightedWords.push(`<mark>${word}</mark>`);
+        const re = new RegExp(`(${word})`, 'gi');
+        highlighted = highlighted.replace(re, '<mark>$1</mark>');
       }
-    }
+    });
 
-    if (matches >= minMatches) {
-      results.push({ ...recipe, matches, highlighted: highlightedWords.join(", ") });
+    if (matches >= minMatch) {
+      results.push({ ...r, matches, highlighted });
     }
+  });
+
+  if (!results.length) {
+    return `<p style="margin-top:10px;">Нічого не знайдено 🤷‍♀️</p>`;
   }
 
-  const resultsContainer = document.getElementById("fridge-results");
-  resultsContainer.innerHTML = "";
+  results.sort((a, b) => b.matches - a.matches);
 
-  const seenRecipes = new Set();
-
-  for (const r of results) {
-    const recipeId = r["номер рецепту"];
-    if (seenRecipes.has(recipeId)) continue;
-    seenRecipes.add(recipeId);
-
-    const id = `fridge-${recipeId}-${Math.random().toString(36).substr(2, 5)}`;
-    const title = r["назва"] || "Рецепт";
-
-    const group = recipes.filter(x => x["номер рецепту"] === recipeId);
-    const seen = new Set();
-
-    let text = "", photos = [], video = "";
-    for (const x of group) {
-      const key = `${x["тип блоку"]}|${x["контент"]}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-
-      if (x["тип блоку"] === "текст") {
-        text += `<p>${x["контент"]}</p>`;
-      } else if (x["тип блоку"] === "фото") {
-        photos.push(`<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`);
-      } else if (x["тип блоку"] === "відео") {
-        video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
-          <source src="${x["контент"]}" type="video/mp4">
-          Ваш браузер не підтримує відео.
-        </video>`;
-      }
-    }
-
-    const cardHTML = `
-      <div class="recipe-card" data-recipe-id="${recipeId}">
-        <h3>${title}</h3>
-        <p><strong>Інгредієнти:</strong> ${r["highlighted"]}</p>
-        <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
-        <div class="recipe-buttons">
-          <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-          <button class="favorite-button" onclick="toggleFavorite('${recipeId}', this)">💛 У список</button>
-        </div>
-        <div id="${id}" class="recipe-content open">
-          ${photos[0] || ""}
-          ${text}
-          ${photos.length > 1 ? `<div class="slider-container">${photos.slice(1).join("")}</div>` : ""}
-          ${video}
-          <div style="text-align: center; margin-top: 20px;">
-            <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
-          </div>
+  return results.map(r => {
+    const title = r["назва"];
+    const id = `fridge-result-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
+    return `<div class="recipe-card">
+      <h3>${title}</h3>
+      <p>${r["highlighted"]}</p>
+      <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
+      <div class="recipe-buttons">
+        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+        <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
+      </div>
+      <div id="${id}" class="recipe-content">
+        ${(() => {
+          let blocks = "";
+          let seen = new Set();
+          let firstImage = null;
+          let sliderImages = [];
+          groupByRecipeNumber(data)[r["номер рецепту"]]?.forEach(x => {
+            const key = `${x["тип блоку"]}|${x["контент"]}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            if (x["тип блоку"] === "текст") {
+              blocks += `<p>${x["контент"]}</p>`;
+            } else if (x["тип блоку"] === "фото") {
+              if (!firstImage) {
+                firstImage = `<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`;
+              } else {
+                sliderImages.push(x["контент"]);
+              }
+            }
+          });
+          const slider = sliderImages.length
+            ? `<div class="slider-container">${sliderImages.map(src => `<img src="${src}">`).join('')}</div>`
+            : '';
+          return `${firstImage || ''}${blocks}${slider}`;
+        })()}
+        <div style="text-align:center; margin-top:20px;">
+          <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
         </div>
       </div>
-    `;
-    resultsContainer.insertAdjacentHTML("beforeend", cardHTML);
-  }
-
-  if (results.length === 0) {
-    resultsContainer.innerHTML = `<p style="text-align:center;">😔 Нічого не знайдено</p>`;
-  }
+    </div>`;
+  }).join("");
 }
+
 
   
 window.addEventListener("load", () => {
