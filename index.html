@@ -1464,74 +1464,94 @@ function normalizeWord(word) {
   container.innerHTML = results.length ? results.join('') : '<p>Нічого не знайдено 😞</p>';
 }
 
-  async function searchFridge() {
-  const input = document.getElementById('fridge-input').value.toLowerCase();
-  const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
-  const normFridgeItems = fridgeItems.map(normalizeWord);
+async function searchFridge() {
+  const input = document.getElementById("fridge-input").value.trim().toLowerCase();
+  const ingredients = input.split(/[\s,;]+/).filter(word => word.length > 0);
+  const minMatches = parseInt(document.getElementById("threshold-btn").innerText || "1");
+
+  const recipes = await fetchRecipes();
   const results = [];
-  const all = await fetchRecipes(); // тягне тільки зараз
 
+  for (const recipe of recipes) {
+    if (!recipe["інгредієнти"]) continue;
 
-  all.forEach(r => {
-   const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
-const ingredientWords = new Set(
-  rawIngredients
-    .split(/[,\n]+/)
-    .flatMap(ing => normalizeWord(ing.trim()).split(/\s+/))
-    .filter(Boolean)
-);
+    const normalizedIngredients = normalizeText(recipe["інгредієнти"]);
+    let matches = 0;
+    const highlightedWords = [];
 
-
-
-    const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
-    const threshold = parseInt(document.getElementById('threshold-btn').innerText, 10);
-
-    if (matches >= threshold) {
-      // Підсвічуємо інгредієнти
-      let highlighted = r["інгредієнти"];
-      fridgeItems.forEach(word => {
-        const normWord = normalizeWord(word);
-        const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
-        highlighted = highlighted.replace(regex, '<strong>$1</strong>');
-      });
-
-      results.push({
-        ...r,
-        matches,
-        hasFirst: ingredientWords.has(normFridgeItems[0]),
-        highlighted
-      });
+    for (const word of ingredients) {
+      const norm = normalizeWord(word);
+      if (normalizedIngredients.includes(norm)) {
+        matches++;
+        highlightedWords.push(`<mark>${word}</mark>`);
+      }
     }
-  });
 
-  results.sort((a, b) => {
-    if (b.hasFirst !== a.hasFirst) return b.hasFirst - a.hasFirst;
-    return b.matches - a.matches;
-  });
+    if (matches >= minMatches) {
+      results.push({ ...recipe, matches, highlighted: highlightedWords.join(", ") });
+    }
+  }
 
-    // 🔽 Обмежуємо кількість результатів
-results.length = Math.min(results.length, 20);
+  const resultsContainer = document.getElementById("fridge-results");
+  resultsContainer.innerHTML = "";
 
-  
+  const seenRecipes = new Set();
 
-  const container = document.getElementById('fridge-results');
-  container.innerHTML = results.length
-    ? results.map(r => {
-        let title = r["назва рецепту"];
-        fridgeItems.forEach(word => {
-          const normWord = normalizeWord(word);
-          const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
-          title = title.replace(regex, '<strong>$1</strong>');
-        });
+  for (const r of results) {
+    const recipeId = r["номер рецепту"];
+    if (seenRecipes.has(recipeId)) continue;
+    seenRecipes.add(recipeId);
 
-        return `<div class="recipe-card">
-  <h3>${title}</h3>
-  <p>${r["highlighted"]}</p>
-  <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
-</div>`;
+    const id = `fridge-${recipeId}-${Math.random().toString(36).substr(2, 5)}`;
+    const title = r["назва"] || "Рецепт";
 
-      }).join('')
-    : '<p>Нічого не знайдено 😞</p>';
+    const group = recipes.filter(x => x["номер рецепту"] === recipeId);
+    const seen = new Set();
+
+    let text = "", photos = [], video = "";
+    for (const x of group) {
+      const key = `${x["тип блоку"]}|${x["контент"]}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      if (x["тип блоку"] === "текст") {
+        text += `<p>${x["контент"]}</p>`;
+      } else if (x["тип блоку"] === "фото") {
+        photos.push(`<img src="${x["контент"]}" style="max-width:100%; border-radius:10px; margin-top:10px;">`);
+      } else if (x["тип блоку"] === "відео") {
+        video = `<video controls style="width:100%; border-radius:10px; margin-top:10px;">
+          <source src="${x["контент"]}" type="video/mp4">
+          Ваш браузер не підтримує відео.
+        </video>`;
+      }
+    }
+
+    const cardHTML = `
+      <div class="recipe-card" data-recipe-id="${recipeId}">
+        <h3>${title}</h3>
+        <p><strong>Інгредієнти:</strong> ${r["highlighted"]}</p>
+        <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
+        <div class="recipe-buttons">
+          <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+          <button class="favorite-button" onclick="toggleFavorite('${recipeId}', this)">💛 У список</button>
+        </div>
+        <div id="${id}" class="recipe-content open">
+          ${photos[0] || ""}
+          ${text}
+          ${photos.length > 1 ? `<div class="slider-container">${photos.slice(1).join("")}</div>` : ""}
+          ${video}
+          <div style="text-align: center; margin-top: 20px;">
+            <button class="recipe-toggle" onclick="toggleRecipe('${id}', this)">🔼 Згорнути</button>
+          </div>
+        </div>
+      </div>
+    `;
+    resultsContainer.insertAdjacentHTML("beforeend", cardHTML);
+  }
+
+  if (results.length === 0) {
+    resultsContainer.innerHTML = `<p style="text-align:center;">😔 Нічого не знайдено</p>`;
+  }
 }
 
   
