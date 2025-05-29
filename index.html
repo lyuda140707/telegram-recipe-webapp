@@ -1469,27 +1469,24 @@ function normalizeWord(word) {
   const fridgeItems = input.split(/[\s,]+/).map(i => i.trim()).filter(Boolean);
   const normFridgeItems = fridgeItems.map(normalizeWord);
   const results = [];
-  const all = await fetchRecipes(); // тягне тільки зараз
-
+  const all = await fetchRecipes();
 
   all.forEach(r => {
-   const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
-const ingredientWords = new Set(
-  rawIngredients
-    .split(/[,\n]+/)
-    .flatMap(ing => normalizeWord(ing.trim()).split(/\s+/))
-    .filter(Boolean)
-);
+    const rawIngredients = (r["інгредієнти"] || "").toLowerCase();
+    const ingredientWords = new Set(
+      rawIngredients
+        .split(/[,\n]+/)
+        .flatMap(ing => normalizeWord(ing.trim()).split(/\s+/))
+        .filter(Boolean)
+    );
 
+    const matches = normFridgeItems.filter(i =>
+      Array.from(ingredientWords).some(w => w.startsWith(i) || i.startsWith(w))
+    ).length;
 
-
-    const matches = normFridgeItems.filter(i => ingredientWords.has(i)).length;
-    // вже є глобальна змінна threshold — використовуємо її напряму
-// нічого не треба оголошувати
-
+    const threshold = 1; // Мінімум збігів — фіксоване значення
 
     if (matches >= threshold) {
-      // Підсвічуємо інгредієнти
       let highlighted = r["інгредієнти"];
       fridgeItems.forEach(word => {
         const normWord = normalizeWord(word);
@@ -1511,44 +1508,40 @@ const ingredientWords = new Set(
     return b.matches - a.matches;
   });
 
-    // 🔽 Обмежуємо кількість результатів
-results.length = Math.min(results.length, 20);
-
-  
+  results.length = Math.min(results.length, 20);
 
   const container = document.getElementById('fridge-results');
   container.innerHTML = results.length
     ? results.map(r => {
-  let title = r["назва рецепту"];
-  fridgeItems.forEach(word => {
-    const normWord = normalizeWord(word);
-    const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
-    title = title.replace(regex, '<strong>$1</strong>');
-  });
+        let title = r["назва рецепту"];
+        fridgeItems.forEach(word => {
+          const normWord = normalizeWord(word);
+          const regex = new RegExp(`(${normWord}\\w*)`, 'gi');
+          title = title.replace(regex, '<strong>$1</strong>');
+        });
 
-  const id = `fridge-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
+        const id = `fridge-${r["номер рецепту"]}-${Math.random().toString(36).substr(2, 5)}`;
 
-  return `
-    <div class="recipe-card">
-      <h3>${title}</h3>
-      <p><strong>Інгредієнти:</strong></p>
-      <pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${r["highlighted"]}</pre>
-      <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
+        return `
+          <div class="recipe-card">
+            <h3>${title}</h3>
+            <p><strong>Інгредієнти:</strong></p>
+            <pre style="white-space: pre-wrap; font-family: inherit; margin-top: -10px;">${r["highlighted"]}</pre>
+            <p><em>🔍 Збігів: <strong>${r.matches}</strong></em></p>
 
-      <div class="recipe-buttons">
-        <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
-        <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
-      </div>
+            <div class="recipe-buttons">
+              <button class="detail-button" onclick="toggleRecipe('${id}', this)">➕ Детальніше</button>
+              <button class="favorite-button" onclick="toggleFavorite('${r["номер рецепту"]}', this)">💛 У список</button>
+            </div>
 
-      <div id="${id}" class="recipe-content">
-        <p>${r["контент"] || ''}</p>
-      </div>
-    </div>`;
-}).join('')  // ✅ без крапки з комою
-
-
+            <div id="${id}" class="recipe-content">
+              <p>${r["контент"] || ''}</p>
+            </div>
+          </div>`;
+      }).join('')
     : '<p>Нічого не знайдено 😞</p>';
 }
+
 
   
 window.addEventListener("load", () => {
